@@ -1,0 +1,68 @@
+﻿.mud-dialog > .mud-dialog-title {
+    background: #003366;
+    padding: .5rem 1.75rem;
+    color: white;
+}
+
+.mud-dialog-title > .mud-icon-button {
+    font-size: 1.5rem;
+    margin: 0;
+    padding: 3px;
+    color: #DEDEDE;
+}
+
+.mud-paper.mud-elevation-1.mud-card {
+    box-shadow: none !important;
+    margin-bottom: 15px;
+}
+
+.mud-navmenu.mud-navmenu-default .mud-nav-link.active:not(.mud-nav-link-disabled) {
+    color: #003366;
+}
+
+.mud-button-filled.mud-button-filled-primary {
+    background: #225588;
+}
+
+    .mud-button-filled.mud-button-filled-primary:hover {
+        background: #003399;
+    }
+
+.mud-button-group-filled.mud-button-group-override-styles.mud-button-group-filled-primary
+.mud-button-root {
+    background: #225588;
+}
+
+    .mud-button-group-filled.mud-button-group-override-styles.mud-button-group-filled-primary
+    .mud-button-root:hover {
+        background: #003399;
+    }
+
+.mud-button-group-filled.mud-button-group-override-styles.mud-button-group-filled-primary.mud-button-group-horizontal:not(.mud-button-group-rtl)
+.mud-button-root:not(:first-child), .mud-button-group-filled.mud-button-group-override-styles.mud-button-group-filled-primary.mud-button-group-horizontal:not(.mud-button-group-rtl) > :not(:first-child)
+.mud-button-root {
+    border-left: 1px solid rgb(235 235 235);
+}
+
+.mud-input-control.mud-input-control-boolean-input {
+    margin-top: 2em !important;
+}
+
+.detailTable {
+    width: 100%;
+    border: 1px solid #CCC;
+    border-collapse: collapse;
+}
+
+    .detailTable td {
+        padding: 3px;
+    }
+
+    .detailTable tr:nth-child(even) {
+        background: #EDEDED;
+    }
+
+    .detailTable label {
+        font-weight: bold;
+        font-size: 1rem;
+    }

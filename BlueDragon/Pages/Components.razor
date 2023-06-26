@@ -1,0 +1,199 @@
+﻿@page "/components"
+@using BlueDragon.Data;
+@using BlueDragon.Services;
+@using System.Linq;
+@using BlueDragon.Models;
+
+<PageTitle>Components</PageTitle>
+
+<MudButton OnClick="(()=>UpsertComponent(new Ecomponent()))"
+           Size="Size.Small"
+           Class="mb-2 mud-success-text"
+           StartIcon="@Icons.Material.Filled.Add">
+    Add New Item
+</MudButton>
+<MudDataGrid Items="@ecomponents" Dense Filterable Hideable Hover Striped>
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Electronic Components</MudText>
+        <MudSpacer />
+    </ToolBarContent>
+    <Columns>
+        <PropertyColumn Property="x => x.Name" />
+        <PropertyColumn Property="x => x.Location" />
+        <PropertyColumn Property="x => x.InUse" Title="Used" />
+        <PropertyColumn Property="x => x.OnHand" Title="Available" />
+        <PropertyColumn Property="x => x.Ecid" Hidden="true" />
+        <PropertyColumn Property="x => x.BrandName" Hidden="true" />
+        <PropertyColumn Property="x => x.SerialNumber" Hidden="true" />
+        <PropertyColumn Property="x => x.Description" Hidden="true" />
+        <PropertyColumn Property="x => x.Notes" Hidden="true" />
+        <TemplateColumn CellStyle="width:118px;" Filterable="false">
+            <CellTemplate>
+                <MudIconButton Color="Color.Tertiary" Icon="@Icons.Material.Filled.OpenInNew" Size="Size.Small" OnClick="(()=>ViewDetails(context.Item))" />
+                <MudIconButton Color="Color.Info" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="(()=>UpsertComponent(context.Item))" />
+                <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" OnClick="(()=>DeleteComponent(context.Item))" />
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager />
+    </PagerContent>
+    <NoRecordsContent>
+        <div>No Records Have Been Saved For This List</div>
+    </NoRecordsContent>
+</MudDataGrid>
+<MudDialog @bind-IsVisible="upsertVisible" Options="dialogOptions" DefaultFocus="DefaultFocus.LastChild">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            Add/Edit Component
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <EditForm Model="@eComponentModel" OnValidSubmit="SaveComponent">
+            <DataAnnotationsValidator />
+            <MudCard>
+                <MudCardContent>
+                    <MudGrid Spacing="1">
+                        <MudItem xs="6">
+                            <MudTextField @bind-Value="eComponentModel.Name"
+                                          Label="Name"
+                                          HelperText="Max. 50 characters"
+                                          For="@(() => eComponentModel.Name)"
+                                          Required="true"
+                                          RequiredError="A Component name is required!" />
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudSelect T="string" @bind-Value="eComponentModel.BrandName"
+                                       Label="Brand"
+                                       HelperText="Select from dropdown"
+                                       For="@(() => eComponentModel.BrandName)"
+                                       Dense="true"
+                                       Required="true"
+                                       RequiredError="A Brand Name must be selected!">
+                                @foreach (LuBrandName n in brands)
+                                {
+                                    <MudSelectItem Value="n.Name" />
+                                }
+                            </MudSelect>
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudTextField @bind-Value="eComponentModel.ModelNumber"
+                                          Label="Model #"
+                                          HelperText="Enter model as shown"
+                                          For="@(() => eComponentModel.ModelNumber)"
+                                          Required="false" />
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudTextField @bind-Value="eComponentModel.SerialNumber"
+                                          Label="Serial #"
+                                          HelperText="Enter serial as shown"
+                                          For="@(() => eComponentModel.SerialNumber)"
+                                          Required="false" />
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudSelect T="string" @bind-Value="eComponentModel.Location"
+                                       Label="Location"
+                                       HelperText="Select from dropdown"
+                                       For="@(() => eComponentModel.Location)"
+                                       Dense="true"
+                                       Required="true"
+                                       RequiredError="A Location must be selected!">
+                                @foreach (var n in (LocationUsed[])Enum.GetValues(typeof(LocationUsed)))
+                                {
+                                    <MudSelectItem Value=n.ToString() />
+                                }
+                            </MudSelect>
+                        </MudItem>
+                        <MudItem xs="3">
+                            <MudTextField @bind-Value="eComponentModel.InUse"
+                                         Label="In-service count"
+                                         For="@(() => eComponentModel.InUse)"
+                                         Required="false" />
+                        </MudItem>
+                        <MudItem xs="3">
+                            <MudTextField @bind-Value="eComponentModel.OnHand"
+                                          Label="On-hand count"
+                                          For="@(() => eComponentModel.OnHand)"
+                                          Required="false" />
+                        </MudItem>
+                        <MudItem xs="12">
+                            <MudTextField @bind-Value="eComponentModel.Description"
+                                          Label="Description"
+                                          HelperText="Description of component"
+                                          For="@(() => eComponentModel.Description)"
+                                          Required="false" />
+                        </MudItem>
+                        <MudItem xs="12">
+                            <MudTextField @bind-Value="eComponentModel.Notes"
+                                          Label="Notes"
+                                          HelperText="Additional notes"
+                                          For="@(() => eComponentModel.Notes)"
+                                          Required="false" />
+                        </MudItem>
+                    </MudGrid>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButtonGroup Class="mx-auto" Color="Color.Primary" Variant="Variant.Filled">
+                        <MudButton ButtonType="ButtonType.Submit" StartIcon="@Icons.Material.Filled.Save">Save Component</MudButton>
+                        <MudButton OnClick="Close" StartIcon="@Icons.Material.Filled.Close">Close</MudButton>
+                    </MudButtonGroup>
+                </MudCardActions>
+            </MudCard>
+        </EditForm>
+
+    </DialogContent>
+</MudDialog>
+<MudDialog @bind-IsVisible="detailVisible" Options="dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            Component Details
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudCard>
+            <MudCardContent>
+                <table class="detailTable">
+                    <tbody>
+                        <tr>
+                            <td width="125px"><label for="@eComponentModel.Name">Name</label></td>
+                            <td><MudText>@eComponentModel.Name</MudText></td>
+                        </tr>
+                        <tr>
+                            <td><label for="@eComponentModel.BrandName">Brand</label></td>
+                            <td><MudText>@eComponentModel.BrandName</MudText></td>
+                        </tr>
+                        <tr>
+                            <td><label for="@eComponentModel.ModelNumber">Model Number</label></td>
+                            <td><MudText>@eComponentModel.ModelNumber</MudText></td>
+                        </tr>
+                        <tr>
+                            <td><label for="@eComponentModel.SerialNumber">Serial Number</label></td>
+                            <td><MudText>@eComponentModel.SerialNumber</MudText></td>
+                        </tr>
+                        <tr>
+                            <td><label for="@eComponentModel.Location">Location</label></td>
+                            <td><MudText>@eComponentModel.Location</MudText></td>
+                        </tr>
+                        <tr>
+                            <td><label for="@eComponentModel.Description">Description</label></td>
+                            <td><MudText>@eComponentModel.Description</MudText></td>
+                        </tr>
+                        <tr>
+                            <td><label for="@eComponentModel.Notes">Notes</label></td>
+                            <td><MudText>@eComponentModel.Notes</MudText></td>
+                        </tr>
+                        <tr>
+                            <td><label for="@eComponentModel.InUse">Used</label></td>
+                            <td><MudText>@eComponentModel.InUse of @(eComponentModel.InUse + eComponentModel.OnHand)</MudText></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </MudCardContent>
+            <MudCardActions>
+                <MudButtonGroup Class="mx-auto" Color="Color.Primary" Variant="Variant.Filled">
+                    <MudButton OnClick="Close" StartIcon="@Icons.Material.Filled.Close">Close</MudButton>
+                </MudButtonGroup>
+            </MudCardActions>
+        </MudCard>
+    </DialogContent>
+</MudDialog>

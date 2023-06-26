@@ -1,0 +1,22 @@
+﻿::deep img.siteLogo {
+    height: 100px !important;
+    width: 100px !important;
+    margin: 0 auto;
+}
+
+::deep .mud-drawer-header {
+    background: #036;
+}
+
+::deep .mud-toolbar {
+    background: #FC0;
+}
+
+::deep .mud-data-grid .mud-toolbar {
+    background: #EEE;
+    min-height: 45px !important;
+}
+
+::deep .textLogo {
+    height: 2em;
+}
