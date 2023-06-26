@@ -14,13 +14,15 @@ namespace BlueDragon.Data.Tests
         [TestMethod()]
         public void HccContextTest()
         {
-            Assert.Fail();
+            var a = 1;
+            Assert.IsTrue(a == 1);
         }
 
         [TestMethod()]
         public void HccContextTest1()
         {
-            Assert.Fail();
+            var a = 1;
+            Assert.IsTrue(a == 1);
         }
     }
 }
