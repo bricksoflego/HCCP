@@ -22,7 +22,7 @@ namespace BlueDragon.Data.Tests
         public void HccContextTest1()
         {
             var a = 1;
-            Assert.IsTrue(a == 1);
+            Assert.IsTrue(a == 2);
         }
     }
 }
