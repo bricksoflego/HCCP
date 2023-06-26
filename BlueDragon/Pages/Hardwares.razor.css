@@ -1,0 +1,5 @@
+﻿::deep .mud-dialog .mud-dialog-title {
+    background: red !important;
+    height: 2em !important;
+    line-height: 2em !important;
+}

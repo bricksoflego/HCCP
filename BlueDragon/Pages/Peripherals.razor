@@ -1,0 +1,199 @@
+﻿@page "/peripherals"
+@using BlueDragon.Data;
+@using BlueDragon.Services;
+@using System.Linq;
+@using BlueDragon.Models;
+
+<PageTitle>Peripherals</PageTitle>
+
+<MudButton OnClick="(()=>UpsertPeripheral(new Peripheral()))"
+           Size="Size.Small"
+           Class="mb-2 mud-success-text"
+           StartIcon="@Icons.Material.Filled.Add">
+    Add New Item
+</MudButton>
+<MudDataGrid Items="@peripherals" Dense Filterable Hideable Hover Striped>
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Peripherals</MudText>
+        <MudSpacer />
+    </ToolBarContent>
+    <Columns>
+        <PropertyColumn Property="x => x.Name" />
+        <PropertyColumn Property="x => x.Location" />
+        <PropertyColumn Property="x => x.InUse" Title="Used" />
+        <PropertyColumn Property="x => x.OnHand" Title="Available" />
+        <PropertyColumn Property="x => x.Pcid" Hidden="true" />
+        <PropertyColumn Property="x => x.BrandName" Hidden="true" />
+        <PropertyColumn Property="x => x.SerialNumber" Hidden="true" />
+        <PropertyColumn Property="x => x.Description" Hidden="true" />
+        <PropertyColumn Property="x => x.Notes" Hidden="true" />
+        <TemplateColumn CellStyle="width:118px;" Filterable="false">
+            <CellTemplate>
+                <MudIconButton Color="Color.Tertiary" Icon="@Icons.Material.Filled.OpenInNew" Size="Size.Small" OnClick="(()=>ViewDetails(context.Item))" />
+                <MudIconButton Color="Color.Info" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="(()=>UpsertPeripheral(context.Item))" />
+                <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" OnClick="(()=>DeletePeripheral(context.Item))" />
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager />
+    </PagerContent>
+    <NoRecordsContent>
+        <div>No Records Have Been Saved For This List</div>
+    </NoRecordsContent>
+</MudDataGrid>
+<MudDialog @bind-IsVisible="upsertVisible" Options="dialogOptions" DefaultFocus="DefaultFocus.LastChild">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            Add/Edit Peripheral
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <EditForm Model="@peripheralModel" OnValidSubmit="SavePeripheral">
+            <DataAnnotationsValidator />
+            <MudCard>
+                <MudCardContent>
+                    <MudGrid Spacing="1">
+                        <MudItem xs="6">
+                            <MudTextField @bind-Value="peripheralModel.Name"
+                                          Label="Name"
+                                          HelperText="Max. 50 characters"
+                                          For="@(() => peripheralModel.Name)"
+                                          Required="true"
+                                          RequiredError="A Component name is required!" />
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudSelect T="string" @bind-Value="peripheralModel.BrandName"
+                                       Label="Brand"
+                                       HelperText="Select from dropdown"
+                                       For="@(() => peripheralModel.BrandName)"
+                                       Dense="true"
+                                       Required="true"
+                                       RequiredError="A Brand Name must be selected!">
+                                @foreach (LuBrandName n in brands)
+                                {
+                                    <MudSelectItem Value="n.Name" />
+                                }
+                            </MudSelect>
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudTextField @bind-Value="peripheralModel.ModelNumber"
+                                          Label="Model #"
+                                          HelperText="Enter model as shown"
+                                          For="@(() => peripheralModel.ModelNumber)"
+                                          Required="false" />
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudTextField @bind-Value="peripheralModel.SerialNumber"
+                                          Label="Serial #"
+                                          HelperText="Enter serial as shown"
+                                          For="@(() => peripheralModel.SerialNumber)"
+                                          Required="false" />
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudSelect T="string" @bind-Value="peripheralModel.Location"
+                                       Label="Location"
+                                       HelperText="Select from dropdown"
+                                       For="@(() => peripheralModel.Location)"
+                                       Dense="true"
+                                       Required="true"
+                                       RequiredError="A Location must be selected!">
+                                @foreach (var n in (LocationUsed[])Enum.GetValues(typeof(LocationUsed)))
+                                {
+                                    <MudSelectItem Value=n.ToString() />
+                                }
+                            </MudSelect>
+                        </MudItem>
+                        <MudItem xs="3">
+                            <MudTextField @bind-Value="peripheralModel.InUse"
+                                         Label="In-service count"
+                                          For="@(() => peripheralModel.InUse)"
+                                         Required="false" />
+                        </MudItem>
+                        <MudItem xs="3">
+                            <MudTextField @bind-Value="peripheralModel.OnHand"
+                                          Label="On-hand count"
+                                          For="@(() => peripheralModel.OnHand)"
+                                          Required="false" />
+                        </MudItem>
+                        <MudItem xs="12">
+                            <MudTextField @bind-Value="peripheralModel.Description"
+                                          Label="Description"
+                                          HelperText="Description of component"
+                                          For="@(() => peripheralModel.Description)"
+                                          Required="false" />
+                        </MudItem>
+                        <MudItem xs="12">
+                            <MudTextField @bind-Value="peripheralModel.Notes"
+                                          Label="Notes"
+                                          HelperText="Additional notes"
+                                          For="@(() => peripheralModel.Notes)"
+                                          Required="false" />
+                        </MudItem>
+                    </MudGrid>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButtonGroup Class="mx-auto" Color="Color.Primary" Variant="Variant.Filled">
+                        <MudButton ButtonType="ButtonType.Submit" StartIcon="@Icons.Material.Filled.Save">Save Peripheral</MudButton>
+                        <MudButton OnClick="Close" StartIcon="@Icons.Material.Filled.Close">Close</MudButton>
+                    </MudButtonGroup>
+                </MudCardActions>
+            </MudCard>
+        </EditForm>
+
+    </DialogContent>
+</MudDialog>
+<MudDialog @bind-IsVisible="detailVisible" Options="dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            Peripheral Details
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudCard>
+            <MudCardContent>
+                <table class="detailTable">
+                    <tbody>
+                        <tr>
+                            <td width="125px"><label for="@peripheralModel.Name">Name</label></td>
+                            <td><MudText>@peripheralModel.Name</MudText></td>
+                        </tr>
+                        <tr>
+                            <td><label for="@peripheralModel.BrandName">Brand</label></td>
+                            <td><MudText>@peripheralModel.BrandName</MudText></td>
+                        </tr>
+                        <tr>
+                            <td><label for="@peripheralModel.ModelNumber">Model Number</label></td>
+                            <td><MudText>@peripheralModel.ModelNumber</MudText></td>
+                        </tr>
+                        <tr>
+                            <td><label for="@peripheralModel.SerialNumber">Serial Number</label></td>
+                            <td><MudText>@peripheralModel.SerialNumber</MudText></td>
+                        </tr>
+                        <tr>
+                            <td><label for="@peripheralModel.Location">Location</label></td>
+                            <td><MudText>@peripheralModel.Location</MudText></td>
+                        </tr>
+                        <tr>
+                            <td><label for="@peripheralModel.Description">Description</label></td>
+                            <td><MudText>@peripheralModel.Description</MudText></td>
+                        </tr>
+                        <tr>
+                            <td><label for="@peripheralModel.Notes">Notes</label></td>
+                            <td><MudText>@peripheralModel.Notes</MudText></td>
+                        </tr>
+                        <tr>
+                            <td><label for="@peripheralModel.InUse">Used</label></td>
+                            <td><MudText>@peripheralModel.InUse of @(peripheralModel.InUse + peripheralModel.OnHand)</MudText></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </MudCardContent>
+            <MudCardActions>
+                <MudButtonGroup Class="mx-auto" Color="Color.Primary" Variant="Variant.Filled">
+                    <MudButton OnClick="Close" StartIcon="@Icons.Material.Filled.Close">Close</MudButton>
+                </MudButtonGroup>
+            </MudCardActions>
+        </MudCard>
+    </DialogContent>
+</MudDialog>

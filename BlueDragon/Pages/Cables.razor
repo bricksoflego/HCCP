@@ -1,0 +1,190 @@
+﻿@page "/cables"
+@using BlueDragon.Data;
+@using BlueDragon.Services;
+@using System.Linq;
+@using BlueDragon.Models;
+
+<PageTitle>Cables</PageTitle>
+
+<MudButton OnClick="(()=>UpsertCable(new Cable()))"
+           Size="Size.Small"
+           Class="mb-2 mud-success-text"
+           StartIcon="@Icons.Material.Filled.Add">
+    Add New Item
+</MudButton>
+<MudDataGrid Items="@cables" Dense Filterable Hideable Hover Striped>
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Cables</MudText>
+        <MudSpacer />
+    </ToolBarContent>
+    <Columns>
+        <PropertyColumn Property="x => x.CableType" Title='Type' />
+        <PropertyColumn Property="x => x.Name" Title="Sub Type" />
+        <PropertyColumn Property="x => x.Length" />
+        <PropertyColumn Property="x => x.OnHand" Title="Count" />
+        <PropertyColumn Property="x => x.Cid" Hidden="true" />
+        <PropertyColumn Property="x => x.BrandName" Hidden="true" />
+        <PropertyColumn Property="x => x.Mutipart" Hidden="true" />
+        <PropertyColumn Property="x => x.Notes" Hidden="true" />
+        <TemplateColumn CellStyle="width:118px;" Filterable="false">
+            <CellTemplate>
+                <MudIconButton Color="Color.Tertiary" Icon="@Icons.Material.Filled.OpenInNew" Size="Size.Small" OnClick="(()=>ViewDetails(context.Item))" />
+                <MudIconButton Color="Color.Info" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="(()=>UpsertCable(context.Item))" />
+                <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" OnClick="(()=>DeleteCable(context.Item))" />
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager />
+    </PagerContent>
+    <NoRecordsContent>
+        <div>No Records Have Been Saved For This List</div>
+    </NoRecordsContent>
+</MudDataGrid>
+<MudDialog @bind-IsVisible="upsertVisible" Options="dialogOptions" DefaultFocus="DefaultFocus.LastChild">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            Add Cable
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <EditForm Model="@cableModel" OnValidSubmit="SaveCable">
+            <DataAnnotationsValidator />
+            <MudCard>
+                <MudCardContent>
+                    <MudGrid Spacing="1">
+                        <MudItem xs="6">
+                            <MudTextField @bind-Value="cableModel.Name"
+                                          Label="Name"
+                                          HelperText="Max. 50 characters"
+                                          For="@(() => cableModel.Name)"
+                                          Required="true"
+                                          RequiredError="A Cable name is required!" />
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudSelect T="string" @bind-Value="cableModel.BrandName"
+                                       Label="Brand"
+                                       HelperText="Select from dropdown"
+                                       For="@(() => cableModel.BrandName)"
+                                       Dense="true"
+                                       Required="true"
+                                       RequiredError="A Brand Name must be selected!">
+                                @foreach (LuBrandName n in brands)
+                                {
+                                    <MudSelectItem Value="n.Name" />
+                                }
+                            </MudSelect>
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudSelect T="string" @bind-Value="cableModel.CableType"
+                                       Label="Cable Type"
+                                       HelperText="Select from dropdown"
+                                       For="@(() => cableModel.CableType)"
+                                       Dense="true"
+                                       Required="true"
+                                       RequiredError="A Cable Type must be selected!">
+                                @foreach (LuCableType n in cableTypes)
+                                {
+                                    <MudSelectItem Value="n.Name" />
+                                }
+                            </MudSelect>
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudTextField @bind-Value="cableModel.Length"
+                                          Label="Length (ft.)"
+                                          HelperText="Whole and decimal numbers"
+                                          For="@(() => cableModel.Length)"
+                                          Required="true"
+                                          RequiredError="A length must be entered using whole and/or decimals!" />
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudTextField @bind-Value="cableModel.OnHand"
+                                          Label="Quantity"
+                                          HelperText="How many do you have"
+                                          For="@(() => cableModel.OnHand)"
+                                          Required="false" />
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudCheckBox @bind-Checked="cableModel.Mutipart"
+                                         Label="Multi-Part"
+                                         For="@(() => cableModel.Mutipart)"
+                                         Dense="true"
+                                         Required="false"
+                                         Size="Size.Small" />
+                        </MudItem>
+                        <MudItem xs="12">
+                            <MudTextField @bind-Value="cableModel.Notes"
+                                          Label="Notes"
+                                          HelperText="Additional notes"
+                                          For="@(() => cableModel.Notes)"
+                                          Required="false" />
+                        </MudItem>
+                    </MudGrid>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButtonGroup Class="mx-auto" Color="Color.Primary" Variant="Variant.Filled">
+                        <MudButton ButtonType="ButtonType.Submit" StartIcon="@Icons.Material.Filled.Save">Save Cable</MudButton>
+                        <MudButton OnClick="Close" StartIcon="@Icons.Material.Filled.Close">Close</MudButton>
+                    </MudButtonGroup>
+                </MudCardActions>
+            </MudCard>
+        </EditForm>
+    </DialogContent>
+</MudDialog>
+<MudDialog @bind-IsVisible="detailVisible" Options="dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            Cable Details
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudCard>
+            <MudCardContent>
+                <table class="detailTable">
+                    <tbody>
+                        <tr>
+                            <td width="125px"><label for="@cableModel.Name">Name</label></td>
+                            <td><MudText>@cableModel.Name</MudText></td>
+                        </tr>
+                        <tr>
+                            <td><label for="@cableModel.CableType">Cable Type</label></td>
+                            <td><MudText>@cableModel.CableType</MudText></td>
+                        </tr>
+                        <tr>
+                            <td><label for="@cableModel.BrandName">Brand</label></td>
+                            <td><MudText>@cableModel.BrandName</MudText></td>
+                        </tr>
+                        <tr>
+                            <td><label for="@cableModel.Length">Cable Length</label></td>
+                            <td><MudText>@cableModel.Length ft.</MudText></td>
+                        </tr>
+                        <tr>
+                            <td><label for="@cableModel.Mutipart">Multi-part?</label></td>
+                            <td><MudText>@ConvertBool(cableModel.Mutipart)</MudText></td>
+                        </tr>
+                        <tr>
+                            <td><label for="@cableModel.OnHand">Total Count</label></td>
+                            <td><MudText>@cableModel.OnHand</MudText></td>
+                        </tr>
+                        <tr>
+                            <td><label for="@cableModel.Notes">Notes</label></td>
+                            <td><MudText>@cableModel.Notes</MudText></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </MudCardContent>
+            <MudCardActions>
+                <MudButtonGroup Class="mx-auto" Color="Color.Primary" Variant="Variant.Filled">
+                    <MudButton OnClick="Close" StartIcon="@Icons.Material.Filled.Close">Close</MudButton>
+                </MudButtonGroup>
+            </MudCardActions>
+        </MudCard>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    protected string ConvertBool(bool b)
+    {
+        return b ? "Yes" : "No";
+    }
+}

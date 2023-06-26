@@ -1,0 +1,133 @@
+﻿@page "/lookups"
+@using BlueDragon.Data;
+@using BlueDragon.Services;
+@using System.Linq;
+@using BlueDragon.Models;
+
+<PageTitle>Lookup Administration</PageTitle>
+
+@*Brand Names*@
+<MudCard Class="d-inline-flex">
+    <MudCardContent>
+        <MudButton OnClick='(() => UpsertBrand(new LuBrandName()))'
+                   Size="Size.Small"
+                   Class="mb-2 mud-success-text"
+                   StartIcon="@Icons.Material.Filled.Add">
+            Add New Brand
+        </MudButton>
+        <MudDataGrid Items="@brands" RowsPerPage="5" Dense Filterable Hideable Hover Striped>
+            <ToolBarContent>
+                <MudText Typo="Typo.h6">Brand Names</MudText>
+                <MudSpacer />
+            </ToolBarContent>
+            <Columns>
+                <PropertyColumn Property="x => x.Name" />
+                <TemplateColumn CellStyle="width:70px;" Filterable="false">
+                    <CellTemplate>
+                        <MudIconButton Color="Color.Info" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="(()=>UpsertBrand(context.Item))" />
+                        <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" OnClick="(()=>DeleteBrand(context.Item))" />
+                    </CellTemplate>
+                </TemplateColumn>
+            </Columns>
+            <PagerContent>
+                <MudDataGridPager T="LuBrandName" />
+            </PagerContent>
+            <NoRecordsContent>
+                <div>No Records Have Been Saved For This List</div>
+            </NoRecordsContent>
+        </MudDataGrid>
+    </MudCardContent>
+</MudCard>
+
+@*Cable Types*@
+<MudCard Class="d-inline-flex">
+    <MudCardContent>
+        <MudButton OnClick='(() => UpsertCableType(new LuCableType()))'
+                   Size="Size.Small"
+                   Class="mb-2 mud-success-text"
+                   StartIcon="@Icons.Material.Filled.Add">
+            Add New Cable Type
+        </MudButton>
+        <MudDataGrid Items="@cableTypes" RowsPerPage="5" Dense Filterable Hideable Hover Striped>
+            <ToolBarContent>
+                <MudText Typo="Typo.h6">Cable Types</MudText>
+                <MudSpacer />
+            </ToolBarContent>
+            <Columns>
+                <PropertyColumn Property="x => x.Name" />
+                <TemplateColumn CellStyle="width:70px;" Filterable="false">
+                    <CellTemplate>
+                        <MudIconButton Color="Color.Info" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="(()=>UpsertCableType(context.Item))" />
+                        <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" OnClick="(()=>DeleteCableType(context.Item))" />
+                    </CellTemplate>
+                </TemplateColumn>
+            </Columns>
+            <PagerContent>
+                <MudDataGridPager />
+            </PagerContent>
+            <NoRecordsContent>
+                <div>No Records Have Been Saved For This List</div>
+            </NoRecordsContent>
+        </MudDataGrid>
+    </MudCardContent>
+</MudCard>
+
+@*Brand Dialog*@
+<MudDialog @bind-IsVisible="upsertBrandVisible" Options="dialogOptions" DefaultFocus="DefaultFocus.LastChild">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            Add Brand
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <EditForm Model="@brandNameModel" OnValidSubmit="SaveBrandName">
+            <DataAnnotationsValidator />
+            <MudCard>
+                <MudCardContent>
+                    <MudTextField @bind-Value="brandNameModel.Name"
+                                  Label="Brand Name"
+                                  HelperText="Max. 50 characters"
+                                  For="@(() => brandNameModel.Name)"
+                                  Required="true"
+                                  RequiredError="Brand Name is required!" />
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButtonGroup Class="mx-auto" Color="Color.Primary" Variant="Variant.Filled">
+                        <MudButton ButtonType="ButtonType.Submit" StartIcon="@Icons.Material.Filled.Save">Save Brand</MudButton>
+                        <MudButton OnClick='(() => Close("brand"))' StartIcon="@Icons.Material.Filled.Close">Close</MudButton>
+                    </MudButtonGroup>
+                </MudCardActions>
+            </MudCard>
+        </EditForm>
+    </DialogContent>
+</MudDialog>
+
+@*Cable Types Dialog*@
+<MudDialog @bind-IsVisible="upsertCableVisible" Options="dialogOptions" DefaultFocus="DefaultFocus.LastChild">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            Add Cable Type
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <EditForm Model="@cableTypeModel" OnValidSubmit="SaveCableType">
+            <DataAnnotationsValidator />
+            <MudCard>
+                <MudCardContent>
+                    <MudTextField @bind-Value="cableTypeModel.Name"
+                                  Label="Cable Type"
+                                  HelperText="Max. 50 characters"
+                                  For="@(() => cableTypeModel.Name)"
+                                  Required="true"
+                                  RequiredError="A Cable Type is required!" />
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButtonGroup Class="mx-auto" Color="Color.Primary" Variant="Variant.Filled">
+                        <MudButton ButtonType="ButtonType.Submit" StartIcon="@Icons.Material.Filled.Save">Save Cable</MudButton>
+                        <MudButton OnClick='(() => Close("cable"))' StartIcon="@Icons.Material.Filled.Close">Close</MudButton>
+                    </MudButtonGroup>
+                </MudCardActions>
+            </MudCard>
+        </EditForm>
+    </DialogContent>
+</MudDialog>
