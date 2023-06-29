@@ -1,4 +1,3 @@
-//using BlueDragon.Data;
 using BlueDragon.Data;
 using BlueDragon.Models;
 using BlueDragon.Services;
@@ -24,6 +23,7 @@ builder.Services.AddTransient<EComponentService>();
 builder.Services.AddTransient<HardwareService>();
 builder.Services.AddTransient<PeripheralService>();
 builder.Services.AddTransient<UserService>();
+builder.Services.AddScoped<AuthService>();
 builder.Services.AddMudServices();
 
 var app = builder.Build();

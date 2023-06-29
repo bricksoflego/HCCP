@@ -9,8 +9,13 @@ namespace BlueDragon.Pages
 {
     public partial class Index
     {
+        [Inject] AuthService? AuthService { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
+            if (AuthService != null)
+                AuthService.OnChange += StateHasChanged;
+
             await base.OnInitializedAsync();
         }
     }

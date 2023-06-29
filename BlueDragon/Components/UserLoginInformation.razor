@@ -1,16 +1,15 @@
 ﻿@using BlueDragon.Models;
 @using BlueDragon.Services;
 
-<CascadingValue Value="isAuthorized">
-    @if (isAuthorized)
-    {
-        <MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" Href="" Target="_blank" />
-    }
-    else
-    {
-        <MudIconButton Icon="@Icons.Material.Filled.Login" OnClick="Login" Color="Color.Inherit" Href="" Target="_blank" />
-    }
-</CascadingValue>
+
+@if (AuthService?.IsAuthorized != false)
+{
+    <MudIconButton Icon="@Icons.Material.Filled.Logout" OnClick="@Logout" Color="Color.Inherit" Href="" Target="_blank" />
+}
+else
+{
+    <MudIconButton Icon="@Icons.Material.Filled.Login" OnClick="Login" Color="Color.Inherit" Href="" Target="_blank" />
+}
 
 <MudDialog @bind-IsVisible="loginDialogVisible" Options="dialogOptions" DefaultFocus="DefaultFocus.LastChild">
     <TitleContent>
@@ -49,22 +48,31 @@
 </MudDialog>
 
 @code {
-    bool isAuthorized;
     bool loginDialogVisible;
     LoginModel login = new();
+
     [Inject] UserService? UserService { get; set; }
+
+    [Inject] private AuthService? AuthService { get; set; }
+
+    [Inject] public NavigationManager? NavigationManager { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (AuthService != null)
+            AuthService.OnChange += StateHasChanged;
+    }
+
 
     private async Task CheckAuthentication(EditContext context)
     {
-
-        if (UserService != null)
+        if (context != null && AuthService != null)
         {
-            isAuthorized = await UserService.GetUserCredentials(login.UserName, login.Password);
+            await AuthService.Login(login.UserName, login.Password);
+            Close();
+            StateHasChanged();
         }
-        StateHasChanged();
-        Close();
     }
-
     private void Login()
     {
         loginDialogVisible = true;
@@ -74,6 +82,12 @@
     {
         loginDialogVisible = false;
 
+    }
+
+    private void Logout()
+    {
+        AuthService?.Logout();
+        NavigationManager?.NavigateTo("/", true);
     }
 
     private DialogOptions dialogOptions = new()

@@ -1,4 +1,5 @@
 ﻿@using BlueDragon.Components
+@using BlueDragon.Services
 @inherits LayoutComponentBase
 
 <MudThemeProvider />
@@ -6,6 +7,7 @@
 <MudSnackbarProvider />
 <link rel="stylesheet" href="global.css" />
 <div>
+    <CascadingValue Value="AuthService?.IsAuthorized" Name="IsAuthorized">
         <MudLayout>
             <MudAppBar Elevation="0">
                 <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
@@ -25,8 +27,17 @@
                 </MudContainer>
             </MudMainContent>
         </MudLayout>
+    </CascadingValue>
 </div>
 @code {
+    [Inject] private AuthService? AuthService { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (AuthService != null)
+            AuthService.OnChange += StateHasChanged;
+    }
+
     bool _drawerOpen = true;
 
     void DrawerToggle()

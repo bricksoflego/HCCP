@@ -13,6 +13,7 @@ namespace BlueDragon.Pages
         [Inject] BrandNameService? BrandService { get; set; }
         [Inject] CableTypeService? CableTypeService { get; set; }
         [Inject] CableService? CableService { get; set; }
+        [Inject] AuthService? AuthService { get; set; }
         #endregion
 
         #region Model and List Initialization
@@ -25,6 +26,9 @@ namespace BlueDragon.Pages
 
         protected override async Task OnInitializedAsync()
         {
+            if (AuthService != null)
+                AuthService.OnChange += StateHasChanged;
+
             if (BrandService != null && CableTypeService != null && CableService != null)
             {
                 brands = await BrandService.GetBrandNames();

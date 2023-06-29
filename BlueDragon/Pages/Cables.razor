@@ -30,7 +30,10 @@
             <CellTemplate>
                 <MudIconButton Color="Color.Tertiary" Icon="@Icons.Material.Filled.OpenInNew" Size="Size.Small" OnClick="(()=>ViewDetails(context.Item))" />
                 <MudIconButton Color="Color.Info" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="(()=>UpsertCable(context.Item))" />
-                <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" OnClick="(()=>DeleteCable(context.Item))" />
+                @if (AuthService?.IsAuthorized != false)
+                {
+                    <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" OnClick="(()=>DeleteCable(context.Item))" />
+                }
             </CellTemplate>
         </TemplateColumn>
     </Columns>
