@@ -1,14 +1,11 @@
-﻿@using BlueDragon.Models;
-@using BlueDragon.Services;
-
-
-@if (AuthService?.IsAuthorized != false)
+﻿@if (AuthService?.IsAuthorized != false)
 {
-    <MudIconButton Icon="@Icons.Material.Filled.Logout" OnClick="@Logout" Color="Color.Inherit" Href="" Target="_blank" />
+    <MudText>Hello, @login.UserName! - </MudText>
+    <MudButton StartIcon="@Icons.Material.Filled.Logout" OnClick="@Logout" Color="Color.Inherit" Href="" Target="_blank">Logout</MudButton>
 }
 else
 {
-    <MudIconButton Icon="@Icons.Material.Filled.Login" OnClick="Login" Color="Color.Inherit" Href="" Target="_blank" />
+    <MudButton StartIcon="@Icons.Material.Filled.Login" OnClick="Login" Color="Color.Inherit" Href="" Target="_blank">Login</MudButton>
 }
 
 <MudDialog @bind-IsVisible="loginDialogVisible" Options="dialogOptions" DefaultFocus="DefaultFocus.LastChild">
@@ -46,56 +43,3 @@ else
         </EditForm>
     </DialogContent>
 </MudDialog>
-
-@code {
-    bool loginDialogVisible;
-    LoginModel login = new();
-
-    [Inject] UserService? UserService { get; set; }
-
-    [Inject] private AuthService? AuthService { get; set; }
-
-    [Inject] public NavigationManager? NavigationManager { get; set; }
-
-    protected override void OnInitialized()
-    {
-        if (AuthService != null)
-            AuthService.OnChange += StateHasChanged;
-    }
-
-
-    private async Task CheckAuthentication(EditContext context)
-    {
-        if (context != null && AuthService != null)
-        {
-            await AuthService.Login(login.UserName, login.Password);
-            Close();
-            StateHasChanged();
-        }
-    }
-    private void Login()
-    {
-        loginDialogVisible = true;
-    }
-
-    private void Close()
-    {
-        loginDialogVisible = false;
-
-    }
-
-    private void Logout()
-    {
-        AuthService?.Logout();
-        NavigationManager?.NavigateTo("/", true);
-    }
-
-    private DialogOptions dialogOptions = new()
-        {
-            FullWidth = true,
-            CloseButton = true,
-            DisableBackdropClick = true,
-            Position = DialogPosition.TopCenter,
-            MaxWidth = MaxWidth.Small
-        };
-}

@@ -1,4 +1,48 @@
 ﻿@page "/"
 
-<PageTitle>HCC Home</PageTitle>
+<PageTitle>HCCP Home</PageTitle>
+<div>
+    <MudText Typo="Typo.body2" Style="text-align:center;">
+        <MudText Typo="Typo.h5">
+            Hardware, Cables, Components, and Peripherals (HCCP)<br />
+            is an Inventory Management System created for the fictious company Blue Dragon.
+        </MudText>
+        <MudImage Class="portrait" Src="images/ProfilePictureFS.JPG" Height="200" /><br />
+        Developed by <br />
+        <MudText Typo="Typo.h6">Brent L. Ricks </MudText>
+        In pursuit of a master's degree in 'Software Development'<br />
+        from <MudLink Href="https://www.gcu.edu/" target="_blank" title="Grand Canyon University">
+            Grand Canyon University (GCU).<br />
+            <MudImage Src="images/gcu.svg" Height="75" />
+        </MudLink>
+    </MudText>
+    <MudDivider/>
+    <MudText Typo="Typo.h5">Selecting a Project</MudText>
+    <MudText Typo="Typo.h6">Defining the Project</MudText>
+    <MudText Typo="Typo.body1">
+        You first need to clearly state the purpose of the project. Is the project intended to solve a particular problem? Is the project a game? Does the project explore a particular concept or technology? Is the project part of a larger solution for a workplace or business application? If the project is intended to solve a particular problem, explain why the project is needed. What is the current process for solving the identified problem, and how will your project improve this process? Is the project final deliverable a complete product or the implementation of an (original) algorithm?
 
+        <MudText Typo="Typo.h6">Project Examples</MudText>
+        <MudList Dense="@Dense">
+            <MudListItem Text="Make a social networking site" Icon="@Icons.Material.Filled.ArrowForwardIos" IconSize="Size.Small" Dense="@Dense" />
+            <MudListItem Text="Create an online store site" Icon="@Icons.Material.Filled.ArrowForwardIos" IconSize="Size.Small" Dense="@Dense" />
+            <MudListItem Text="Make an iPhone, iPad, or Android mobile application" Icon="@Icons.Material.Filled.ArrowForwardIos" IconSize="Size.Small" Dense="@Dense" />
+            <MudListItem Text="Create an Online Voter Registration application" Icon="@Icons.Material.Filled.ArrowForwardIos" IconSize="Size.Small" Dense="@Dense" />
+            <MudListItem Text="Create a game" Icon="@Icons.Material.Filled.ArrowForwardIos" IconSize="Size.Small" Dense="@Dense" />
+            <MudListItem Text="Create a business application" Class="highlighter" IconColor="Color.Success" Icon="@Icons.Material.Filled.Check" IconSize="Size.Small" Dense="@Dense" />
+            <MudListItem Text="Create a scientific simulation" Icon="@Icons.Material.Filled.ArrowForwardIos" IconSize="Size.Small" Dense="@Dense" />
+            <MudListItem Text="Develop an augmented reality environment" Icon="@Icons.Material.Filled.ArrowForwardIos" IconSize="Size.Small" Dense="@Dense" />
+            <MudListItem Text="Build a visual computing environment" Icon="@Icons.Material.Filled.ArrowForwardIos" IconSize="Size.Small" Dense="@Dense" />
+            <MudListItem Text="Build a decision support system" Icon="@Icons.Material.Filled.ArrowForwardIos" IconSize="Size.Small" Dense="@Dense" />
+            <MudListItem Text="Implement a substantial algorithm published in a peer-reviewed journal" Icon="@Icons.Material.Filled.ArrowForwardIos" IconSize="Size.Small" Dense="@Dense" />
+        </MudList>
+    </MudText>
+    <MudText Typo="Typo.h5">Proposal, Technology &amp; Requirements</MudText>
+    <MudText Typo="Typo.h6">Why is this needed?</MudText>
+    <MudText Typo="Typo.body1">
+    </MudText>
+</div>
+
+@code {
+    public bool Dense { get; set; }
+}

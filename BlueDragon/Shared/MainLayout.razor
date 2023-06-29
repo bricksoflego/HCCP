@@ -1,5 +1,4 @@
 ﻿@using BlueDragon.Components
-@using BlueDragon.Services
 @inherits LayoutComponentBase
 
 <MudThemeProvider />
@@ -29,19 +28,3 @@
         </MudLayout>
     </CascadingValue>
 </div>
-@code {
-    [Inject] private AuthService? AuthService { get; set; }
-
-    protected override void OnInitialized()
-    {
-        if (AuthService != null)
-            AuthService.OnChange += StateHasChanged;
-    }
-
-    bool _drawerOpen = true;
-
-    void DrawerToggle()
-    {
-        _drawerOpen = !_drawerOpen;
-    }
-}

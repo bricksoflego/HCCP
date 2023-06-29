@@ -9,16 +9,7 @@
 
     @if (AuthService?.IsAuthorized != false)
     {
-        <MudNavLink Href="lookups" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.MiscellaneousServices">Lookup Administration</MudNavLink>
+        <MudDivider/>
+        <MudNavLink Href="lookups" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.MiscellaneousServices">Administration</MudNavLink>
     }
 </MudNavMenu>
-
-@code {
-    [Inject] private AuthService? AuthService { get; set; }
-
-    protected override void OnInitialized()
-    {
-        if (AuthService != null)
-            AuthService.OnChange += StateHasChanged;
-    }
-}

@@ -1,0 +1,20 @@
+﻿::deep .mud-list-item {
+    padding: 0 0 0 1.5em;
+}
+
+::deep .highlighter {
+    background-color: antiquewhite;
+}
+
+::deep .mud-list-item-icon {
+    min-width: 24px;
+}
+
+::deep .mud-typography-h5 {
+    margin: 10px 0 10px 0;
+}
+
+::deep .portrait {
+    border: 1px solid black;
+    box-shadow: 5px 5px 5px rgba(0,0,0,.4);
+}

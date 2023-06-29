@@ -24,6 +24,11 @@ namespace BlueDragon.Pages
         List<Cable> cables = new();
         #endregion
 
+        protected string ConvertBool(bool b)
+        {
+            return b ? "Yes" : "No";
+        }
+
         protected override async Task OnInitializedAsync()
         {
             if (AuthService != null)
