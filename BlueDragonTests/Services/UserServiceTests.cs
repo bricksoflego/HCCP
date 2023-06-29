@@ -1,24 +1,30 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using BlueDragon.Data;
+using BlueDragon.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlueDragon.Data.Tests
+namespace BlueDragon.Services.Tests
 {
     [TestClass()]
-    public class HccContextTests
+    public class UserServiceTests
     {
         [TestMethod()]
-        public void HccContextTest()
+        public void UserServiceTest()
         {
             Assert.Fail();
         }
 
         [TestMethod()]
-        public void HccContextTest1()
+        public void GetUserCredentialsTest()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod()]
+        public void CreateUserTest()
         {
             Assert.Fail();
         }

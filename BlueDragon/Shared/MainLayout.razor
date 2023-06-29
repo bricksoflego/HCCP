@@ -1,32 +1,31 @@
-﻿@inherits LayoutComponentBase
+﻿@using BlueDragon.Components
+@inherits LayoutComponentBase
 
 <MudThemeProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 <link rel="stylesheet" href="global.css" />
 <div>
-    <MudLayout>
-        <MudAppBar Elevation="0">
-            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-            <MudImage Src="images/BlueDragonText.png" Class="textLogo" />
-            <MudSpacer />
-            <MudIconButton Icon="@Icons.Material.Filled.Security" Color="Color.Inherit" Href="" Target="_blank" />
-            <MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Inherit" Href="https://mudblazor.com/" Target="_blank" />
-        </MudAppBar>
-        <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
-            <MudDrawerHeader>
-                <MudImage Src="images/BlueDragonLogo.png" ObjectPosition="ObjectPosition.Center" Alt="Site Logo" Class="siteLogo" />
-            </MudDrawerHeader>
-            <NavMenu />
-        </MudDrawer>
-        <MudMainContent>
-            <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="my-4 pt-4"> 
-                @Body
-            </MudContainer>
-        </MudMainContent>
-    </MudLayout>
+        <MudLayout>
+            <MudAppBar Elevation="0">
+                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+                <MudImage Src="images/BlueDragonText.png" Class="textLogo" />
+                <MudSpacer />
+                <UserLoginInformation />
+            </MudAppBar>
+            <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
+                <MudDrawerHeader>
+                    <MudImage Src="images/BlueDragonLogo.png" ObjectPosition="ObjectPosition.Center" Alt="Site Logo" Class="siteLogo" />
+                </MudDrawerHeader>
+                <NavMenu />
+            </MudDrawer>
+            <MudMainContent>
+                <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="my-4 pt-4">
+                    @Body
+                </MudContainer>
+            </MudMainContent>
+        </MudLayout>
 </div>
-
 @code {
     bool _drawerOpen = true;
 

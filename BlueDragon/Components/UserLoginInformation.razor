@@ -1,0 +1,87 @@
+﻿@using BlueDragon.Models;
+@using BlueDragon.Services;
+
+<CascadingValue Value="isAuthorized">
+    @if (isAuthorized)
+    {
+        <MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" Href="" Target="_blank" />
+    }
+    else
+    {
+        <MudIconButton Icon="@Icons.Material.Filled.Login" OnClick="Login" Color="Color.Inherit" Href="" Target="_blank" />
+    }
+</CascadingValue>
+
+<MudDialog @bind-IsVisible="loginDialogVisible" Options="dialogOptions" DefaultFocus="DefaultFocus.LastChild">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            User Login
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <EditForm Model="@login" OnValidSubmit="CheckAuthentication">
+            <DataAnnotationsValidator />
+            <MudCard>
+                <MudCardContent>
+                    <MudTextField @bind-Value="login.UserName"
+                                  Label="Username"
+                                  HelperText="Max. 50 characters"
+                                  For="@(() => login.UserName)"
+                                  Required="true"
+                                  RequiredError="A Cable Type is required!" />
+                    <MudTextField @bind-Value="login.Password"
+                                  Label="Password"
+                                  HelperText="Max. 50 characters"
+                                  For="@(() => login.Password)"
+                                  Required="true"
+                                  InputType="InputType.Password"
+                                  RequiredError="A Cable Type is required!" />
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButtonGroup Class="mx-auto" Color="Color.Primary" Variant="Variant.Filled">
+                        <MudButton ButtonType="ButtonType.Submit" StartIcon="@Icons.Material.Filled.Save">Login</MudButton>
+                        <MudButton OnClick='(() => Close())' StartIcon="@Icons.Material.Filled.Close">Close</MudButton>
+                    </MudButtonGroup>
+                </MudCardActions>
+            </MudCard>
+        </EditForm>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    bool isAuthorized;
+    bool loginDialogVisible;
+    LoginModel login = new();
+    [Inject] UserService? UserService { get; set; }
+
+    private async Task CheckAuthentication(EditContext context)
+    {
+
+        if (UserService != null)
+        {
+            isAuthorized = await UserService.GetUserCredentials(login.UserName, login.Password);
+        }
+        StateHasChanged();
+        Close();
+    }
+
+    private void Login()
+    {
+        loginDialogVisible = true;
+    }
+
+    private void Close()
+    {
+        loginDialogVisible = false;
+
+    }
+
+    private DialogOptions dialogOptions = new()
+        {
+            FullWidth = true,
+            CloseButton = true,
+            DisableBackdropClick = true,
+            Position = DialogPosition.TopCenter,
+            MaxWidth = MaxWidth.Small
+        };
+}

@@ -11,8 +11,8 @@ namespace BlueDragon.Pages
     {
         #region Dependencies
         [Inject] ISnackbar? Snackbar { get; set; }
-        [Inject] BrandNameService BrandService { get; set; } = new();
-        [Inject] CableTypeService CableTypeService { get; set; } = new();
+        [Inject] BrandNameService? BrandService { get; set; }
+        [Inject] CableTypeService? CableTypeService { get; set; }
         #endregion
 
         #region Model and List Initialization
@@ -25,8 +25,11 @@ namespace BlueDragon.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            brands = await BrandService.GetBrandNames();
-            cableTypes = await CableTypeService.GetCableTypes();
+            if (BrandService != null && CableTypeService != null)
+            {
+                brands = await BrandService.GetBrandNames();
+                cableTypes = await CableTypeService.GetCableTypes();
+            }
         }
 
         #region Brand Names
@@ -36,13 +39,16 @@ namespace BlueDragon.Pages
         /// <param name="context"></param>
         private async Task SaveBrandName(EditContext context)
         {
-            brandNameModel = (LuBrandName)context.Model;
-            await BrandService.Upsert(brandNameModel);
-            Snackbar!.Configuration.PositionClass = Defaults.Classes.Position.BottomLeft;
-            Snackbar.Add("Brand Added", Severity.Success);
-            brandNameModel = new();
-            brands = await BrandService.GetBrandNames();
-            StateHasChanged();
+            if (BrandService != null)
+            {
+                brandNameModel = (LuBrandName)context.Model;
+                await BrandService.Upsert(brandNameModel);
+                Snackbar!.Configuration.PositionClass = Defaults.Classes.Position.BottomLeft;
+                Snackbar.Add("Brand Added", Severity.Success);
+                brandNameModel = new();
+                brands = await BrandService.GetBrandNames();
+                StateHasChanged();
+            }
         }
 
         /// <summary>
@@ -52,9 +58,12 @@ namespace BlueDragon.Pages
         /// <returns></returns>
         private async Task DeleteBrand(LuBrandName model)
         {
-            await BrandService.Delete(model);
-            brands = await BrandService.GetBrandNames();
-            StateHasChanged();
+            if (BrandService != null)
+            {
+                await BrandService.Delete(model);
+                brands = await BrandService.GetBrandNames();
+                StateHasChanged();
+            }
         }
         #endregion
 
@@ -65,13 +74,16 @@ namespace BlueDragon.Pages
         /// <param name="context"></param>
         private async Task SaveCableType(EditContext context)
         {
-            cableTypeModel = (LuCableType)context.Model;
-            await CableTypeService.Upsert(cableTypeModel);
-            Snackbar!.Configuration.PositionClass = Defaults.Classes.Position.BottomLeft;
-            Snackbar.Add("Cable Type Added", Severity.Success);
-            cableTypeModel = new();
-            cableTypes = await CableTypeService.GetCableTypes();
-            StateHasChanged();
+            if (CableTypeService != null)
+            {
+                cableTypeModel = (LuCableType)context.Model;
+                await CableTypeService.Upsert(cableTypeModel);
+                Snackbar!.Configuration.PositionClass = Defaults.Classes.Position.BottomLeft;
+                Snackbar.Add("Cable Type Added", Severity.Success);
+                cableTypeModel = new();
+                cableTypes = await CableTypeService.GetCableTypes();
+                StateHasChanged();
+            }
         }
 
         /// <summary>
@@ -81,9 +93,12 @@ namespace BlueDragon.Pages
         /// <returns></returns>
         private async Task DeleteCableType(LuCableType model)
         {
-            await CableTypeService.Delete(model);
-            cableTypes = await CableTypeService.GetCableTypes();
-            StateHasChanged();
+            if (CableTypeService != null)
+            {
+                await CableTypeService.Delete(model);
+                cableTypes = await CableTypeService.GetCableTypes();
+                StateHasChanged();
+            }
         }
         #endregion
 
@@ -101,13 +116,13 @@ namespace BlueDragon.Pages
 
         private async void UpsertBrand(LuBrandName? context)
         {
-            if (context != null)
+            if (context != null && BrandService != null)
                 brandNameModel = await BrandService.GetBrandName(context) ?? new LuBrandName();
             upsertBrandVisible = true;
         }
         private async void UpsertCableType(LuCableType? context)
         {
-            if (context != null)
+            if (context != null && CableTypeService != null)
                 cableTypeModel = await CableTypeService.GetCableType(context) ?? new LuCableType();
             upsertCableVisible = true;
         }
@@ -118,7 +133,9 @@ namespace BlueDragon.Pages
                 upsertBrandVisible = false;
                 brandNameModel.Name = string.Empty;
             }
-            else { upsertCableVisible = false;
+            else
+            {
+                upsertCableVisible = false;
                 cableTypeModel.Name = string.Empty;
             }
         }

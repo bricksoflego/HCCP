@@ -11,8 +11,8 @@ namespace BlueDragon.Pages
     {
         #region Dependencies
         [Inject] ISnackbar? Snackbar { get; set; }
-        [Inject] BrandNameService BrandService { get; set; } = new();
-        [Inject] PeripheralService PeripheralService { get; set; } = new();
+        [Inject] BrandNameService? BrandService { get; set; }
+        [Inject] PeripheralService? PeripheralService { get; set; }
         #endregion
 
         #region Model and List Initialization
@@ -24,8 +24,11 @@ namespace BlueDragon.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            brands = await BrandService.GetBrandNames();
-            peripherals = await PeripheralService.GetPeripherals();
+            if (BrandService != null && PeripheralService != null)
+            {
+                brands = await BrandService.GetBrandNames();
+                peripherals = await PeripheralService.GetPeripherals();
+            }
         }
 
         #region Peripherals
@@ -35,13 +38,16 @@ namespace BlueDragon.Pages
         /// <param name="context"></param>
         private async Task SavePeripheral(EditContext context)
         {
-            peripheralModel = (Peripheral)context.Model;
-            await PeripheralService.Upsert(peripheralModel);
-            Snackbar!.Configuration.PositionClass = Defaults.Classes.Position.BottomLeft;
-            Snackbar.Add("Component Added", Severity.Success);
-            peripheralModel = new();
-            peripherals = await PeripheralService.GetPeripherals();
-            StateHasChanged();
+            if (PeripheralService != null)
+            {
+                peripheralModel = (Peripheral)context.Model;
+                await PeripheralService.Upsert(peripheralModel);
+                Snackbar!.Configuration.PositionClass = Defaults.Classes.Position.BottomLeft;
+                Snackbar.Add("Component Added", Severity.Success);
+                peripheralModel = new();
+                peripherals = await PeripheralService.GetPeripherals();
+                StateHasChanged();
+            }
         }
 
         /// <summary>
@@ -51,9 +57,12 @@ namespace BlueDragon.Pages
         /// <returns></returns>
         private async Task DeletePeripheral(Peripheral model)
         {
-            await PeripheralService.Delete(model);
-            peripherals = await PeripheralService.GetPeripherals();
-            StateHasChanged();
+            if (PeripheralService != null)
+            {
+                await PeripheralService.Delete(model);
+                peripherals = await PeripheralService.GetPeripherals();
+                StateHasChanged();
+            }
         }
         #endregion
 
@@ -70,13 +79,13 @@ namespace BlueDragon.Pages
         };
         private async void UpsertPeripheral(Peripheral? context)
         {
-            if (context != null)
+            if (context != null && PeripheralService != null)
                 peripheralModel = await PeripheralService.GetPeripheral(context) ?? new Peripheral();
             upsertVisible = true;
         }
         private async Task ViewDetails(Peripheral context)
         {
-            if (context != null)
+            if (context != null && PeripheralService != null)
                 peripheralModel = await PeripheralService.GetPeripheral(context) ?? new Peripheral();
             detailVisible = true;
         }

@@ -1,32 +1,30 @@
 ﻿using BlueDragon.Data;
 using BlueDragon.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlueDragon.Services
 {
     public class EComponentService
     {
+        private readonly HccContext _context;
+
+        public EComponentService(HccContext context)
+        {
+            _context = context;
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
         public async Task<List<Ecomponent>> GetComponents()
         {
-            List<Ecomponent> ecomponents = new();
-            using (var context = new HccContext())
-            {
-                ecomponents = context.Ecomponents.OrderBy(c => c.Name).ToList();
-                await Task.CompletedTask;
-            }
-            return ecomponents;
+            return await _context.Ecomponents.OrderBy(c => c.Name).ToListAsync();
         }
 
-
-        public Task<Ecomponent?> GetComponent(Ecomponent model)
+        public async Task<Ecomponent?> GetComponent(Ecomponent model)
         {
-            using (var context = new HccContext())
-            {
-                return Task.FromResult(context.Ecomponents?.FirstOrDefault(c => c.Ecid == model.Ecid)); 
-            }
+            return await _context.Ecomponents.FirstOrDefaultAsync(c => c.Ecid == model.Ecid);
         }
 
         /// <summary>
@@ -36,11 +34,8 @@ namespace BlueDragon.Services
         /// <returns></returns>
         public async Task Upsert(Ecomponent model)
         {
-            using (var context = new HccContext())
-            {
-                context.Update(model);
-                await context.SaveChangesAsync();
-            }
+            _context.Update(model);
+            await _context.SaveChangesAsync();
         }
 
         /// <summary>
@@ -50,12 +45,8 @@ namespace BlueDragon.Services
         /// <returns></returns>
         public async Task Delete(Ecomponent model)
         {
-            using (var context = new HccContext())
-            {
-                context.Remove(model);
-                await context.SaveChangesAsync();
-            }
+            _context.Remove(model);
+            await _context.SaveChangesAsync();
         }
-
     }
 }

@@ -4,5 +4,14 @@
     <MudNavLink Href="cables" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Cable">Cable Inventory</MudNavLink>
     <MudNavLink Href="components" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Polyline">Component Inventory</MudNavLink>
     <MudNavLink Href="peripherals" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Extension">Peripheral Inventory</MudNavLink>
-    <MudNavLink Href="lookups" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.MiscellaneousServices">Lookup Administration</MudNavLink>
+
+    @if (isAuthorized)
+    {
+        <MudNavLink Href="lookups" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.MiscellaneousServices">Lookup Administration</MudNavLink>
+    }
 </MudNavMenu>
+
+@code {
+    [CascadingParameter]
+    public bool isAuthorized { get; set; }
+}

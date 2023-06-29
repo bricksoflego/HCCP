@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using BlueDragon.Models;
+﻿using BlueDragon.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace BlueDragon.Data;
 
-public partial class HccContext : DbContext
+public partial class HccContext : IdentityDbContext<ApplicationUser>
 {
     public HccContext()
     {
@@ -14,7 +14,12 @@ public partial class HccContext : DbContext
     public HccContext(DbContextOptions<HccContext> options)
         : base(options)
     {
+        // TEST MAKING SURE CONNECTION TO SQL SERVER IS CORRECT
+        var connStr = options.FindExtension<RelationalOptionsExtension>()?.ConnectionString;
+        Console.WriteLine($"Connection String: {connStr}");
     }
+
+    public virtual DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
     public virtual DbSet<Cable> Cables { get; set; }
 
@@ -28,18 +33,21 @@ public partial class HccContext : DbContext
 
     public virtual DbSet<LuCableType> LuCableTypes { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        IConfigurationRoot configuration = new ConfigurationBuilder()
-                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile("appsettings.json")
-                .Build();
+    // THIS SECTION IS OUTDATED AND IS MOVED TO THE PROGRAM.CS IN ORDER TO SUPPORT MICROSOFT.IDENTITY
+    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //{
+    //    IConfigurationRoot configuration = new ConfigurationBuilder()
+    //            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+    //            .AddJsonFile("appsettings.json")
+    //            .Build();
 
-        optionsBuilder.UseSqlServer(configuration.GetConnectionString("SQLServer"));
-    }
+    //    optionsBuilder.UseSqlServer(configuration.GetConnectionString("SQLServer"));
+    //}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<Cable>(entity =>
         {
             entity.HasKey(e => e.Cid);

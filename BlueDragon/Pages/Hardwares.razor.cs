@@ -11,8 +11,8 @@ namespace BlueDragon.Pages
     {
         #region Dependencies
         [Inject] ISnackbar? Snackbar { get; set; }
-        [Inject] BrandNameService BrandService { get; set; } = new();
-        [Inject] HardwareService HardwareService { get; set; } = new();
+        [Inject] BrandNameService? BrandService { get; set; }
+        [Inject] HardwareService? HardwareService { get; set; }
         #endregion
 
         #region Model and List Initialization
@@ -24,8 +24,11 @@ namespace BlueDragon.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            brands = await BrandService.GetBrandNames();
-            hardwares = await HardwareService.GetHardware();
+            if (BrandService != null && HardwareService != null)
+            {
+                brands = await BrandService.GetBrandNames();
+                hardwares = await HardwareService.GetHardware();
+            }
         }
 
         #region Hardware
@@ -35,13 +38,16 @@ namespace BlueDragon.Pages
         /// <param name="context"></param>
         private async Task SaveHardware(EditContext context)
         {
-            hardwareModel = (Hardware)context.Model;
-            await HardwareService.Upsert(hardwareModel);
-            Snackbar!.Configuration.PositionClass = Defaults.Classes.Position.BottomLeft;
-            Snackbar.Add("Hardware Added", Severity.Success);
-            hardwareModel = new();
-            hardwares = await HardwareService.GetHardware();
-            StateHasChanged();
+            if (HardwareService != null)
+            {
+                hardwareModel = (Hardware)context.Model;
+                await HardwareService.Upsert(hardwareModel);
+                Snackbar!.Configuration.PositionClass = Defaults.Classes.Position.BottomLeft;
+                Snackbar.Add("Hardware Added", Severity.Success);
+                hardwareModel = new();
+                hardwares = await HardwareService.GetHardware();
+                StateHasChanged();
+            }
         }
 
         /// <summary>
@@ -51,9 +57,12 @@ namespace BlueDragon.Pages
         /// <returns></returns>
         private async Task DeleteHardware(Hardware model)
         {
-            await HardwareService.Delete(model);
-            hardwares = await HardwareService.GetHardware();
-            StateHasChanged();
+            if (HardwareService != null)
+            {
+                await HardwareService.Delete(model);
+                hardwares = await HardwareService.GetHardware();
+                StateHasChanged();
+            }
         }
         #endregion
 
@@ -70,14 +79,14 @@ namespace BlueDragon.Pages
         };
         private async void UpsertHardware(Hardware? context)
         {
-            if (context != null)
+            if (context != null && HardwareService != null)
                 hardwareModel = await HardwareService.GetSelectedHardware(context) ?? new Hardware();
             upsertVisible = true;
         }
 
         private async Task ViewDetails(Hardware context)
         {
-            if (context != null)
+            if (context != null && HardwareService != null)
                 hardwareModel = await HardwareService.GetSelectedHardware(context) ?? new Hardware();
             detailVisible = true;
         }

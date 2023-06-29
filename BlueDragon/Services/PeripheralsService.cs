@@ -1,32 +1,31 @@
 ﻿using BlueDragon.Data;
 using BlueDragon.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlueDragon.Services
 {
     public class PeripheralService
     {
+        private readonly HccContext _context;
+
+        public PeripheralService(HccContext context)
+        {
+            _context = context;
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
         public async Task<List<Peripheral>> GetPeripherals()
         {
-            List<Peripheral> peripherals = new();
-            using (var context = new HccContext())
-            {
-                peripherals = context.Peripherals.OrderBy(c => c.Name).ToList();
-                await Task.CompletedTask;
-            }
-            return peripherals;
+            return await _context.Peripherals.OrderBy(c => c.Name).ToListAsync();
         }
 
 
-        public Task<Peripheral?> GetPeripheral(Peripheral model)
+        public async Task<Peripheral?> GetPeripheral(Peripheral model)
         {
-            using (var context = new HccContext())
-            {
-                return Task.FromResult(context.Peripherals?.FirstOrDefault(c => c.Pcid == model.Pcid)); 
-            }
+            return await _context.Peripherals.FirstOrDefaultAsync(c => c.Pcid == model.Pcid);
         }
 
         /// <summary>
@@ -36,11 +35,8 @@ namespace BlueDragon.Services
         /// <returns></returns>
         public async Task Upsert(Peripheral model)
         {
-            using (var context = new HccContext())
-            {
-                context.Update(model);
-                await context.SaveChangesAsync();
-            }
+            _context.Update(model);
+            await _context.SaveChangesAsync();
         }
 
         /// <summary>
@@ -50,12 +46,8 @@ namespace BlueDragon.Services
         /// <returns></returns>
         public async Task Delete(Peripheral model)
         {
-            using (var context = new HccContext())
-            {
-                context.Remove(model);
-                await context.SaveChangesAsync();
-            }
+            _context.Remove(model);
+            await _context.SaveChangesAsync();
         }
-
     }
 }

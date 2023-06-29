@@ -1,31 +1,30 @@
 ﻿using BlueDragon.Data;
 using BlueDragon.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlueDragon.Services
 {
     public class CableService
     {
+        private readonly HccContext _context;
+
+        public CableService(HccContext context)
+        {
+            _context = context;
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
         public async Task<List<Cable>> GetCables()
         {
-            List<Cable> cables = new();
-            using (var context = new HccContext())
-            {
-                cables = context.Cables.OrderBy(c => c.CableType).ToList();
-                await Task.CompletedTask;
-            }
-            return cables;
+            return await _context.Cables.OrderBy(c => c.CableType).ToListAsync(); ;
         }
 
-        public Task<Cable?> GetCable(Cable model)
+        public async Task<Cable?> GetCable(Cable model)
         {
-            using (var context = new HccContext())
-            {
-                return Task.FromResult(context.Cables?.FirstOrDefault(c => c.Cid == model.Cid));
-            }
+            return await _context.Cables.FirstOrDefaultAsync(c => c.Cid == model.Cid);
         }
 
         /// <summary>
@@ -35,11 +34,9 @@ namespace BlueDragon.Services
         /// <returns></returns>
         public async Task Upsert(Cable model)
         {
-            using (var context = new HccContext())
-            {
-                context.Update(model);
-                await context.SaveChangesAsync();
-            }
+
+            _context.Update(model);
+            await _context.SaveChangesAsync();
         }
 
         /// <summary>
@@ -49,11 +46,8 @@ namespace BlueDragon.Services
         /// <returns></returns>
         public async Task Delete(Cable model)
         {
-            using (var context = new HccContext())
-            {
-                context.Remove(model);
-                await context.SaveChangesAsync();
-            }
+            _context.Remove(model);
+            await _context.SaveChangesAsync();
         }
     }
 }

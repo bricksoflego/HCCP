@@ -10,9 +10,9 @@ namespace BlueDragon.Pages
     {
         #region Dependencies
         [Inject] ISnackbar? Snackbar { get; set; }
-        [Inject] BrandNameService BrandService { get; set; } = new();
-        [Inject] CableTypeService CableTypeService { get; set; } = new();
-        [Inject] CableService CableService { get; set; } = new();
+        [Inject] BrandNameService? BrandService { get; set; }
+        [Inject] CableTypeService? CableTypeService { get; set; }
+        [Inject] CableService? CableService { get; set; }
         #endregion
 
         #region Model and List Initialization
@@ -25,9 +25,12 @@ namespace BlueDragon.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            brands = await BrandService.GetBrandNames();
-            cableTypes = await CableTypeService.GetCableTypes();
-            cables = await CableService.GetCables();
+            if (BrandService != null && CableTypeService != null && CableService != null)
+            {
+                brands = await BrandService.GetBrandNames();
+                cableTypes = await CableTypeService.GetCableTypes();
+                cables = await CableService.GetCables();
+            }
         }
 
         #region Cables
@@ -37,13 +40,16 @@ namespace BlueDragon.Pages
         /// <param name="context"></param>
         private async Task SaveCable(EditContext context)
         {
-            cableModel = (Cable)context.Model;
-            await CableService.Upsert(cableModel);
-            Snackbar!.Configuration.PositionClass = Defaults.Classes.Position.BottomLeft;
-            Snackbar.Add("Cable Added", Severity.Success);
-            cableModel = new();
-            cables = await CableService.GetCables();
-            StateHasChanged();
+            if (CableService != null)
+            {
+                cableModel = (Cable)context.Model;
+                await CableService.Upsert(cableModel);
+                Snackbar!.Configuration.PositionClass = Defaults.Classes.Position.BottomLeft;
+                Snackbar.Add("Cable Added", Severity.Success);
+                cableModel = new();
+                cables = await CableService.GetCables();
+                StateHasChanged();
+            }
         }
 
         /// <summary>
@@ -53,9 +59,12 @@ namespace BlueDragon.Pages
         /// <returns></returns>
         private async Task DeleteCable(Cable model)
         {
-            await CableService.Delete(model);
-            cables = await CableService.GetCables();
-            StateHasChanged();
+            if (CableService != null)
+            {
+                await CableService.Delete(model);
+                cables = await CableService.GetCables();
+                StateHasChanged();
+            }
         }
         #endregion
 
@@ -73,14 +82,14 @@ namespace BlueDragon.Pages
 
         private async void UpsertCable(Cable? context)
         {
-            if (context != null)
+            if (context != null && CableService != null)
                 cableModel = await CableService.GetCable(context) ?? new Cable();
             upsertVisible = true;
 
         }
         private async Task ViewDetails(Cable context)
         {
-            if (context != null)
+            if (context != null && CableService != null)
                 cableModel = await CableService.GetCable(context) ?? new Cable();
             detailVisible = true;
         }
@@ -92,6 +101,5 @@ namespace BlueDragon.Pages
             cableModel = new();
         }
         #endregion
-
     }
 }

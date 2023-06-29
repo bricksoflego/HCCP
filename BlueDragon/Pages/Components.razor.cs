@@ -11,8 +11,8 @@ namespace BlueDragon.Pages
     {
         #region Dependencies
         [Inject] ISnackbar? Snackbar { get; set; }
-        [Inject] BrandNameService BrandService { get; set; } = new();
-        [Inject] EComponentService EComponentService { get; set; } = new();
+        [Inject] BrandNameService? BrandService { get; set; }
+        [Inject] EComponentService? EComponentService { get; set; }
         #endregion
 
         #region Model and List Initialization
@@ -24,8 +24,11 @@ namespace BlueDragon.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            brands = await BrandService.GetBrandNames();
-            ecomponents = await EComponentService.GetComponents();
+            if (BrandService != null && EComponentService != null)
+            {
+                brands = await BrandService.GetBrandNames();
+                ecomponents = await EComponentService.GetComponents();
+            }
         }
 
         #region eComponents
@@ -35,13 +38,16 @@ namespace BlueDragon.Pages
         /// <param name="context"></param>
         private async Task SaveComponent(EditContext context)
         {
-            eComponentModel = (Ecomponent)context.Model;
-            await EComponentService.Upsert(eComponentModel);
-            Snackbar!.Configuration.PositionClass = Defaults.Classes.Position.BottomLeft;
-            Snackbar.Add("Component Added", Severity.Success);
-            eComponentModel = new();
-            ecomponents = await EComponentService.GetComponents();
-            StateHasChanged();
+            if (EComponentService != null)
+            {
+                eComponentModel = (Ecomponent)context.Model;
+                await EComponentService.Upsert(eComponentModel);
+                Snackbar!.Configuration.PositionClass = Defaults.Classes.Position.BottomLeft;
+                Snackbar.Add("Component Added", Severity.Success);
+                eComponentModel = new();
+                ecomponents = await EComponentService.GetComponents();
+                StateHasChanged();
+            }
         }
 
         /// <summary>
@@ -51,9 +57,11 @@ namespace BlueDragon.Pages
         /// <returns></returns>
         private async Task DeleteComponent(Ecomponent model)
         {
+            if(EComponentService != null) { 
             await EComponentService.Delete(model);
             ecomponents = await EComponentService.GetComponents();
             StateHasChanged();
+            }
         }
         #endregion
 
@@ -70,13 +78,13 @@ namespace BlueDragon.Pages
         };
         private async void UpsertComponent(Ecomponent? context)
         {
-            if (context != null)
+            if (context != null && EComponentService != null)
                 eComponentModel = await EComponentService.GetComponent(context) ?? new Ecomponent();
             upsertVisible = true;
         }
         private async Task ViewDetails(Ecomponent context)
         {
-            if (context != null)
+            if (context != null && EComponentService != null)
                 eComponentModel = await EComponentService.GetComponent(context) ?? new Ecomponent();
             detailVisible = true;
         }
