@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using Markdig
 
 <PageTitle>HCCP Home</PageTitle>
 <div>
@@ -16,33 +17,113 @@
             <MudImage Src="images/gcu.svg" Height="75" />
         </MudLink>
     </MudText>
-    <MudDivider/>
+    <MudDivider />
     <MudText Typo="Typo.h5">Selecting a Project</MudText>
     <MudText Typo="Typo.h6">Defining the Project</MudText>
     <MudText Typo="Typo.body1">
         You first need to clearly state the purpose of the project. Is the project intended to solve a particular problem? Is the project a game? Does the project explore a particular concept or technology? Is the project part of a larger solution for a workplace or business application? If the project is intended to solve a particular problem, explain why the project is needed. What is the current process for solving the identified problem, and how will your project improve this process? Is the project final deliverable a complete product or the implementation of an (original) algorithm?
-
-        <MudText Typo="Typo.h6">Project Examples</MudText>
+    </MudText><br />
+    <MudText Typo="Typo.h6">Project Examples</MudText>
         <MudList Dense="@Dense">
-            <MudListItem Text="Make a social networking site" Icon="@Icons.Material.Filled.ArrowForwardIos" IconSize="Size.Small" Dense="@Dense" />
-            <MudListItem Text="Create an online store site" Icon="@Icons.Material.Filled.ArrowForwardIos" IconSize="Size.Small" Dense="@Dense" />
-            <MudListItem Text="Make an iPhone, iPad, or Android mobile application" Icon="@Icons.Material.Filled.ArrowForwardIos" IconSize="Size.Small" Dense="@Dense" />
-            <MudListItem Text="Create an Online Voter Registration application" Icon="@Icons.Material.Filled.ArrowForwardIos" IconSize="Size.Small" Dense="@Dense" />
-            <MudListItem Text="Create a game" Icon="@Icons.Material.Filled.ArrowForwardIos" IconSize="Size.Small" Dense="@Dense" />
-            <MudListItem Text="Create a business application" Class="highlighter" IconColor="Color.Success" Icon="@Icons.Material.Filled.Check" IconSize="Size.Small" Dense="@Dense" />
-            <MudListItem Text="Create a scientific simulation" Icon="@Icons.Material.Filled.ArrowForwardIos" IconSize="Size.Small" Dense="@Dense" />
-            <MudListItem Text="Develop an augmented reality environment" Icon="@Icons.Material.Filled.ArrowForwardIos" IconSize="Size.Small" Dense="@Dense" />
-            <MudListItem Text="Build a visual computing environment" Icon="@Icons.Material.Filled.ArrowForwardIos" IconSize="Size.Small" Dense="@Dense" />
-            <MudListItem Text="Build a decision support system" Icon="@Icons.Material.Filled.ArrowForwardIos" IconSize="Size.Small" Dense="@Dense" />
-            <MudListItem Text="Implement a substantial algorithm published in a peer-reviewed journal" Icon="@Icons.Material.Filled.ArrowForwardIos" IconSize="Size.Small" Dense="@Dense" />
+            <MudListItem Text="Make a social networking site"
+                         Icon="@Icons.Material.Filled.ArrowForwardIos"
+                         IconSize="Size.Small"
+                         Dense="@Dense" />
+            <MudListItem Text="Create an online store site"
+                         Icon="@Icons.Material.Filled.ArrowForwardIos"
+                         IconSize="Size.Small"
+                         Dense="@Dense" />
+            <MudListItem Text="Make an iPhone, iPad, or Android mobile application"
+                         Icon="@Icons.Material.Filled.ArrowForwardIos"
+                         IconSize="Size.Small"
+                         Dense="@Dense" />
+            <MudListItem Text="Create an Online Voter Registration application"
+                         Icon="@Icons.Material.Filled.ArrowForwardIos"
+                         IconSize="Size.Small"
+                         Dense="@Dense" />
+            <MudListItem Text="Create a game"
+                         Icon="@Icons.Material.Filled.ArrowForwardIos"
+                         IconSize="Size.Small"
+                         Dense="@Dense" />
+            <MudListItem Text="Create a business application"
+                         Class="highlighter"
+                         IconColor="Color.Success"
+                         Icon="@Icons.Material.Filled.Check"
+                         IconSize="Size.Small"
+                         Dense="@Dense" />
+            <MudListItem Text="Create a scientific simulation"
+                         Icon="@Icons.Material.Filled.ArrowForwardIos"
+                         IconSize="Size.Small"
+                         Dense="@Dense" />
+            <MudListItem Text="Develop an augmented reality environment"
+                         Icon="@Icons.Material.Filled.ArrowForwardIos"
+                         IconSize="Size.Small"
+                         Dense="@Dense" />
+            <MudListItem Text="Build a visual computing environment"
+                         Icon="@Icons.Material.Filled.ArrowForwardIos"
+                         IconSize="Size.Small"
+                         Dense="@Dense" />
+            <MudListItem Text="Build a decision support system"
+                         Icon="@Icons.Material.Filled.ArrowForwardIos"
+                         IconSize="Size.Small"
+                         Dense="@Dense" />
+            <MudListItem Text="Implement a substantial algorithm published in a peer-reviewed journal"
+                         Icon="@Icons.Material.Filled.ArrowForwardIos"
+                         IconSize="Size.Small"
+                         Dense="@Dense" />
         </MudList>
-    </MudText>
     <MudText Typo="Typo.h5">Proposal, Technology &amp; Requirements</MudText>
     <MudText Typo="Typo.h6">Why is this needed?</MudText>
     <MudText Typo="Typo.body1">
+        Although it is unclear how much money can be saved by re-using or not having to purchase IT-related replacement parts, there is no question that these individual items add up over time. Many of these items are replaced when a new system or workstation is installed, configuration changes are made, or personnel moves. These replacements occur even if unwarranted.
+    </MudText><br />
+    <MudText Typo="Typo.body1">
+        Additionally, because there are potentially thousands of items for IT departments work with, it is very difficult to know how many of each item is on-hand when a replacement is needed without physically inspecting the inventory or even cannibalizing an existing system that is no longer in use. Typically, large cabinets and bins are used to store items but rarely stay organized or have a reporting system.
+    </MudText><br />
+    <MudText Typo="Typo.body1">
+        Another reason for creating an IMS for these items is to keep loss due to misplacement and theft to a minimum. The following is an example of money that can be saved over a 3-year period for a company of 1,000 employees (average hardware refresh ranges from 2-4 years) not taking into account configuration or personnel changes:
     </MudText>
+    <br />
+    <MudText Typo="Typo.body1">
+        @((MarkupString)costAnalysis)
+    </MudText><br />
+    <MudText Typo="Typo.h6">Technical Requirements</MudText>
+    <MudList Dense="@Dense">
+        <MudListItem Text="Run on any web server with .Net 6 or greater intalled"
+                     Icon="@Icons.Material.Filled.ArrowForwardIos"
+                     IconSize="Size.Small"
+                     Dense="@Dense" />
+        <MudListItem Text="Access through any modern web browser"
+                     Icon="@Icons.Material.Filled.ArrowForwardIos"
+                     IconSize="Size.Small"
+                     Dense="@Dense" />
+        <MudListItem Text="Ability to make changes easily on desktop and/or mobile"
+                     Icon="@Icons.Material.Filled.ArrowForwardIos"
+                     IconSize="Size.Small"
+                     Dense="@Dense" />
+        <MudListItem Text="Easy to use UI for inventory/managing items"
+                     Icon="@Icons.Material.Filled.ArrowForwardIos"
+                     IconSize="Size.Small"
+                     Dense="@Dense" />
+        <MudListItem Text="Browse and lookup/filter invnetory from anywhere with internet connection"
+                     Icon="@Icons.Material.Filled.ArrowForwardIos"
+                     IconSize="Size.Small"
+                     Dense="@Dense" />
+        <MudListItem Text="Tied to a database"
+                     Icon="@Icons.Material.Filled.ArrowForwardIos"
+                     IconSize="Size.Small"
+                     Dense="@Dense" />
+        <MudListItem Text="Administration of logins/users and pre-defined lists"
+                     Icon="@Icons.Material.Filled.ArrowForwardIos"
+                     IconSize="Size.Small"
+                     Dense="@Dense" />
+        <MudListItem Text="Ability to work for small and enterprise-level organizations"
+                     Icon="@Icons.Material.Filled.ArrowForwardIos"
+                     IconSize="Size.Small"
+                     Dense="@Dense" />
+    </MudList>
 </div>
-
 @code {
     public bool Dense { get; set; }
+    string costAnalysis = "A basic **USB-A 3.0** cable from <ins>[Monoprice.com](https://Monoprice.com)</ins> with volume pricing is **$5.36** as of June 2023. If the theoretical company uses KVMs for desktop setups of two computers, you will need a minimum of 2 USB cables. A typical smartcard reader from <ins>[Amazon.com](https://Amazon.com)</ins> as of June 2023 is priced at **$14.99**. Also taking into account a personal scanner/printer, that now makes **3 USB cables**. Assuming the user *never moves, never has their systems reconfigured, never has anything wear out or break*, the cost for 1 employee is **$31.07** before tax. Multiply by **1,000** employees and the total comes to **$31,070** or approximately <ins>**$10,357 per year!**</ins> Of course, the cost goes up with all the loss or damage to these cables/peripherals; not to mention the other cables and \"cheap\" peripherals purchased.";
 }
