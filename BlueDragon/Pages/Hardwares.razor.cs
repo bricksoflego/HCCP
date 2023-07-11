@@ -3,6 +3,8 @@ using BlueDragon.Models;
 using BlueDragon.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.VisualBasic;
 using MudBlazor;
 
 namespace BlueDragon.Pages
@@ -44,13 +46,21 @@ namespace BlueDragon.Pages
         {
             if (HardwareService != null)
             {
-                hardwareModel = (Hardware)context.Model;
-                await HardwareService.Upsert(hardwareModel);
                 Snackbar!.Configuration.PositionClass = Defaults.Classes.Position.BottomLeft;
-                Snackbar.Add("Hardware Added", Severity.Success);
-                hardwareModel = new();
-                hardwares = await HardwareService.GetHardware();
-                StateHasChanged();
+                try
+                {
+                    hardwareModel = (Hardware)context.Model;
+                    await HardwareService.Upsert(hardwareModel);
+                    Snackbar.Add("Hardware Saved", Severity.Success);
+                    hardwareModel = new();
+                    hardwares = await HardwareService.GetHardware();
+                    StateHasChanged();
+                }
+                catch (Exception e)
+                {
+                    Snackbar.Add("Hardware Not Saved", Severity.Error);
+                    Console.WriteLine(e);
+                }
             }
         }
 
@@ -86,6 +96,7 @@ namespace BlueDragon.Pages
             if (context != null && HardwareService != null)
                 hardwareModel = await HardwareService.GetSelectedHardware(context) ?? new Hardware();
             upsertVisible = true;
+            StateHasChanged();
         }
 
         private async Task ViewDetails(Hardware context)
@@ -93,12 +104,13 @@ namespace BlueDragon.Pages
             if (context != null && HardwareService != null)
                 hardwareModel = await HardwareService.GetSelectedHardware(context) ?? new Hardware();
             detailVisible = true;
+            StateHasChanged();
         }
         private void Close()
         {
             upsertVisible = false;
             detailVisible = false;
-            hardwareModel = new(); 
+            hardwareModel = new();
         }
         #endregion
     }

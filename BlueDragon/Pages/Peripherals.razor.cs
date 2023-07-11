@@ -86,12 +86,14 @@ namespace BlueDragon.Pages
             if (context != null && PeripheralService != null)
                 peripheralModel = await PeripheralService.GetPeripheral(context) ?? new Peripheral();
             upsertVisible = true;
+            StateHasChanged();
         }
         private async Task ViewDetails(Peripheral context)
         {
             if (context != null && PeripheralService != null)
                 peripheralModel = await PeripheralService.GetPeripheral(context) ?? new Peripheral();
             detailVisible = true;
+            StateHasChanged();
         }
         private void Close()
         {

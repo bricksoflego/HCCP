@@ -1,0 +1,8 @@
+﻿.div-display {
+    display: flex;
+    gap: 20px;
+}
+
+::deep .div-flex {
+    flex: 1;
+}

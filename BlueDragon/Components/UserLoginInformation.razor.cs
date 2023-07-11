@@ -10,6 +10,9 @@ namespace BlueDragon.Components
     {
         bool loginDialogVisible;
         LoginModel login = new();
+        ApplicationUser applicationUser = new();
+
+        [Inject] private UserService? UserService { get; set; }
 
         [Inject] private AuthService? AuthService { get; set; }
 
@@ -26,6 +29,19 @@ namespace BlueDragon.Components
             if (context != null && AuthService != null)
             {
                 await AuthService.Login(login.UserName, login.Password);
+
+                if (AuthService.IsAuthorized && UserService != null)
+                {
+                    try
+                    {
+                        applicationUser = await UserService.GetUserInformation(login.UserName);
+                    }
+                    catch (Exception e)
+                    {
+                        // TODO:
+                        Console.WriteLine(e);
+                    }
+                }
                 Close();
                 StateHasChanged();
             }

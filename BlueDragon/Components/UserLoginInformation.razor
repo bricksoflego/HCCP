@@ -1,6 +1,6 @@
 ﻿@if (AuthService?.IsAuthorized != false)
 {
-    <MudText>Hello, @login.UserName! - </MudText>
+    <MudText>Hello, @applicationUser.UserName! - </MudText>
     <MudButton StartIcon="@Icons.Material.Filled.Logout" OnClick="@Logout" Color="Color.Inherit" Href="" Target="_blank">Logout</MudButton>
 }
 else
@@ -24,14 +24,14 @@ else
                                   HelperText="Max. 50 characters"
                                   For="@(() => login.UserName)"
                                   Required="true"
-                                  RequiredError="A Cable Type is required!" />
-                    <MudTextField @bind-Value="login.Password"
+                                  RequiredError="A Username is required!" />
+                    <MudExtensions.MudPasswordField @bind-Value="login.Password"
                                   Label="Password"
                                   HelperText="Max. 50 characters"
                                   For="@(() => login.Password)"
                                   Required="true"
                                   InputType="InputType.Password"
-                                  RequiredError="A Cable Type is required!" />
+                                  RequiredError="A Password is required!" />
                 </MudCardContent>
                 <MudCardActions>
                     <MudButtonGroup Class="mx-auto" Color="Color.Primary" Variant="Variant.Filled">

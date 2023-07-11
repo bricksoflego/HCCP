@@ -23,10 +23,17 @@ builder.Services.AddTransient<EComponentService>();
 builder.Services.AddTransient<HardwareService>();
 builder.Services.AddTransient<PeripheralService>();
 builder.Services.AddTransient<UserService>();
+builder.Services.AddTransient<RoleService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddMudServices();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    await InitializeRoles(roleManager);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -43,3 +50,15 @@ app.MapFallbackToPage("/_Host");
 
 app.Run();
 
+async Task InitializeRoles(RoleManager<IdentityRole> roleManager)
+{
+    var roles = new List<string> { "Admin", "User", "Manager" };
+
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
+    }
+}

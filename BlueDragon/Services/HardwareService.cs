@@ -1,6 +1,7 @@
 ﻿using BlueDragon.Data;
 using BlueDragon.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace BlueDragon.Services
 {

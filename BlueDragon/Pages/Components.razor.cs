@@ -85,12 +85,14 @@ namespace BlueDragon.Pages
             if (context != null && EComponentService != null)
                 eComponentModel = await EComponentService.GetComponent(context) ?? new Ecomponent();
             upsertVisible = true;
+            StateHasChanged();
         }
         private async Task ViewDetails(Ecomponent context)
         {
             if (context != null && EComponentService != null)
                 eComponentModel = await EComponentService.GetComponent(context) ?? new Ecomponent();
             detailVisible = true;
+            StateHasChanged();
         }
         private void Close()
         {

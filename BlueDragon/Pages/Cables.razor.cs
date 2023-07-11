@@ -94,13 +94,14 @@ namespace BlueDragon.Pages
             if (context != null && CableService != null)
                 cableModel = await CableService.GetCable(context) ?? new Cable();
             upsertVisible = true;
-
+            StateHasChanged();
         }
         private async Task ViewDetails(Cable context)
         {
             if (context != null && CableService != null)
                 cableModel = await CableService.GetCable(context) ?? new Cable();
             detailVisible = true;
+            StateHasChanged();
         }
 
         private void Close()

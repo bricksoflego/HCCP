@@ -4,63 +4,42 @@
 @using System.Linq;
 @using BlueDragon.Models;
 
-<PageTitle>Lookup Administration</PageTitle>
+<PageTitle>Administration</PageTitle>
 
-@*Brand Names*@
-<MudCard Class="d-inline-flex">
+@*Users*@
+<MudCard>
     <MudCardContent>
-        <MudButton OnClick='(() => UpsertBrand(new LuBrandName()))'
+        <MudButton OnClick='(() => UpsertUser(new ApplicationUser()))'
                    Size="Size.Small"
                    Class="mb-2 mud-success-text"
                    StartIcon="@Icons.Material.Filled.Add">
-            Add New Brand
+            Add New User
         </MudButton>
-        <MudDataGrid Items="@brands" RowsPerPage="5" Dense Filterable Hideable Hover Striped>
+        <MudDataGrid Items="@users" RowsPerPage="5" Dense Filterable Hideable Hover Striped>
             <ToolBarContent>
-                <MudText Typo="Typo.h6">Brand Names</MudText>
+                <MudText Typo="Typo.h6">User Accounts</MudText>
                 <MudSpacer />
             </ToolBarContent>
             <Columns>
-                <PropertyColumn Property="x => x.Name" />
-                <TemplateColumn CellStyle="width:70px;" Filterable="false">
+                <PropertyColumn Property="x => x.UserName" Title="Username" />
+                <TemplateColumn Title="User Roles">
                     <CellTemplate>
-                        <MudIconButton Color="Color.Info" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="(()=>UpsertBrand(context.Item))" />
-                        <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" OnClick="(()=>DeleteBrand(context.Item))" />
+                        @{
+                            var user = context.Item as ApplicationUser;
+                            var roles = string.Join(", ", user.UserRoles);
+                        }
+                        <div>@roles</div>
                     </CellTemplate>
                 </TemplateColumn>
-            </Columns>
-            <PagerContent>
-                <MudDataGridPager T="LuBrandName" />
-            </PagerContent>
-            <NoRecordsContent>
-                <div>No Records Have Been Saved For This List</div>
-            </NoRecordsContent>
-        </MudDataGrid>
-    </MudCardContent>
-</MudCard>
-
-@*Cable Types*@
-<MudCard Class="d-inline-flex">
-    <MudCardContent>
-        <MudButton OnClick='(() => UpsertCableType(new LuCableType()))'
-                   Size="Size.Small"
-                   Class="mb-2 mud-success-text"
-                   StartIcon="@Icons.Material.Filled.Add">
-            Add New Cable Type
-        </MudButton>
-        <MudDataGrid Items="@cableTypes" RowsPerPage="5" Dense Filterable Hideable Hover Striped>
-            <ToolBarContent>
-                <MudText Typo="Typo.h6">Cable Types</MudText>
-                <MudSpacer />
-            </ToolBarContent>
-            <Columns>
-                <PropertyColumn Property="x => x.Name" />
+                <PropertyColumn Property="x => x.Email" />
+                <PropertyColumn Property="x => x.PhoneNumber" Title="Phone Number" />
                 <TemplateColumn CellStyle="width:70px;" Filterable="false">
                     <CellTemplate>
-                        <MudIconButton Color="Color.Info" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="(()=>UpsertCableType(context.Item))" />
-                        <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" OnClick="(()=>DeleteCableType(context.Item))" />
+                        <MudIconButton Color="Color.Info" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="(()=>UpsertUser(context.Item))" />
+                        @*<MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" OnClick="(()=>DeleteCableType(context.Item))" />*@
                     </CellTemplate>
                 </TemplateColumn>
+                <PropertyColumn Property="x => x.UserName" Hidden />
             </Columns>
             <PagerContent>
                 <MudDataGridPager />
@@ -72,11 +51,154 @@
     </MudCardContent>
 </MudCard>
 
+@*Brand Names & Cable Types*@
+<div class="div-display">
+    @*Brand Names*@
+    <MudCard Class="div-flex">
+        <MudCardContent>
+            <MudButton OnClick='(() => UpsertBrand(new LuBrandName()))'
+                       Size="Size.Small"
+                       Class="mb-2 mud-success-text"
+                       StartIcon="@Icons.Material.Filled.Add">
+                Add New Brand
+            </MudButton>
+            <MudDataGrid Items="@brands" RowsPerPage="5" Dense Filterable Hideable Hover Striped>
+                <ToolBarContent>
+                    <MudText Typo="Typo.h6">Brand Names</MudText>
+                    <MudSpacer />
+                </ToolBarContent>
+                <Columns>
+                    <PropertyColumn Property="x => x.Name" />
+                    <TemplateColumn CellStyle="width:70px;" Filterable="false">
+                        <CellTemplate>
+                            <MudIconButton Color="Color.Info" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="(()=>UpsertBrand(context.Item))" />
+                            <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" OnClick="(()=>DeleteBrand(context.Item))" />
+                        </CellTemplate>
+                    </TemplateColumn>
+                </Columns>
+                <PagerContent>
+                    <MudDataGridPager T="LuBrandName" />
+                </PagerContent>
+                <NoRecordsContent>
+                    <div>No Records Have Been Saved For This List</div>
+                </NoRecordsContent>
+            </MudDataGrid>
+        </MudCardContent>
+    </MudCard>
+
+    @*Cable Types*@
+    <MudCard Class="div-flex">
+        <MudCardContent>
+            <MudButton OnClick='(() => UpsertCableType(new LuCableType()))'
+                       Size="Size.Small"
+                       Class="mb-2 mud-success-text"
+                       StartIcon="@Icons.Material.Filled.Add">
+                Add New Cable Type
+            </MudButton>
+            <MudDataGrid Items="@cableTypes" RowsPerPage="5" Dense Filterable Hideable Hover Striped>
+                <ToolBarContent>
+                    <MudText Typo="Typo.h6">Cable Types</MudText>
+                    <MudSpacer />
+                </ToolBarContent>
+                <Columns>
+                    <PropertyColumn Property="x => x.Name" />
+                    <TemplateColumn CellStyle="width:70px;" Filterable="false">
+                        <CellTemplate>
+                            <MudIconButton Color="Color.Info" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="(()=>UpsertCableType(context.Item))" />
+                            <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" OnClick="(()=>DeleteCableType(context.Item))" />
+                        </CellTemplate>
+                    </TemplateColumn>
+                </Columns>
+                <PagerContent>
+                    <MudDataGridPager />
+                </PagerContent>
+                <NoRecordsContent>
+                    <div>No Records Have Been Saved For This List</div>
+                </NoRecordsContent>
+            </MudDataGrid>
+        </MudCardContent>
+    </MudCard>
+</div>
+
+@*User Account Dialog*@
+<MudDialog @bind-IsVisible="upsertUserAccount" Options="dialogOptions" DefaultFocus="DefaultFocus.LastChild">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            Add/Edit User
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <EditForm Model="@applicationUserModel" OnValidSubmit="SaveUserAccount">
+            <DataAnnotationsValidator />
+            <MudCard>
+                <MudCardContent>
+                    @if (!newApplication)
+                    {
+                        <MudTextField @bind-Value="applicationUserModel.UserName"
+                                      InputType="InputType.Text"
+                                      Disabled="true"
+                                      Label="Username"
+                                      HelperText="Max. 50 characters"
+                                      For="@(() => applicationUserModel.UserName)"
+                                      Required="true"
+                                      RequiredError="A Userame is required!" />
+                    }
+                    else
+                    {
+                        <MudTextField @bind-Value="applicationUserModel.UserName"
+                                      InputType="InputType.Text"
+                                      Label="Username"
+                                      HelperText="Max. 50 characters"
+                                      For="@(() => applicationUserModel.UserName)"
+                                      Required="true"
+                                      RequiredError="A Userame is required!" />
+                    }
+                    <MudSelect T="string"
+                               @bind-Value="selectedRole"
+                               Label="User Role"
+                               HelperText="Select Role"
+                               Required="true"
+                               RequiredError="You must select a role."
+                               Dense="true">
+                        @foreach (var r in roles)
+                        {
+                            <MudSelectItem T="string" Value="r.Name" />
+                        }
+                    </MudSelect>
+                    <MudTextField @bind-Value="applicationUserModel.Email"
+                                  InputType="InputType.Email"
+                                  Label="Email"
+                                  HelperText="Max. 50 characters"
+                                  For="@(() => applicationUserModel.Email)"
+                                  Required="true"
+                                  RequiredError="A valid Email is required!" />
+                    @if (newApplication)
+                    {
+                        <MudTextField @bind-Value="tempPassword"
+                                      InputType="InputType.Password"
+                                      Label="Password"
+                                      HelperText="Max. 20 characters"
+                                      For="@(() => tempPassword)"
+                                      Required="true"
+                                      RequiredError="Passwords must meet complexity requirements!" />
+                    }
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButtonGroup Class="mx-auto" Color="Color.Primary" Variant="Variant.Filled">
+                        <MudButton ButtonType="ButtonType.Submit" StartIcon="@Icons.Material.Filled.Save">Save User</MudButton>
+                        <MudButton OnClick='(() => Close("userAccount"))' StartIcon="@Icons.Material.Filled.Close">Close</MudButton>
+                    </MudButtonGroup>
+                </MudCardActions>
+            </MudCard>
+        </EditForm>
+    </DialogContent>
+</MudDialog>
+
 @*Brand Dialog*@
 <MudDialog @bind-IsVisible="upsertBrandVisible" Options="dialogOptions" DefaultFocus="DefaultFocus.LastChild">
     <TitleContent>
         <MudText Typo="Typo.h6">
-            Add Brand
+            Add/Edit Brand
         </MudText>
     </TitleContent>
     <DialogContent>
@@ -106,7 +228,7 @@
 <MudDialog @bind-IsVisible="upsertCableVisible" Options="dialogOptions" DefaultFocus="DefaultFocus.LastChild">
     <TitleContent>
         <MudText Typo="Typo.h6">
-            Add Cable Type
+            Add/Edit Cable Type
         </MudText>
     </TitleContent>
     <DialogContent>
