@@ -21,5 +21,7 @@ public partial class Cable
 
     public bool Mutipart { get; set; }
     [Required]
+    public int InUse { get; set; } = 0;
+    [Required]
     public int OnHand { get; set; } = 0;
 }

@@ -21,6 +21,7 @@
         <PropertyColumn Property="x => x.CableType" Title='Type' />
         <PropertyColumn Property="x => x.Name" Title="Sub Type" />
         <PropertyColumn Property="x => x.Length" />
+        <PropertyColumn Property="x => x.InUse" Title="Used" />
         <PropertyColumn Property="x => x.OnHand" Title="Count" />
         <PropertyColumn Property="x => x.Cid" Hidden="true" />
         <PropertyColumn Property="x => x.BrandName" Hidden="true" />
@@ -100,14 +101,26 @@
                                           Required="true"
                                           RequiredError="A length must be entered using whole and/or decimals!" />
                         </MudItem>
-                        <MudItem xs="6">
+                        <MudItem xs="3">
+                            <MudTextField @bind-Value="cableModel.InUse"
+                                          Label="In-service count"
+                                          For="@(() => cableModel.InUse)"
+                                          Required="false" />
+                        </MudItem>
+                        <MudItem xs="3">
                             <MudTextField @bind-Value="cableModel.OnHand"
-                                          Label="Quantity"
-                                          HelperText="How many do you have"
+                                          Label="On-hand count"
                                           For="@(() => cableModel.OnHand)"
                                           Required="false" />
                         </MudItem>
-                        <MudItem xs="6">
+                        @*                        <MudItem xs="6">
+                        <MudTextField @bind-Value="cableModel.OnHand"
+                        Label="Quantity"
+                        HelperText="How many do you have"
+                        For="@(() => cableModel.OnHand)"
+                        Required="false" />
+                        </MudItem>
+                        *@                        <MudItem xs="6">
                             <MudCheckBox @bind-Checked="cableModel.Mutipart"
                                          Label="Multi-Part"
                                          For="@(() => cableModel.Mutipart)"
