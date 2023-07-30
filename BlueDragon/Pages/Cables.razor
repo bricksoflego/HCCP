@@ -113,7 +113,14 @@
                                           For="@(() => cableModel.OnHand)"
                                           Required="false" />
                         </MudItem>
-                        <MudItem xs="6">
+                        @*                        <MudItem xs="6">
+                        <MudTextField @bind-Value="cableModel.OnHand"
+                        Label="Quantity"
+                        HelperText="How many do you have"
+                        For="@(() => cableModel.OnHand)"
+                        Required="false" />
+                        </MudItem>
+                        *@                        <MudItem xs="6">
                             <MudCheckBox @bind-Checked="cableModel.Mutipart"
                                          Label="Multi-Part"
                                          For="@(() => cableModel.Mutipart)"
