@@ -19,9 +19,9 @@ namespace BlueDragon.Pages
         #region Model and List Initialization
         Cable cableModel = new();
 
-        List<LuBrandName> brands = new();
-        List<LuCableType> cableTypes = new();
-        List<Cable> cables = new();
+        List<LuBrandName> brands = [];
+        List<LuCableType> cableTypes = [];
+        List<Cable> cables = [];
         #endregion
 
         protected string ConvertBool(bool b)
@@ -80,11 +80,11 @@ namespace BlueDragon.Pages
         #region Upsert Dialog
         private bool upsertVisible;
         private bool detailVisible;
-        private DialogOptions dialogOptions = new()
+        private static readonly DialogOptions dialogOptions = new()
         {
             FullWidth = true,
             CloseButton = true,
-            DisableBackdropClick = true,
+            BackdropClick = false,
             Position = DialogPosition.TopCenter,
             MaxWidth = MaxWidth.Small
         };

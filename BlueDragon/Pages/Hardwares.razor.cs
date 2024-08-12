@@ -21,8 +21,8 @@ namespace BlueDragon.Pages
         #region Model and List Initialization
         Hardware hardwareModel = new();
 
-        List<LuBrandName> brands = new();
-        List<Hardware> hardwares = new();
+        List<LuBrandName> brands = [];
+        List<Hardware> hardwares = [];
         #endregion
 
         protected override async Task OnInitializedAsync()
@@ -83,11 +83,11 @@ namespace BlueDragon.Pages
         #region Upsert Dialog
         private bool upsertVisible;
         private bool detailVisible;
-        private DialogOptions dialogOptions = new()
+        private static readonly DialogOptions dialogOptions = new()
         {
             FullWidth = true,
             CloseButton = true,
-            DisableBackdropClick = true,
+            BackdropClick = false,
             Position = DialogPosition.TopCenter,
             MaxWidth = MaxWidth.Small
         };

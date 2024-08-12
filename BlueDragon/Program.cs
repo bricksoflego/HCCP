@@ -50,7 +50,7 @@ app.MapFallbackToPage("/_Host");
 
 app.Run();
 
-async Task InitializeRoles(RoleManager<IdentityRole> roleManager)
+static async Task InitializeRoles(RoleManager<IdentityRole> roleManager)
 {
     var roles = new List<string> { "Admin", "User", "Manager" };
 

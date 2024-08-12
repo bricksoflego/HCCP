@@ -45,7 +45,7 @@
         <div>No Records Have Been Saved For This List</div>
     </NoRecordsContent>
 </MudDataGrid>
-<MudDialog @bind-IsVisible="upsertVisible" Options="dialogOptions" DefaultFocus="DefaultFocus.LastChild">
+<MudDialog @bind-Visible="upsertVisible" Options="dialogOptions" DefaultFocus="DefaultFocus.LastChild">
     <TitleContent>
         <MudText Typo="Typo.h6">
             Add Cable
@@ -114,7 +114,7 @@
                                           Required="false" />
                         </MudItem>
                         <MudItem xs="6">
-                            <MudCheckBox @bind-Checked="cableModel.Mutipart"
+                            <MudCheckBox @bind-Value="cableModel.Mutipart"
                                          Label="Multi-Part"
                                          For="@(() => cableModel.Mutipart)"
                                          Dense="true"
@@ -140,7 +140,7 @@
         </EditForm>
     </DialogContent>
 </MudDialog>
-<MudDialog @bind-IsVisible="detailVisible" Options="dialogOptions">
+<MudDialog @bind-Visible="detailVisible" Options="dialogOptions">
     <TitleContent>
         <MudText Typo="Typo.h6">
             Cable Details

@@ -25,10 +25,10 @@ namespace BlueDragon.Pages
         LuCableType cableTypeModel = new();
         ApplicationUser applicationUserModel = new();
 
-        List<LuBrandName> brands = new();
-        List<LuCableType> cableTypes = new();
-        List<ApplicationUser> users = new();
-        List<IdentityRole> roles = new();
+        List<LuBrandName> brands = [];
+        List<LuCableType> cableTypes = [];
+        List<ApplicationUser> users = [];
+        List<IdentityRole> roles = [];
         string selectedRole = string.Empty;
         #endregion
 
@@ -187,11 +187,11 @@ namespace BlueDragon.Pages
         private bool upsertUserAccount;
         private bool upsertBrandVisible;
         private bool upsertCableVisible;
-        private DialogOptions dialogOptions = new()
+        private static readonly DialogOptions dialogOptions = new()
         {
             FullWidth = true,
             CloseButton = true,
-            DisableBackdropClick = true,
+            BackdropClick = false,
             Position = DialogPosition.TopCenter,
             MaxWidth = MaxWidth.Small
         };

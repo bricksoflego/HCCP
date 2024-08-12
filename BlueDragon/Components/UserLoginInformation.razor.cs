@@ -9,7 +9,7 @@ namespace BlueDragon.Components
     public partial class UserLoginInformation
     {
         bool loginDialogVisible;
-        LoginModel login = new();
+        readonly LoginModel login = new();
         ApplicationUser applicationUser = new();
 
         [Inject] private UserService? UserService { get; set; }
@@ -64,11 +64,11 @@ namespace BlueDragon.Components
             NavigationManager?.NavigateTo("/", true);
         }
 
-        private DialogOptions dialogOptions = new()
+        private static readonly DialogOptions dialogOptions = new()
         {
             FullWidth = true,
             CloseButton = true,
-            DisableBackdropClick = true,
+            BackdropClick = false,
             Position = DialogPosition.TopCenter,
             MaxWidth = MaxWidth.Small
         };

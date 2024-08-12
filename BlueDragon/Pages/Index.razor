@@ -24,8 +24,8 @@
         You first need to clearly state the purpose of the project. Is the project intended to solve a particular problem? Is the project a game? Does the project explore a particular concept or technology? Is the project part of a larger solution for a workplace or business application? If the project is intended to solve a particular problem, explain why the project is needed. What is the current process for solving the identified problem, and how will your project improve this process? Is the project final deliverable a complete product or the implementation of an (original) algorithm?
     </MudText><br />
     <MudText Typo="Typo.h6">Project Examples</MudText>
-        <MudList Dense="@Dense">
-            <MudListItem Text="Make a social networking site"
+    <MudList T="string" Dense="@Dense">
+            <MudListItem Text="Make a social networking site" 
                          Icon="@Icons.Material.Filled.ArrowForwardIos"
                          IconSize="Size.Small"
                          Dense="@Dense" />
@@ -88,7 +88,7 @@
         @((MarkupString)costAnalysis)
     </MudText><br />
     <MudText Typo="Typo.h6">Technical Requirements</MudText>
-    <MudList Dense="@Dense">
+    <MudList T="string" Dense="@Dense">
         <MudListItem Text="Run on any web server with .Net 6 or greater intalled"
                      Icon="@Icons.Material.Filled.ArrowForwardIos"
                      IconSize="Size.Small"

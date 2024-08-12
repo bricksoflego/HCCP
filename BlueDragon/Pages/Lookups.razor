@@ -121,7 +121,7 @@
 </div>
 
 @*User Account Dialog*@
-<MudDialog @bind-IsVisible="upsertUserAccount" Options="dialogOptions" DefaultFocus="DefaultFocus.LastChild">
+<MudDialog @bind-Visible="upsertUserAccount" Options="dialogOptions" DefaultFocus="DefaultFocus.LastChild">
     <TitleContent>
         <MudText Typo="Typo.h6">
             Add/Edit User
@@ -195,7 +195,7 @@
 </MudDialog>
 
 @*Brand Dialog*@
-<MudDialog @bind-IsVisible="upsertBrandVisible" Options="dialogOptions" DefaultFocus="DefaultFocus.LastChild">
+<MudDialog @bind-Visible="upsertBrandVisible" Options="dialogOptions" DefaultFocus="DefaultFocus.LastChild">
     <TitleContent>
         <MudText Typo="Typo.h6">
             Add/Edit Brand
@@ -225,7 +225,7 @@
 </MudDialog>
 
 @*Cable Types Dialog*@
-<MudDialog @bind-IsVisible="upsertCableVisible" Options="dialogOptions" DefaultFocus="DefaultFocus.LastChild">
+<MudDialog @bind-Visible="upsertCableVisible" Options="dialogOptions" DefaultFocus="DefaultFocus.LastChild">
     <TitleContent>
         <MudText Typo="Typo.h6">
             Add/Edit Cable Type

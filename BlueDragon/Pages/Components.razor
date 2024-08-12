@@ -42,7 +42,7 @@
         <div>No Records Have Been Saved For This List</div>
     </NoRecordsContent>
 </MudDataGrid>
-<MudDialog @bind-IsVisible="upsertVisible" Options="dialogOptions" DefaultFocus="DefaultFocus.LastChild">
+<MudDialog @bind-Visible="upsertVisible" Options="dialogOptions" DefaultFocus="DefaultFocus.LastChild">
     <TitleContent>
         <MudText Typo="Typo.h6">
             Add/Edit Component
@@ -143,7 +143,7 @@
 
     </DialogContent>
 </MudDialog>
-<MudDialog @bind-IsVisible="detailVisible" Options="dialogOptions">
+<MudDialog @bind-Visible="detailVisible" Options="dialogOptions">
     <TitleContent>
         <MudText Typo="Typo.h6">
             Component Details
