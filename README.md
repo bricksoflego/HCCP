@@ -7,7 +7,7 @@ Developed by
 **Brent L. Ricks**
 In pursuit of a master's degree in 'Software Development'
 from [Grand Canyon University (GCU).
-<img src="https://github.com/bricksoflego/HCCP/blob/Demo/BlueDragon/wwwroot/images/gcu.svg" alt="img" style="zoom:30%;" />](https://www.gcu.edu/)
+<img src="https://github.com/bricksoflego/HCCP/blob/Demo/BlueDragon/wwwroot/images/gcu.svg" alt="img" width="250" />](https://www.gcu.edu/)
 
 ------
 
@@ -17,17 +17,17 @@ You first need to clearly state the purpose of the project. Is the project inten
 
 #### Project Examples
 
-Make a social networking site
-Create an online store site
-Make an iPhone, iPad, or Android mobile application
-Create an Online Voter Registration application
-Create a game
-Create a business application
-Create a scientific simulation
-Develop an augmented reality environment
-Build a visual computing environment
-Build a decision support system
-Implement a substantial algorithm published in a peer-reviewed journal
+- Make a social networking site
+- Create an online store site
+- Make an iPhone, iPad, or Android mobile application
+- Create an Online Voter Registration application
+- Create a game     
+- Create a business application ☑️ 
+- Create a scientific simulation
+- Develop an augmented reality environment
+- Build a visual computing environment
+- Build a decision support system
+- Implement a substantial algorithm published in a peer-reviewed journal
 
 ### Proposal, Technology & Requirements
 
@@ -43,11 +43,11 @@ A basic **USB-A 3.0** cable from [Monoprice.com](https://monoprice.com/) with vo
 
 #### Technical Requirements
 
-Run on any web server with .Net 6 or greater intalled
-Access through any modern web browser
-Ability to make changes easily on desktop and/or mobile
-Easy to use UI for inventory/managing items
-Browse and lookup/filter invnetory from anywhere with internet connection
-Tied to a database
-Administration of logins/users and pre-defined lists
-Ability to work for small and enterprise-level organizations
+- Run on any web server with .Net 6 or greater intalled
+- Access through any modern web browser
+- Ability to make changes easily on desktop and/or mobile
+- Easy to use UI for inventory/managing items
+- Browse and lookup/filter invnetory from anywhere with internet connection
+- Tied to a database
+- Administration of logins/users and pre-defined lists
+- Ability to work for small and enterprise-level organizations
