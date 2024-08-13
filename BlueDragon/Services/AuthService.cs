@@ -16,6 +16,8 @@ namespace BlueDragon.Services
         }
 
         public bool IsAuthorized { get; private set; }
+
+        // Make the setter public so that roles can be assigned externally
         public List<string> UserRoles { get; set; } = new List<string>();
 
         public event Action? OnChange;
@@ -27,17 +29,16 @@ namespace BlueDragon.Services
 
             if (authorized)
             {
-                var customAuthProvider = (CustomAuthenticationStateProvider)_authenticationStateProvider;
-                var userInfo = new UserInfo { UserName = userName };
-                await customAuthProvider.MarkUserAsAuthenticated(userInfo);
-                // Fetch user roles after login
-                var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
-                var user = authState.User;
+                // Fetch the user's information, including roles
+                var applicationUser = await _userService.GetUserInformation(userName);
+                applicationUser.UserRoles = (List<string>)await _userService.GetUserRoles(applicationUser);
 
-                if (user.Identity?.IsAuthenticated == true)
-                {
-                    UserRoles = user.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
-                }
+                // Pass the ApplicationUser object to the CustomAuthenticationStateProvider
+                var customAuthProvider = (CustomAuthenticationStateProvider)_authenticationStateProvider;
+                await customAuthProvider.MarkUserAsAuthenticated(applicationUser);
+
+                // Store roles locally in AuthService for quick access
+                UserRoles = applicationUser.UserRoles;
 
                 OnChange?.Invoke();
             }

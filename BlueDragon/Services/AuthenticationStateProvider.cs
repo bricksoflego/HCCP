@@ -1,4 +1,5 @@
 ﻿using BlueDragon.Extensions;
+using BlueDragon.Models;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 using System.Security.Claims;
@@ -38,13 +39,14 @@ namespace BlueDragon.Services
 
             if (!string.IsNullOrEmpty(json))
             {
-                var userInfo = JsonSerializer.Deserialize<UserInfo>(json);
-                if (userInfo != null)
+                var applicationUser = JsonSerializer.Deserialize<ApplicationUser>(json);
+                if (applicationUser != null)
                 {
                     identity = new ClaimsIdentity(new[]
                     {
-                        new Claim(ClaimTypes.Name, userInfo.UserName),
-                    }, "customAuthType");
+                        new Claim(ClaimTypes.Name, applicationUser.UserName),
+                    }.Concat(applicationUser.UserRoles.Select(role => new Claim(ClaimTypes.Role, role))),
+                    "customAuthType");
                 }
             }
 
@@ -54,18 +56,19 @@ namespace BlueDragon.Services
             return _cachedAuthenticationState;
         }
 
-        public async Task MarkUserAsAuthenticated(UserInfo userInfo)
+        public async Task MarkUserAsAuthenticated(ApplicationUser applicationUser)
         {
             var identity = new ClaimsIdentity(new[]
             {
-                new Claim(ClaimTypes.Name, userInfo.UserName),
-            }, "customAuthType");
+                new Claim(ClaimTypes.Name, applicationUser.UserName),
+            }.Concat(applicationUser.UserRoles.Select(role => new Claim(ClaimTypes.Role, role))),
+            "customAuthType");
 
             var user = new ClaimsPrincipal(identity);
             _cachedAuthenticationState = new AuthenticationState(user);
             NotifyAuthenticationStateChanged(Task.FromResult(_cachedAuthenticationState));
 
-            var json = JsonSerializer.Serialize(userInfo);
+            var json = JsonSerializer.Serialize(applicationUser);
             await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "authUser", json);
         }
 
@@ -78,10 +81,5 @@ namespace BlueDragon.Services
             _cachedAuthenticationState = new AuthenticationState(user);
             NotifyAuthenticationStateChanged(Task.FromResult(_cachedAuthenticationState));
         }
-    }
-
-    public class UserInfo
-    {
-        public string UserName { get; set; }
     }
 }

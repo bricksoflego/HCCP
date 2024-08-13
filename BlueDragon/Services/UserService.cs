@@ -86,6 +86,22 @@ namespace BlueDragon.Services
             return result;
         }
 
+        public async Task<IdentityResult> DeleteUser(string userName)
+        {
+
+            // Find the user by their ID
+            var selectedUser = await _userManager.FindByNameAsync(userName);
+            if (selectedUser == null)
+            {
+                // Handle case where user is not found
+                return IdentityResult.Failed(new IdentityError { Description = $"User with ID {userName} not found." });
+            }
+
+            // Delete the user
+            var result = await _userManager.DeleteAsync(selectedUser);
+            return result;
+        }
+
         public async Task<IList<string>> GetUserRoles(ApplicationUser user)
         {
             return await _userManager.GetRolesAsync(user);

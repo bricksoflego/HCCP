@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MudBlazor;
 using System.Security.Claims;
 
-namespace BlueDragon.Pages
+namespace BlueDragon.Account
 {
     public partial class Lookups
     {
@@ -68,7 +68,7 @@ namespace BlueDragon.Pages
             else
             {
                 // If the user is not authenticated, redirect them to the login page
-                NavigationManager.NavigateTo("/Account/AccessDenied");
+                NavigationManager.NavigateTo("AccessDenied");
             }
         }
 
@@ -117,16 +117,16 @@ namespace BlueDragon.Pages
         }
 
         /// <summary>
-        /// TODO 
+        /// 
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="user"></param>
         /// <returns></returns>
-        private async Task DeleteUserAccount(LuBrandName model)
+        private async Task DeleteUserAccount(ApplicationUser user)
         {
-            if (BrandService != null)
+            if (UserService != null)
             {
-                await BrandService.Delete(model);
-                brands = await BrandService.GetBrandNames();
+                await UserService.DeleteUser(user.UserName);
+                users = await UserService.GetUserList();
                 StateHasChanged();
             }
         }
@@ -248,7 +248,6 @@ namespace BlueDragon.Pages
             upsertUserAccount = true;
             StateHasChanged();
         }
-
         private async void UpsertBrand(LuBrandName? context)
         {
             if (context != null && BrandService != null)

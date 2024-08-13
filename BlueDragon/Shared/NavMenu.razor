@@ -8,26 +8,15 @@
     <MudNavLink Href="components" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Polyline">Component Inventory</MudNavLink>
     <MudNavLink Href="peripherals" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Extension">Peripheral Inventory</MudNavLink>
     <CascadingAuthenticationState>
-        <AuthorizeView>
+        <AuthorizeView Roles="Admin,Manager">
             <MudDivider />
             <MudNavLink Href="peripherals" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Extension">Peripheral Inventory</MudNavLink>
-            @if (ApplicationUserService.ApplicationUser.UserRoles.Contains("Admin"))
-            {
-                <MudNavLink Href="lookups" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.MiscellaneousServices">Administration</MudNavLink>
-            }
+        </AuthorizeView>
+        <AuthorizeView Roles="Admin">
+            <MudNavLink Href="lookups" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.MiscellaneousServices">Administration</MudNavLink>
         </AuthorizeView>
     </CascadingAuthenticationState>
 </MudNavMenu>
 
 
-@* 
-<CascadingAuthenticationState>
-   <AuthorizeView>
-       <MudDivider />
-       <MudNavLink Href="peripherals" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Extension">Peripheral Inventory</MudNavLink>
-   </AuthorizeView>
-   <AuthorizeView Roles="Admin">
-       <MudNavLink Href="lookups" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.MiscellaneousServices">Administration</MudNavLink>
-   </AuthorizeView>
-</CascadingAuthenticationState>
- *@
+@code{}

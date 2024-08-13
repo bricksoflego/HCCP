@@ -66,3 +66,7 @@
         font-weight: bold;
         font-size: 1rem;
     }
+
+.mud-paper .mud-card-content {
+    padding: 0px !important;
+}

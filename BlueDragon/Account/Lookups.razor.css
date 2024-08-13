@@ -6,3 +6,6 @@
 ::deep .div-flex {
     flex: 1;
 }
+::deep .mud-paper .mud-card-content {
+    padding: 0px!important;
+}

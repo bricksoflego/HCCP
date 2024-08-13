@@ -7,6 +7,7 @@
 
 <PageTitle>Administration</PageTitle>
 
+@*Users*@
 <MudCard>
     <MudCardContent>
         <MudButton OnClick='(() => UpsertUser(new ApplicationUser()))'
@@ -33,10 +34,10 @@
                 </TemplateColumn>
                 <PropertyColumn Property="x => x.Email" />
                 <PropertyColumn Property="x => x.PhoneNumber" Title="Phone Number" />
-                <TemplateColumn CellStyle="width:70px;" Filterable="false">
+                <TemplateColumn CellStyle="width:88px;" Filterable="false">
                     <CellTemplate>
                         <MudIconButton Color="Color.Info" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="(()=>UpsertUser(context.Item))" />
-                        @*<MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" OnClick="(()=>DeleteCableType(context.Item))" />*@
+                        <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" OnClick="(()=>DeleteUserAccount(context.Item))" />
                     </CellTemplate>
                 </TemplateColumn>
                 <PropertyColumn Property="x => x.UserName" Hidden />
@@ -69,7 +70,7 @@
                 </ToolBarContent>
                 <Columns>
                     <PropertyColumn Property="x => x.Name" />
-                    <TemplateColumn CellStyle="width:70px;" Filterable="false">
+                    <TemplateColumn CellStyle="width:88px;" Filterable="false">
                         <CellTemplate>
                             <MudIconButton Color="Color.Info" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="(()=>UpsertBrand(context.Item))" />
                             <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" OnClick="(()=>DeleteBrand(context.Item))" />
@@ -102,7 +103,7 @@
                 </ToolBarContent>
                 <Columns>
                     <PropertyColumn Property="x => x.Name" />
-                    <TemplateColumn CellStyle="width:70px;" Filterable="false">
+                    <TemplateColumn CellStyle="width:88px;" Filterable="false">
                         <CellTemplate>
                             <MudIconButton Color="Color.Info" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="(()=>UpsertCableType(context.Item))" />
                             <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" OnClick="(()=>DeleteCableType(context.Item))" />
