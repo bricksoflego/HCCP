@@ -3,6 +3,7 @@ using BlueDragon.Components;
 using BlueDragon.Data;
 using BlueDragon.Models;
 using BlueDragon.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Microsoft.AspNetCore.Identity;
@@ -16,6 +17,18 @@ var connectionString = builder.Configuration.GetConnectionString("SQLServer");
 builder.Services.AddDbContext<HccContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<HccContext>();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";
+        options.AccessDeniedPath = "/Account/AccessDenied";
+    });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("MustBeAdmin", policy => policy.RequireRole("Admin"));
+});
 
 // Add services to the container.
 builder.Services.AddRazorPages();

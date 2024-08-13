@@ -3,10 +3,10 @@
 @using BlueDragon.Services;
 @using System.Linq;
 @using BlueDragon.Models;
+@attribute [Authorize]
 
 <PageTitle>Administration</PageTitle>
 
-@*Users*@
 <MudCard>
     <MudCardContent>
         <MudButton OnClick='(() => UpsertUser(new ApplicationUser()))'

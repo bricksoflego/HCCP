@@ -3,6 +3,7 @@ using BlueDragon.Services;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using System.Data;
 
 namespace BlueDragon.Components
 {
@@ -35,6 +36,9 @@ namespace BlueDragon.Components
                     {
                         ApplicationUser = await UserService.GetUserInformation(login.UserName);
                         ApplicationUser.UserRoles = (List<string>)await UserService.GetUserRoles(ApplicationUser);
+
+                        // Store roles in AuthService
+                        AuthService.UserRoles = ApplicationUser.UserRoles;
                     }
                     catch (Exception e)
                     {

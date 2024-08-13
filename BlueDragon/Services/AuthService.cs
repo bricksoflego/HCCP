@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using System;
+using System.Security.Claims;
 
 namespace BlueDragon.Services
 {
@@ -15,25 +16,37 @@ namespace BlueDragon.Services
         }
 
         public bool IsAuthorized { get; private set; }
+        public List<string> UserRoles { get; set; } = new List<string>();
 
         public event Action? OnChange;
 
         public async Task Login(string userName, string password)
         {
             bool authorized = await _userService.GetUserCredentials(userName, password);
-            if (IsAuthorized != authorized)
-            {
-                IsAuthorized = authorized;
+            IsAuthorized = authorized;
 
-                if (authorized)
+            if (authorized)
+            {
+                var customAuthProvider = (CustomAuthenticationStateProvider)_authenticationStateProvider;
+                var userInfo = new UserInfo { UserName = userName };
+                await customAuthProvider.MarkUserAsAuthenticated(userInfo);
+                // Fetch user roles after login
+                var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+                var user = authState.User;
+
+                if (user.Identity?.IsAuthenticated == true)
                 {
-                    var customAuthProvider = (CustomAuthenticationStateProvider)_authenticationStateProvider;
-                    var userInfo = new UserInfo { UserName = userName };
-                    await customAuthProvider.MarkUserAsAuthenticated(userInfo);
+                    UserRoles = user.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
                 }
 
-                NotifyStateChanged();
+                OnChange?.Invoke();
             }
+            NotifyStateChanged();
+        }
+
+        public bool IsInRole(string role)
+        {
+            return UserRoles.Contains(role);
         }
 
         public async void Logout()

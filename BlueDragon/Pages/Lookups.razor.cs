@@ -2,10 +2,12 @@
 using BlueDragon.Models;
 using BlueDragon.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MudBlazor;
+using System.Security.Claims;
 
 namespace BlueDragon.Pages
 {
@@ -18,6 +20,8 @@ namespace BlueDragon.Pages
         [Inject] AuthService? AuthService { get; set; }
         [Inject] UserService? UserService { get; set; }
         [Inject] RoleService? RoleService { get; set; }
+        [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+        [Inject] private NavigationManager NavigationManager { get; set; }
         #endregion
 
         #region Model and List Initialization
@@ -40,16 +44,31 @@ namespace BlueDragon.Pages
             if (AuthService != null)
                 AuthService.OnChange += StateHasChanged;
 
-            if (BrandService != null && CableTypeService != null && UserService != null && RoleService != null)
+            if (AuthService.IsAuthorized)
             {
-                roles = await RoleService.GetRoleListAsync();
-                brands = await BrandService.GetBrandNames();
-                cableTypes = await CableTypeService.GetCableTypes();
-                users = await UserService.GetUserList();
-                foreach (var user in users)
+                if(!AuthService.IsInRole("Admin"))
                 {
-                    user.UserRoles = (List<string>)await UserService.GetUserRoles(user);
+                    NavigationManager.NavigateTo("/AccessDenied");
+                    return;
                 }
+
+                if (BrandService != null && CableTypeService != null && UserService != null && RoleService != null)
+                {
+                    roles = await RoleService.GetRoleListAsync();
+                    brands = await BrandService.GetBrandNames();
+                    cableTypes = await CableTypeService.GetCableTypes();
+                    users = await UserService.GetUserList();
+
+                    foreach (var user in users)
+                    {
+                        user.UserRoles = (List<string>)await UserService.GetUserRoles(user);
+                    }
+                }
+            }
+            else
+            {
+                // If the user is not authenticated, redirect them to the login page
+                NavigationManager.NavigateTo("/Account/AccessDenied");
             }
         }
 
