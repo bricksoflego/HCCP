@@ -1,4 +1,5 @@
-﻿@using BlueDragon.Services
+﻿@using BlueDragon.Components
+@using BlueDragon.Services
 
 <MudNavMenu>
     <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">HCC Home</MudNavLink>
@@ -6,10 +7,14 @@
     <MudNavLink Href="cables" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Cable">Cable Inventory</MudNavLink>
     <MudNavLink Href="components" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Polyline">Component Inventory</MudNavLink>
     <MudNavLink Href="peripherals" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Extension">Peripheral Inventory</MudNavLink>
-
-    @if (AuthService?.IsAuthorized != false)
-    {
-        <MudDivider/>
-        <MudNavLink Href="lookups" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.MiscellaneousServices">Administration</MudNavLink>
-    }
+    <CascadingAuthenticationState>
+        <AuthorizeView>
+            <MudDivider />
+            <MudNavLink Href="peripherals" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Extension">Peripheral Inventory</MudNavLink>
+            @if (ApplicationUserService.ApplicationUser.UserRoles.Contains("Admin"))
+            {
+                <MudNavLink Href="lookups" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.MiscellaneousServices">Administration</MudNavLink>
+            }
+        </AuthorizeView>
+    </CascadingAuthenticationState>
 </MudNavMenu>

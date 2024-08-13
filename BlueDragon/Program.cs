@@ -1,6 +1,9 @@
+using BlueDragon;
+using BlueDragon.Components;
 using BlueDragon.Data;
 using BlueDragon.Models;
 using BlueDragon.Services;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -11,10 +14,12 @@ var builder = WebApplication.CreateBuilder(args);
 StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configuration);
 var connectionString = builder.Configuration.GetConnectionString("SQLServer");
 builder.Services.AddDbContext<HccContext>(options => options.UseSqlServer(connectionString));
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<HccContext>();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<HccContext>();
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddRazorComponents();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddTransient<BrandNameService>();
 builder.Services.AddTransient<CableTypeService>();
@@ -22,9 +27,16 @@ builder.Services.AddTransient<CableService>();
 builder.Services.AddTransient<EComponentService>();
 builder.Services.AddTransient<HardwareService>();
 builder.Services.AddTransient<PeripheralService>();
-builder.Services.AddTransient<UserService>();
 builder.Services.AddTransient<RoleService>();
+
+// Register the CustomAuthenticationStateProvider
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+builder.Services.AddSingleton<ApplicationUserService>();
+
+// Register AuthService after CustomAuthenticationStateProvider
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<UserService>();
+
 builder.Services.AddMudServices();
 
 var app = builder.Build();
@@ -44,6 +56,9 @@ if (!app.Environment.IsDevelopment())
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");

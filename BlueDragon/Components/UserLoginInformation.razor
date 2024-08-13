@@ -1,6 +1,6 @@
 ﻿@if (AuthService?.IsAuthorized != false)
 {
-    <MudText>Hello, @applicationUser.UserName! - </MudText>
+    <MudText>Hello, @ApplicationUser.UserName! - </MudText>
     <MudButton StartIcon="@Icons.Material.Filled.Logout" OnClick="@Logout" Color="Color.Inherit" Href="" Target="_blank">Logout</MudButton>
 }
 else

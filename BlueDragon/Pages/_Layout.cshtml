@@ -28,5 +28,10 @@
     </div>
     <script src="_framework/blazor.server.js"></script>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+    <script>
+        window.localStorage.setItem('authUser', JSON.stringify({ userName: 'testUser' }));
+        window.localStorage.getItem('authUser');
+        window.localStorage.removeItem('authUser');
+    </script>
 </body>
 </html>

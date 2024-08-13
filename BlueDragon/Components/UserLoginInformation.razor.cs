@@ -10,13 +10,12 @@ namespace BlueDragon.Components
     {
         bool loginDialogVisible;
         readonly LoginModel login = new();
-        ApplicationUser applicationUser = new();
+        public ApplicationUser ApplicationUser { get; private set; } = new(); // Make applicationUser public
 
         [Inject] private UserService? UserService { get; set; }
-
         [Inject] private AuthService? AuthService { get; set; }
-
         [Inject] public NavigationManager? NavigationManager { get; set; }
+        [Inject] private ApplicationUserService? ApplicationUserService { get; set; }
 
         protected override void OnInitialized()
         {
@@ -34,7 +33,8 @@ namespace BlueDragon.Components
                 {
                     try
                     {
-                        applicationUser = await UserService.GetUserInformation(login.UserName);
+                        ApplicationUser = await UserService.GetUserInformation(login.UserName);
+                        ApplicationUser.UserRoles = (List<string>)await UserService.GetUserRoles(ApplicationUser);
                     }
                     catch (Exception e)
                     {
@@ -42,8 +42,9 @@ namespace BlueDragon.Components
                         Console.WriteLine(e);
                     }
                 }
+                ApplicationUserService?.UpdateUser(ApplicationUser);
                 Close();
-                StateHasChanged();
+                await InvokeAsync(StateHasChanged);
             }
         }
 
@@ -58,10 +59,13 @@ namespace BlueDragon.Components
 
         }
 
-        private void Logout()
+        private async void Logout()
         {
             AuthService?.Logout();
             NavigationManager?.NavigateTo("/", true);
+            // Clear the ApplicationUser in the service
+            ApplicationUserService?.UpdateUser(new ApplicationUser());
+            await InvokeAsync(StateHasChanged);
         }
 
         private static readonly DialogOptions dialogOptions = new()

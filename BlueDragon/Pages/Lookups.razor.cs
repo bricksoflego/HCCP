@@ -209,7 +209,7 @@ namespace BlueDragon.Pages
                 try
                 {
                     applicationUserModel = await UserService.GetUserInformation(context?.UserName ?? string.Empty);
-                    if (applicationUserModel.UserRoles.Any())
+                    if (applicationUserModel.UserRoles.Count != 0)
                     {
                         selectedRole = applicationUserModel.UserRoles.First();
                     }
