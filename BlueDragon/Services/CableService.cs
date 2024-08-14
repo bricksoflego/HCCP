@@ -4,14 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BlueDragon.Services
 {
-    public class CableService
+    public class CableService(HccContext context)
     {
-        private readonly HccContext _context;
-
-        public CableService(HccContext context)
-        {
-            _context = context;
-        }
+        private readonly HccContext _context = context;
 
         /// <summary>
         /// 

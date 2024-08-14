@@ -3,6 +3,7 @@ using BlueDragon.Components;
 using BlueDragon.Data;
 using BlueDragon.Models;
 using BlueDragon.Services;
+using BlueDragon.Shared;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
@@ -25,10 +26,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.AccessDeniedPath = "/Account/AccessDenied";
     });
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("MustBeAdmin", policy => policy.RequireRole("Admin"));
-});
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("MustBeAdmin", policy => policy.RequireRole("Admin"));
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -41,6 +40,8 @@ builder.Services.AddTransient<EComponentService>();
 builder.Services.AddTransient<HardwareService>();
 builder.Services.AddTransient<PeripheralService>();
 builder.Services.AddTransient<RoleService>();
+builder.Services.AddTransient<SolutionService>();
+builder.Services.AddSingleton<AuditStateService>();
 
 // Register the CustomAuthenticationStateProvider
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();

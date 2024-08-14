@@ -70,3 +70,15 @@
 .mud-paper .mud-card-content {
     padding: 0px !important;
 }
+
+.mud-nav-link-disabled {
+    background: gold !important;
+}
+
+    .mud-nav-link-disabled .mud-nav-link-text {
+        color: #001122 !important;
+    }
+
+    .mud-nav-link-disabled .mud-nav-link-icon {
+        color: #001122 !important;
+    }

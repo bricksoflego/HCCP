@@ -1,4 +1,5 @@
 ﻿using BlueDragon.Components;
+using BlueDragon.Models;
 using BlueDragon.Services;
 using Microsoft.AspNetCore.Components;
 
@@ -6,21 +7,55 @@ namespace BlueDragon.Shared
 {
     public partial class NavMenu
     {
+        #region Dependencies
         [Inject] private AuthService? AuthService { get; set; }
-        [Inject] private ApplicationUserService ApplicationUserService { get; set; } = new ApplicationUserService();
+        [Inject] private ApplicationUserService ApplicationUserService { get; set; } = default!;
+        [Inject] private SolutionService? SolutionService { get; set; }
+        [Inject] private AuditStateService? AuditStateService { get; set; }
+        #endregion
 
-        protected override void OnInitialized()
+        #region Model and List Initialization
+        private List<SolutionSetting>? settings = [];
+        #endregion
+
+        protected override async Task OnInitializedAsync()
         {
             if (AuthService != null)
                 AuthService.OnChange += StateHasChanged;
 
+            if (SolutionService != null)
+            {
+                settings = await SolutionService.GetSolutionSetings();
+            }
+
+            AuditStateService.OnChange += () =>
+            {
+                UpdateSettingsBasedOnAuditState();
+                StateHasChanged();
+            };
+
             ApplicationUserService.OnChange += HandleUserStateChange;
         }
 
-        private async void HandleUserStateChange()
+        private void UpdateSettingsBasedOnAuditState()
         {
-            // Ensure UI update happens on the correct thread
-            await InvokeAsync(StateHasChanged);
+            // Assuming settings is a list of SolutionSetting objects
+            var auditSetting = settings.FirstOrDefault(x => x.Name == "Audit");
+            if (auditSetting != null)
+            {
+                auditSetting.IsEnabled = AuditStateService.IsAuditInProgress;
+            }
+        }
+
+        private void HandleUserStateChange()
+        {
+            InvokeAsync(StateHasChanged);
+        }
+
+        public void HandleAuditStateChanged()
+        {
+            // RE - RENDER THE COMPONENT WHEN THE AUDIT STATE CHANGES
+            InvokeAsync(StateHasChanged);
         }
     }
 }
