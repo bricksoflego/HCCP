@@ -17,7 +17,7 @@ namespace BlueDragon.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.8")
+                .HasAnnotation("ProductVersion", "8.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -104,6 +104,9 @@ namespace BlueDragon.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("InUse")
+                        .HasColumnType("int");
 
                     b.Property<double?>("Length")
                         .IsRequired()
@@ -306,6 +309,29 @@ namespace BlueDragon.Migrations
                     b.HasKey("Pcid");
 
                     b.ToTable("Peripherals", (string)null);
+                });
+
+            modelBuilder.Entity("BlueDragon.Models.SolutionSetting", b =>
+                {
+                    b.Property<Guid>("Sid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("SID")
+                        .HasDefaultValueSql("(newid())");
+
+                    b.Property<bool>("IsEnabled")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValueSql("((0))");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Sid");
+
+                    b.ToTable("SolutionSettings", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

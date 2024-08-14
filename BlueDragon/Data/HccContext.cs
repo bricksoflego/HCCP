@@ -33,16 +33,7 @@ public partial class HccContext : IdentityDbContext<ApplicationUser>
 
     public virtual DbSet<LuCableType> LuCableTypes { get; set; }
 
-    // THIS SECTION IS OUTDATED AND IS MOVED TO THE PROGRAM.CS IN ORDER TO SUPPORT MICROSOFT.IDENTITY
-    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    //{
-    //    IConfigurationRoot configuration = new ConfigurationBuilder()
-    //            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-    //            .AddJsonFile("appsettings.json")
-    //            .Build();
-
-    //    optionsBuilder.UseSqlServer(configuration.GetConnectionString("SQLServer"));
-    //}
+    public virtual DbSet<SolutionSetting> SolutionSettings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -122,8 +113,24 @@ public partial class HccContext : IdentityDbContext<ApplicationUser>
             entity.Property(e => e.Name).HasMaxLength(50);
         });
 
+        modelBuilder.Entity<SolutionSetting>(entity =>
+        {
+            entity.HasKey(e => e.Sid);
+
+            entity.ToTable("SolutionSettings");
+
+            entity.Property(e => e.Sid)
+                .HasDefaultValueSql("(newid())")
+                .HasColumnName("SID");
+
+            entity.Property(e => e.Name).HasMaxLength(50);
+
+            entity.Property(e => e.IsEnabled).HasDefaultValueSql("((0))");
+        });
+
         OnModelCreatingPartial(modelBuilder);
     }
+
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

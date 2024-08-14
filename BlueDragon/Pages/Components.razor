@@ -6,42 +6,48 @@
 
 <PageTitle>Components</PageTitle>
 
-<MudButton OnClick="(()=>UpsertComponent(new Ecomponent()))"
-           Size="Size.Small"
-           Class="mb-2 mud-success-text"
-           StartIcon="@Icons.Material.Filled.Add">
-    Add New Item
-</MudButton>
-<MudDataGrid Items="@ecomponents" Dense Filterable Hideable Hover Striped>
-    <ToolBarContent>
-        <MudText Typo="Typo.h6">Electronic Components</MudText>
-        <MudSpacer />
-    </ToolBarContent>
-    <Columns>
-        <PropertyColumn Property="x => x.Name" />
-        <PropertyColumn Property="x => x.Location" />
-        <PropertyColumn Property="x => x.InUse" Title="Used" />
-        <PropertyColumn Property="x => x.OnHand" Title="Available" />
-        <PropertyColumn Property="x => x.Ecid" Hidden="true" />
-        <PropertyColumn Property="x => x.BrandName" Hidden="true" />
-        <PropertyColumn Property="x => x.SerialNumber" Hidden="true" />
-        <PropertyColumn Property="x => x.Description" Hidden="true" />
-        <PropertyColumn Property="x => x.Notes" Hidden="true" />
-        <TemplateColumn CellStyle="width:118px;" Filterable="false">
-            <CellTemplate>
-                <MudIconButton Color="Color.Tertiary" Icon="@Icons.Material.Filled.OpenInNew" Size="Size.Small" OnClick="(()=>ViewDetails(context.Item))" />
-                <MudIconButton Color="Color.Info" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="(()=>UpsertComponent(context.Item))" />
-                <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" OnClick="(()=>DeleteComponent(context.Item))" />
-            </CellTemplate>
-        </TemplateColumn>
-    </Columns>
-    <PagerContent>
-        <MudDataGridPager />
-    </PagerContent>
-    <NoRecordsContent>
-        <div>No Records Have Been Saved For This List</div>
-    </NoRecordsContent>
-</MudDataGrid>
+<CascadingAuthenticationState>
+    <AuthorizeView Roles="Admin, Manager" Context="user">
+        <MudButton OnClick="(()=>UpsertComponent(new Ecomponent()))"
+                   Size="Size.Small"
+                   Class="mb-2 mud-success-text"
+                   StartIcon="@Icons.Material.Filled.Add">
+            Add New Item
+        </MudButton>
+    </AuthorizeView>
+    <MudDataGrid Items="@ecomponents" Dense Filterable Hideable Hover Striped>
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Electronic Components</MudText>
+            <MudSpacer />
+        </ToolBarContent>
+        <Columns>
+            <PropertyColumn Property="x => x.Name" />
+            <PropertyColumn Property="x => x.Location" />
+            <PropertyColumn Property="x => x.InUse" Title="Used" />
+            <PropertyColumn Property="x => x.OnHand" Title="Available" />
+            <PropertyColumn Property="x => x.Ecid" Hidden="true" />
+            <PropertyColumn Property="x => x.BrandName" Hidden="true" />
+            <PropertyColumn Property="x => x.SerialNumber" Hidden="true" />
+            <PropertyColumn Property="x => x.Description" Hidden="true" />
+            <PropertyColumn Property="x => x.Notes" Hidden="true" />
+            <TemplateColumn CellStyle="width:118px;" Filterable="false">
+                <CellTemplate>
+                    <MudIconButton Color="Color.Tertiary" Icon="@Icons.Material.Filled.OpenInNew" Size="Size.Small" OnClick="(()=>ViewDetails(context.Item))" />
+                    <MudIconButton Color="Color.Info" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="(()=>UpsertComponent(context.Item))" />
+                    <AuthorizeView Roles="Admin, Manager" Context="user">
+                        <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" OnClick="(()=>DeleteComponent(context.Item))" />
+                    </AuthorizeView>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager />
+        </PagerContent>
+        <NoRecordsContent>
+            <div>No Records Have Been Saved For This List</div>
+        </NoRecordsContent>
+    </MudDataGrid>
+</CascadingAuthenticationState>
 <MudDialog @bind-Visible="upsertVisible" Options="dialogOptions" DefaultFocus="DefaultFocus.LastChild">
     <TitleContent>
         <MudText Typo="Typo.h6">
@@ -106,9 +112,9 @@
                         </MudItem>
                         <MudItem xs="3">
                             <MudTextField @bind-Value="eComponentModel.InUse"
-                                         Label="In-service count"
-                                         For="@(() => eComponentModel.InUse)"
-                                         Required="false" />
+                                          Label="In-service count"
+                                          For="@(() => eComponentModel.InUse)"
+                                          Required="false" />
                         </MudItem>
                         <MudItem xs="3">
                             <MudTextField @bind-Value="eComponentModel.OnHand"

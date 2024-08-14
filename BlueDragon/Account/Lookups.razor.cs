@@ -20,7 +20,6 @@ namespace BlueDragon.Account
         [Inject] AuthService? AuthService { get; set; }
         [Inject] UserService? UserService { get; set; }
         [Inject] RoleService? RoleService { get; set; }
-        [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; }
         [Inject] private NavigationManager NavigationManager { get; set; }
         #endregion
 
