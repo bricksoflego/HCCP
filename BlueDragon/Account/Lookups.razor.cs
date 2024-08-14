@@ -46,7 +46,7 @@ namespace BlueDragon.Account
 
             if (AuthService.IsAuthorized)
             {
-                if(!AuthService.IsInRole("Admin"))
+                if (!AuthService.IsInRole("Admin"))
                 {
                     NavigationManager.NavigateTo("/AccessDenied");
                     return;
@@ -68,7 +68,7 @@ namespace BlueDragon.Account
             else
             {
                 // If the user is not authenticated, redirect them to the login page
-                NavigationManager.NavigateTo("AccessDenied");
+                NavigationManager.NavigateTo("/");
             }
         }
 
@@ -77,6 +77,7 @@ namespace BlueDragon.Account
         /// 
         /// </summary>
         /// <param name="context"></param>
+
         private async Task SaveUserAccount(EditContext context)
         {
             bool isValid = context.Validate();
@@ -86,31 +87,63 @@ namespace BlueDragon.Account
                 try
                 {
                     applicationUserModel = (ApplicationUser)context.Model;
-                    IdentityResult result = await UserService.UpsertUser(applicationUserModel.UserName ?? string.Empty, applicationUserModel.Email ?? string.Empty, tempPassword, newApplication);
+
+                    // Create or update the user
+                    IdentityResult result = await UserService.UpsertUser(
+                        applicationUserModel.UserName ?? string.Empty,
+                        applicationUserModel.Email ?? string.Empty,
+                        tempPassword,
+                        newApplication);
+
                     if (result.Succeeded)
                     {
+                        // Reload the user from the database to get a fully tracked entity
+                        applicationUserModel = await UserService.GetUserInformation(applicationUserModel.UserName);
+
+                        // Now proceed with role assignment
                         var currentRoles = await UserService.GetUserRoles(applicationUserModel);
                         foreach (var role in currentRoles)
                         {
                             await UserService.RemoveRoleFromUser(applicationUserModel, role);
                         }
-                        await UserService.AddRoleToUser(applicationUserModel, selectedRole);
+
+                        if (!string.IsNullOrEmpty(selectedRole))
+                        {
+                            var addRoleResult = await UserService.AddRoleToUser(applicationUserModel, selectedRole);
+                            if (!addRoleResult.Succeeded)
+                            {
+                                Console.WriteLine($"Failed to add role: {addRoleResult.Errors.FirstOrDefault()?.Description}");
+                            }
+                        }
+
                         Snackbar.Add("User Successfully Saved", Severity.Success);
-                        applicationUserModel = new();
+
+                        // Refresh the user list and include roles
                         users = await UserService.GetUserList();
                         foreach (var user in users)
                         {
                             user.UserRoles = (List<string>)await UserService.GetUserRoles(user);
                         }
-                        Close("userAccount");
-                        StateHasChanged();
-                    }
-                    else Snackbar.Add("User Not Saved", Severity.Error);
 
+                        // Reset the model for new entry
+                        applicationUserModel = new ApplicationUser();
+                        selectedRole = string.Empty;
+                        tempPassword = string.Empty;
+
+                        context = new EditContext(applicationUserModel);
+
+                        StateHasChanged();
+
+                        newApplication = true;
+                    }
+                    else
+                    {
+                        Snackbar.Add("User Not Saved", Severity.Error);
+                    }
                 }
                 catch (Exception e)
                 {
-                    Snackbar.Add("Error Occured.", Severity.Error);
+                    Snackbar.Add("Error Occurred.", Severity.Error);
                     Console.WriteLine(e);
                 }
             }

@@ -34,6 +34,7 @@ namespace BlueDragon.Services
             var users = _userManager.Users.ToList();
             return await _userManager.Users.OrderBy(c => c.UserName).ToListAsync();
         }
+
         public async Task<ApplicationUser> GetUserInformation(string username)
         {
             var user = await _userManager.FindByNameAsync(username);
@@ -44,8 +45,6 @@ namespace BlueDragon.Services
 
         public async Task<IdentityResult> UpsertUser(string login, string email, string password, bool status)
         {
-            var result = new IdentityResult();
-
             if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(email))
             {
                 return IdentityResult.Failed(new IdentityError
@@ -55,6 +54,8 @@ namespace BlueDragon.Services
             }
 
             var existingUser = await _userManager.FindByNameAsync(login);
+
+            IdentityResult result;
 
             if (status) // Creating a new user
             {
@@ -68,6 +69,11 @@ namespace BlueDragon.Services
 
                 var newUser = new ApplicationUser { UserName = login, Email = email };
                 result = await _userManager.CreateAsync(newUser, password);
+
+                if (result.Succeeded)
+                {
+                    await _userManager.UpdateAsync(newUser);
+                }
             }
             else // Updating an existing user
             {
@@ -107,11 +113,17 @@ namespace BlueDragon.Services
             return await _userManager.GetRolesAsync(user);
         }
 
-        public async Task AddRoleToUser(ApplicationUser user, string roleName)
+        public async Task<IdentityResult> AddRoleToUser(ApplicationUser user, string roleName)
         {
-            await _userManager.AddToRoleAsync(user, roleName);
-        }
+            if (!await _roleManager.RoleExistsAsync(roleName))
+            {
+                return IdentityResult.Failed(new IdentityError { Description = $"Role '{roleName}' does not exist." });
+            }
 
+            var result = await _userManager.AddToRoleAsync(user, roleName);
+            return result;
+        }
+        
         public async Task RemoveRoleFromUser(ApplicationUser user, string roleName)
         {
             await _userManager.RemoveFromRoleAsync(user, roleName);
