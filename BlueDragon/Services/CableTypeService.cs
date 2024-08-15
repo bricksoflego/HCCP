@@ -21,6 +21,12 @@ namespace BlueDragon.Services
         {
             return await _context.LuCableTypes.OrderBy(c => c.Name).ToListAsync();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<LuCableType?> GetCableType(LuCableType model)
         {
             return await _context.LuCableTypes.FirstOrDefaultAsync(c => c.Id == model.Id);

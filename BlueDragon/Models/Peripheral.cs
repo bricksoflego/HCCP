@@ -2,6 +2,9 @@
 
 namespace BlueDragon.Models
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Peripheral
     {
         [Key]

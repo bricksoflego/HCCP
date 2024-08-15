@@ -4,6 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BlueDragon.Models;
 
+/// <summary>
+/// 
+/// </summary>
 public partial class Cable
 {
     [Key]
@@ -16,9 +19,7 @@ public partial class Cable
     public string? CableType { get; set; }
     [Required]
     public double? Length { get; set; }
-
     public string? Notes { get; set; }
-
     public bool Mutipart { get; set; }
     [Required]
     public int InUse { get; set; } = 0;

@@ -76,7 +76,6 @@ namespace BlueDragon.Account
         /// 
         /// </summary>
         /// <param name="context"></param>
-
         private async Task SaveUserAccount(EditContext context)
         {
             bool isValid = context.Validate();
@@ -238,6 +237,10 @@ namespace BlueDragon.Account
         private bool upsertUserAccount;
         private bool upsertBrandVisible;
         private bool upsertCableVisible;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private static readonly DialogOptions dialogOptions = new()
         {
             FullWidth = true,
@@ -246,6 +249,7 @@ namespace BlueDragon.Account
             Position = DialogPosition.TopCenter,
             MaxWidth = MaxWidth.Small
         };
+
         /// <summary>
         /// TODO: Need to see if there is a way to enforce/override 
         /// clearing fields with saved browser settings.
@@ -280,6 +284,11 @@ namespace BlueDragon.Account
             upsertUserAccount = true;
             StateHasChanged();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
         private async void UpsertBrand(LuBrandName? context)
         {
             if (context != null && BrandService != null)
@@ -287,6 +296,11 @@ namespace BlueDragon.Account
             upsertBrandVisible = true;
             StateHasChanged();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
         private async void UpsertCableType(LuCableType? context)
         {
             if (context != null && CableTypeService != null)
@@ -294,6 +308,11 @@ namespace BlueDragon.Account
             upsertCableVisible = true;
             StateHasChanged();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="lookupType"></param>
         private void Close(string lookupType)
         {
             switch (lookupType)

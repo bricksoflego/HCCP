@@ -9,12 +9,19 @@ namespace BlueDragon.Services
 
         public event Action? OnChange;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="user"></param>
         public void UpdateUser(ApplicationUser user)
         {
             ApplicationUser = user;
             NotifyStateChanged();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void NotifyStateChanged()
         {
             OnChange?.Invoke();

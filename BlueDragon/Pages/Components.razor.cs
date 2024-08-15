@@ -72,6 +72,10 @@ namespace BlueDragon.Pages
         #region Upsert Dialog
         private bool upsertVisible;
         private bool detailVisible;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private static readonly DialogOptions dialogOptions = new()
         {
             FullWidth = true,
@@ -80,6 +84,11 @@ namespace BlueDragon.Pages
             Position = DialogPosition.TopCenter,
             MaxWidth = MaxWidth.Small
         };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
         private async void UpsertComponent(Ecomponent? context)
         {
             if (context != null && EComponentService != null)
@@ -87,6 +96,12 @@ namespace BlueDragon.Pages
             upsertVisible = true;
             StateHasChanged();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         private async Task ViewDetails(Ecomponent context)
         {
             if (context != null && EComponentService != null)
@@ -94,6 +109,10 @@ namespace BlueDragon.Pages
             detailVisible = true;
             StateHasChanged();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
         private void Close()
         {
             upsertVisible = false;

@@ -24,6 +24,11 @@ namespace BlueDragon.Pages
         List<Cable> cables = [];
         #endregion
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="b"></param>
+        /// <returns></returns>
         protected string ConvertBool(bool b)
         {
             return b ? "Yes" : "No";
@@ -80,6 +85,10 @@ namespace BlueDragon.Pages
         #region Upsert Dialog
         private bool upsertVisible;
         private bool detailVisible;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private static readonly DialogOptions dialogOptions = new()
         {
             FullWidth = true,
@@ -89,6 +98,10 @@ namespace BlueDragon.Pages
             MaxWidth = MaxWidth.Small
         };
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
         private async void UpsertCable(Cable? context)
         {
             if (context != null && CableService != null)
@@ -96,6 +109,12 @@ namespace BlueDragon.Pages
             upsertVisible = true;
             StateHasChanged();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         private async Task ViewDetails(Cable context)
         {
             if (context != null && CableService != null)
@@ -104,6 +123,9 @@ namespace BlueDragon.Pages
             StateHasChanged();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void Close()
         {
             upsertVisible = false;

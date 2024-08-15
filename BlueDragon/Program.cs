@@ -13,7 +13,13 @@ using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+if (builder.Environment.IsDevelopment())
+{
+    builder.Configuration.AddUserSecrets<Program>();
+}
+
 StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configuration);
+
 var connectionString = builder.Configuration.GetConnectionString("SQLServer");
 builder.Services.AddDbContext<HccContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()

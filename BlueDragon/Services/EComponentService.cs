@@ -8,6 +8,10 @@ namespace BlueDragon.Services
     {
         private readonly HccContext _context;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
         public EComponentService(HccContext context)
         {
             _context = context;
@@ -22,6 +26,11 @@ namespace BlueDragon.Services
             return await _context.Ecomponents.OrderBy(c => c.Name).ToListAsync();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<Ecomponent?> GetComponent(Ecomponent model)
         {
             return await _context.Ecomponents.FirstOrDefaultAsync(c => c.Ecid == model.Ecid);

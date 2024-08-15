@@ -22,7 +22,11 @@ namespace BlueDragon.Services
             return await _context.Peripherals.OrderBy(c => c.Name).ToListAsync();
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<Peripheral?> GetPeripheral(Peripheral model)
         {
             return await _context.Peripherals.FirstOrDefaultAsync(c => c.Pcid == model.Pcid);

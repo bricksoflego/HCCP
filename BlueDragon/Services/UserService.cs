@@ -20,6 +20,12 @@ namespace BlueDragon.Services
             _roleManager = roleManager;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         public async Task<bool> GetUserCredentials(string username, string password)
         {
             var user = await _userManager.FindByNameAsync(username);
@@ -29,12 +35,21 @@ namespace BlueDragon.Services
             return false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<ApplicationUser>> GetUserList()
         {
             var users = _userManager.Users.ToList();
             return await _userManager.Users.OrderBy(c => c.UserName).ToListAsync();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
         public async Task<ApplicationUser> GetUserInformation(string username)
         {
             var user = await _userManager.FindByNameAsync(username);
@@ -43,6 +58,14 @@ namespace BlueDragon.Services
             return new();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="login"></param>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
         public async Task<IdentityResult> UpsertUser(string login, string email, string password, bool status)
         {
             if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(email))
@@ -92,6 +115,11 @@ namespace BlueDragon.Services
             return result;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
         public async Task<IdentityResult> DeleteUser(string userName)
         {
 
@@ -108,11 +136,22 @@ namespace BlueDragon.Services
             return result;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public async Task<IList<string>> GetUserRoles(ApplicationUser user)
         {
             return await _userManager.GetRolesAsync(user);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="roleName"></param>
+        /// <returns></returns>
         public async Task<IdentityResult> AddRoleToUser(ApplicationUser user, string roleName)
         {
             if (!await _roleManager.RoleExistsAsync(roleName))
@@ -124,6 +163,12 @@ namespace BlueDragon.Services
             return result;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="roleName"></param>
+        /// <returns></returns>
         public async Task RemoveRoleFromUser(ApplicationUser user, string roleName)
         {
             await _userManager.RemoveFromRoleAsync(user, roleName);

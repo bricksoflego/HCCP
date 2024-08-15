@@ -4,6 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BlueDragon.Models;
 
+/// <summary>
+/// 
+/// </summary>
 public partial class LuCableType
 {
     [Key]

@@ -23,6 +23,11 @@ namespace BlueDragon.Services
             return await _context.Hardwares.OrderBy(c => c.Name).ToListAsync();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<Hardware?> GetSelectedHardware(Hardware model)
         {
             return await _context.Hardwares.FirstOrDefaultAsync(c => c.Hid == model.Hid);

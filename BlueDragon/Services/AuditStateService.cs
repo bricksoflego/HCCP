@@ -5,6 +5,10 @@
         public event Action? OnChange;
 
         private bool _isAuditInProgress;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsAuditInProgress
         {
             get => _isAuditInProgress;

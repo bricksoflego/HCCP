@@ -8,11 +8,21 @@ namespace BlueDragon.Services
     {
         private readonly HccContext _context = context;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<SolutionSetting>> GetSolutionSetings()
         {
             return await _context.SolutionSettings.OrderBy(s => s.Name).ToListAsync();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public async Task Upsert(string name, bool value)
         {
             var setting = await _context.SolutionSettings.FirstOrDefaultAsync(s => s.Name == name);

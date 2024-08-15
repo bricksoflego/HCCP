@@ -24,6 +24,11 @@ namespace BlueDragon.Components
                 AuthService.OnChange += StateHasChanged;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         private async Task CheckAuthentication(EditContext context)
         {
             if (context != null && AuthService != null)
@@ -52,17 +57,26 @@ namespace BlueDragon.Components
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void Login()
         {
             loginDialogVisible = true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void Close()
         {
             loginDialogVisible = false;
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private async void Logout()
         {
             AuthService?.Logout();
@@ -72,6 +86,9 @@ namespace BlueDragon.Components
             await InvokeAsync(StateHasChanged);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private static readonly DialogOptions dialogOptions = new()
         {
             FullWidth = true,

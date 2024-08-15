@@ -47,8 +47,10 @@ namespace BlueDragon.Account
             await InvokeAsync(StateHasChanged);
         }
 
-
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public async Task BeginAudit()
         {
             AuditInProgress = true;
@@ -66,6 +68,10 @@ namespace BlueDragon.Account
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public async Task StopAudit()
         {
             AuditInProgress = false;

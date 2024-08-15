@@ -17,6 +17,10 @@ namespace BlueDragon.Services
             _jsRuntime = jsRuntime;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             // Return cached authentication state if available
@@ -56,6 +60,11 @@ namespace BlueDragon.Services
             return _cachedAuthenticationState;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="applicationUser"></param>
+        /// <returns></returns>
         public async Task MarkUserAsAuthenticated(ApplicationUser applicationUser)
         {
             var identity = new ClaimsIdentity(new[]
@@ -72,6 +81,10 @@ namespace BlueDragon.Services
             await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "authUser", json);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public async Task MarkUserAsLoggedOut()
         {
             await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", "authUser");

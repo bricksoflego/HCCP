@@ -1,5 +1,8 @@
 ﻿namespace BlueDragon.Models
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class InventoryAudit
     {
         public List<Hardware>? Hardwares { get; set; }

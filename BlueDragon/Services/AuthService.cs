@@ -22,6 +22,12 @@ namespace BlueDragon.Services
 
         public event Action? OnChange;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         public async Task Login(string userName, string password)
         {
             bool authorized = await _userService.GetUserCredentials(userName, password);
@@ -45,11 +51,19 @@ namespace BlueDragon.Services
             NotifyStateChanged();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="role"></param>
+        /// <returns></returns>
         public bool IsInRole(string role)
         {
             return UserRoles.Contains(role);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public async void Logout()
         {
             IsAuthorized = false;
@@ -60,6 +74,9 @@ namespace BlueDragon.Services
             NotifyStateChanged();
         }
 
-        private void NotifyStateChanged() => OnChange?.Invoke();
+       /// <summary>
+       /// 
+       /// </summary>
+       private void NotifyStateChanged() => OnChange?.Invoke();
     }
 }

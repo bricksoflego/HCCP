@@ -1,5 +1,8 @@
 ﻿namespace BlueDragon.Data
 {
+    /// <summary>
+    /// 
+    /// </summary>
     enum LocationUsed
     {
         OfficeSupplies,

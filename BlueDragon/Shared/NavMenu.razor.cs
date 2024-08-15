@@ -37,6 +37,9 @@ namespace BlueDragon.Shared
             ApplicationUserService.OnChange += HandleUserStateChange;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void UpdateSettingsBasedOnAuditState()
         {
             // Assuming settings is a list of SolutionSetting objects
@@ -47,11 +50,17 @@ namespace BlueDragon.Shared
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void HandleUserStateChange()
         {
             InvokeAsync(StateHasChanged);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void HandleAuditStateChanged()
         {
             // RE - RENDER THE COMPONENT WHEN THE AUDIT STATE CHANGES
