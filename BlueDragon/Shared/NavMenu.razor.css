@@ -1,11 +1,11 @@
-﻿.mud-nav-link-disabled {
+﻿::deep .mud-nav-link-disabled {
     background: gold;
 }
 
-    .mud-nav-link-disabled .mud-nav-link-text {
+    ::deep .mud-nav-link-disabled .mud-nav-link-text {
         color: #001122 !important;
     }
 
-    .mud-nav-link-disabled .mud-nav-link-icon {
+    ::deep .mud-nav-link-disabled .mud-nav-link-icon {
         color: #001122 !important;
     }
