@@ -1,9 +1,6 @@
-using BlueDragon;
-using BlueDragon.Components;
 using BlueDragon.Data;
 using BlueDragon.Models;
 using BlueDragon.Services;
-using BlueDragon.Shared;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
@@ -48,6 +45,7 @@ builder.Services.AddTransient<PeripheralService>();
 builder.Services.AddTransient<RoleService>();
 builder.Services.AddTransient<SolutionService>();
 builder.Services.AddSingleton<AuditStateService>();
+builder.Services.AddScoped<IFormFieldClearService, FormFieldClearService>();
 
 // Register the CustomAuthenticationStateProvider
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();

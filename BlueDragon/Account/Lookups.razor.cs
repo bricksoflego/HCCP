@@ -1,13 +1,9 @@
-﻿using BlueDragon.Data;
-using BlueDragon.Models;
+﻿using BlueDragon.Models;
 using BlueDragon.Services;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MudBlazor;
-using System.Security.Claims;
 
 namespace BlueDragon.Account
 {
@@ -17,10 +13,10 @@ namespace BlueDragon.Account
         [Inject] ISnackbar? Snackbar { get; set; }
         [Inject] BrandNameService? BrandService { get; set; }
         [Inject] CableTypeService? CableTypeService { get; set; }
-        [Inject] AuthService? AuthService { get; set; }
         [Inject] UserService? UserService { get; set; }
         [Inject] RoleService? RoleService { get; set; }
-        [Inject] private NavigationManager NavigationManager { get; set; }
+        [Inject] AuthService? AuthService { get; set; } = default!;
+        [Inject] private NavigationManager NavigationManager { get; set; } = default!;
         #endregion
 
         #region Model and List Initialization
@@ -35,47 +31,38 @@ namespace BlueDragon.Account
         string selectedRole = string.Empty;
         #endregion
 
+        #region Model and List Initialization
         string tempPassword = string.Empty;
         bool newApplication;
+        #endregion
 
         protected override async Task OnInitializedAsync()
         {
-            if (AuthService != null)
-                AuthService.OnChange += StateHasChanged;
+            AuthService!.OnChange += StateHasChanged;
 
-            if (AuthService.IsAuthorized)
+            if (AuthService?.IsAuthorized == true && (AuthService.IsInRole("Admin") || AuthService.IsInRole("Manager")))
+                await Task.CompletedTask;
+            else NavigationManager.NavigateTo(AuthService?.IsAuthorized == true ? "/AccessDenied" : "/");
+
+            if (BrandService != null && CableTypeService != null && UserService != null && RoleService != null)
             {
-                if (!AuthService.IsInRole("Admin"))
-                {
-                    NavigationManager.NavigateTo("/AccessDenied");
-                    return;
-                }
+                roles = await RoleService.GetRoleListAsync();
+                brands = await BrandService.GetBrandNames();
+                cableTypes = await CableTypeService.GetCableTypes();
+                users = await UserService.GetUserList();
 
-                if (BrandService != null && CableTypeService != null && UserService != null && RoleService != null)
+                foreach (var user in users)
                 {
-                    roles = await RoleService.GetRoleListAsync();
-                    brands = await BrandService.GetBrandNames();
-                    cableTypes = await CableTypeService.GetCableTypes();
-                    users = await UserService.GetUserList();
-
-                    foreach (var user in users)
-                    {
-                        user.UserRoles = (List<string>)await UserService.GetUserRoles(user);
-                    }
+                    user.UserRoles = (List<string>)await UserService.GetUserRoles(user);
                 }
-            }
-            else
-            {
-                // If the user is not authenticated, redirect them to the login page
-                NavigationManager.NavigateTo("/");
             }
         }
 
         #region User Accounts
         /// <summary>
-        /// 
+        /// Saves or updates a user account and assigns roles.
         /// </summary>
-        /// <param name="context"></param>
+        /// <param name="context">The edit context containing user data.</param> 
         private async Task SaveUserAccount(EditContext context)
         {
             bool isValid = context.Validate();
@@ -96,7 +83,7 @@ namespace BlueDragon.Account
                     if (result.Succeeded)
                     {
                         // Reload the user from the database to get a fully tracked entity
-                        applicationUserModel = await UserService.GetUserInformation(applicationUserModel.UserName);
+                        applicationUserModel = await UserService.GetUserInformation(applicationUserModel.UserName!);
 
                         // Now proceed with role assignment
                         var currentRoles = await UserService.GetUserRoles(applicationUserModel);
@@ -156,7 +143,7 @@ namespace BlueDragon.Account
         {
             if (UserService != null)
             {
-                await UserService.DeleteUser(user.UserName);
+                await UserService.DeleteUser(user.UserName!);
                 users = await UserService.GetUserList();
                 StateHasChanged();
             }

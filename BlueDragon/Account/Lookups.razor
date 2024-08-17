@@ -1,8 +1,6 @@
 ﻿@page "/lookups"
-@using BlueDragon.Data;
-@using BlueDragon.Services;
-@using System.Linq;
 @using BlueDragon.Models;
+
 @attribute [Authorize]
 
 <PageTitle>Administration</PageTitle>
@@ -136,17 +134,20 @@
                     @if (!newApplication)
                     {
                         <MudTextField @bind-Value="applicationUserModel.UserName"
+                                      Clearable="true"
                                       InputType="InputType.Text"
                                       Disabled="true"
                                       Label="Username"
                                       HelperText="Max. 50 characters"
                                       For="@(() => applicationUserModel.UserName)"
                                       Required="true"
-                                      RequiredError="A Username is required!" />
+                                      RequiredError="A Username is required!"
+                                      autocomplete="off" />
                     }
                     else
                     {
                         <MudTextField @bind-Value="applicationUserModel.UserName"
+                                      Clearable="true"
                                       InputType="InputType.Text"
                                       Label="Username"
                                       HelperText="Max. 50 characters"
@@ -167,6 +168,7 @@
                         }
                     </MudSelect>
                     <MudTextField @bind-Value="applicationUserModel.Email"
+                                  Clearable="true"
                                   InputType="InputType.Email"
                                   Label="Email"
                                   HelperText="Max. 50 characters"
@@ -176,6 +178,7 @@
                     @if (newApplication)
                     {
                         <MudTextField @bind-Value="tempPassword"
+                                      Clearable="true"
                                       InputType="InputType.Password"
                                       Label="Password"
                                       HelperText="Max. 20 characters"

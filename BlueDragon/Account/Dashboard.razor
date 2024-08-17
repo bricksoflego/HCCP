@@ -1,5 +1,4 @@
 ﻿@page "/dashboard"
-@using Models
 @attribute [Authorize]
 
 <PageTitle>Dashboard</PageTitle>
@@ -8,37 +7,12 @@
 
 <div style="display:inline; position:relative;top:-19px">
     <div style="display:inline-block;margin-right:.75em;"><h2>Inventory Power!</h2></div>
-    <div style="display:inline-block; height:25px;"><MudSwitch Value="AuditStateService.IsAuditInProgress" Color="Color.Info" UncheckedColor="Color.Warning" ValueChanged="@((bool value) => OnSwitchChanged(value))">@SwitchText</MudSwitch></div>
+    <div style="display:inline-block; height:25px;"><MudSwitch Value="AuditStateService!.IsAuditInProgress" Color="Color.Info" UncheckedColor="Color.Warning" ValueChanged="@((bool value) => OnSwitchChanged(value))">@SwitchText</MudSwitch></div>
 </div>
 <div>
     @if (AuditInProgress == false)
     {
-        <h4>Last Audit Results</h4>
+              <h4>Last Audit Results</h4>
     }
     <a href="@A" target="_blank">@A</a>
 </div>
-
-@code {
-    public string SwitchText => AuditStateService.IsAuditInProgress ? "In Progress" : "Not Started";
-    public bool AuditInProgress { get; set; } = false;
-    public string A { get; set; } = "http://oxstudios.com";
-
-    private async Task OnSwitchChanged(bool newValue)
-    {
-        Console.WriteLine($"Switch toggled. New Value: {newValue}"); // Debugging output
-        AuditStateService.IsAuditInProgress = newValue;
-
-        if (newValue)
-        {
-            Console.WriteLine("Audit Started"); // Debugging output
-            await BeginAudit();
-        }
-        else
-        {
-            Console.WriteLine("Audit Stopped"); // Debugging output
-            await StopAudit();
-        }
-
-        StateHasChanged();
-    }
-}

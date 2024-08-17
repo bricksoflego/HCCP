@@ -6,48 +6,46 @@
 
 <PageTitle>Peripherals</PageTitle>
 
-<CascadingAuthenticationState>
-    <AuthorizeView Roles="Admin, Manager" Context="user">
-        <MudButton OnClick="(()=>UpsertPeripheral(new Peripheral()))"
-                   Size="Size.Small"
-                   Class="mb-2 mud-success-text"
-                   StartIcon="@Icons.Material.Filled.Add">
-            Add New Item
-        </MudButton>
-    </AuthorizeView>
-    <MudDataGrid Items="@peripherals" Dense Filterable Hideable Hover Striped>
-        <ToolBarContent>
-            <MudText Typo="Typo.h6">Peripherals</MudText>
-            <MudSpacer />
-        </ToolBarContent>
-        <Columns>
-            <PropertyColumn Property="x => x.Name" />
-            <PropertyColumn Property="x => x.Location" />
-            <PropertyColumn Property="x => x.InUse" Title="Used" />
-            <PropertyColumn Property="x => x.OnHand" Title="Available" />
-            <PropertyColumn Property="x => x.Pcid" Hidden="true" />
-            <PropertyColumn Property="x => x.BrandName" Hidden="true" />
-            <PropertyColumn Property="x => x.SerialNumber" Hidden="true" />
-            <PropertyColumn Property="x => x.Description" Hidden="true" />
-            <PropertyColumn Property="x => x.Notes" Hidden="true" />
-            <TemplateColumn CellStyle="width:118px;" Filterable="false">
-                <CellTemplate>
-                    <MudIconButton Color="Color.Tertiary" Icon="@Icons.Material.Filled.OpenInNew" Size="Size.Small" OnClick="(()=>ViewDetails(context.Item))" />
-                    <MudIconButton Color="Color.Info" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="(()=>UpsertPeripheral(context.Item))" />
-                    <AuthorizeView Roles="Admin, Manager" Context="user">
-                        <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" OnClick="(()=>DeletePeripheral(context.Item))" />
-                    </AuthorizeView>
-                </CellTemplate>
-            </TemplateColumn>
-        </Columns>
-        <PagerContent>
-            <MudDataGridPager />
-        </PagerContent>
-        <NoRecordsContent>
-            <div>No Records Have Been Saved For This List</div>
-        </NoRecordsContent>
-    </MudDataGrid>
-</CascadingAuthenticationState>
+<AuthorizeView Roles="Admin, Manager" Context="user">
+    <MudButton OnClick="(()=>UpsertPeripheral(new Peripheral()))"
+               Size="Size.Small"
+               Class="mb-2 mud-success-text"
+               StartIcon="@Icons.Material.Filled.Add">
+        Add New Item
+    </MudButton>
+</AuthorizeView>
+<MudDataGrid Items="@peripherals" Dense Filterable Hideable Hover Striped>
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Peripherals</MudText>
+        <MudSpacer />
+    </ToolBarContent>
+    <Columns>
+        <PropertyColumn Property="x => x.Name" />
+        <PropertyColumn Property="x => x.Location" />
+        <PropertyColumn Property="x => x.InUse" Title="Used" />
+        <PropertyColumn Property="x => x.OnHand" Title="Available" />
+        <PropertyColumn Property="x => x.Pcid" Hidden="true" />
+        <PropertyColumn Property="x => x.BrandName" Hidden="true" />
+        <PropertyColumn Property="x => x.SerialNumber" Hidden="true" />
+        <PropertyColumn Property="x => x.Description" Hidden="true" />
+        <PropertyColumn Property="x => x.Notes" Hidden="true" />
+        <TemplateColumn CellStyle="width:118px;" Filterable="false">
+            <CellTemplate>
+                <MudIconButton Color="Color.Tertiary" Icon="@Icons.Material.Filled.OpenInNew" Size="Size.Small" OnClick="(()=>ViewDetails(context.Item))" />
+                <MudIconButton Color="Color.Info" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="(()=>UpsertPeripheral(context.Item))" />
+                <AuthorizeView Roles="Admin, Manager" Context="user">
+                    <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" OnClick="(()=>DeletePeripheral(context.Item))" />
+                </AuthorizeView>
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager />
+    </PagerContent>
+    <NoRecordsContent>
+        <div>No Records Have Been Saved For This List</div>
+    </NoRecordsContent>
+</MudDataGrid>
 <MudDialog @bind-Visible="upsertVisible" Options="dialogOptions" DefaultFocus="DefaultFocus.LastChild">
     <TitleContent>
         <MudText Typo="Typo.h6">

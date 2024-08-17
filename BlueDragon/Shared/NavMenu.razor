@@ -3,23 +3,21 @@
 
 <MudNavMenu>
     <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">HCC Home</MudNavLink>
-    <CascadingAuthenticationState>
-        <AuthorizeView>
-            <MudNavLink Href="hardwares" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Computer">Hardware Inventory</MudNavLink>
-            <MudNavLink Href="cables" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Cable">Cable Inventory</MudNavLink>
-            <MudNavLink Href="components" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Polyline">Component Inventory</MudNavLink>
-            <MudNavLink Href="peripherals" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Extension">Peripheral Inventory</MudNavLink>
-            @if (settings != null && settings.Any(x => x.Name == "Audit" && x.IsEnabled == true))
-            {
-                <MudNavLink Href="" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Checklist" Disabled="true">Audit</MudNavLink>
-            }
-        </AuthorizeView>
-        <AuthorizeView Roles="Admin,Manager">
-            <MudDivider />
-            <MudNavLink Href="dashboard" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Group">Manager Dashboard</MudNavLink>
-        </AuthorizeView>
-        <AuthorizeView Roles="Admin">
-            <MudNavLink Href="lookups" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.MiscellaneousServices">Administration</MudNavLink>
-        </AuthorizeView>
-    </CascadingAuthenticationState>
+    <AuthorizeView>
+        <MudNavLink Href="hardwares" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Computer">Hardware Inventory</MudNavLink>
+        <MudNavLink Href="cables" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Cable">Cable Inventory</MudNavLink>
+        <MudNavLink Href="components" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Polyline">Component Inventory</MudNavLink>
+        <MudNavLink Href="peripherals" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Extension">Peripheral Inventory</MudNavLink>
+        @if (settings != null && settings.Any(x => x.Name == "Audit" && x.IsEnabled == true))
+        {
+            <MudNavLink Href="" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Checklist" Disabled="true">Audit</MudNavLink>
+        }
+    </AuthorizeView>
+    <AuthorizeView Roles="Admin,Manager">
+        <MudDivider />
+        <MudNavLink Href="dashboard" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Group">Manager Dashboard</MudNavLink>
+    </AuthorizeView>
+    <AuthorizeView Roles="Admin">
+        <MudNavLink Href="lookups" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.MiscellaneousServices">Administration</MudNavLink>
+    </AuthorizeView>
 </MudNavMenu>
