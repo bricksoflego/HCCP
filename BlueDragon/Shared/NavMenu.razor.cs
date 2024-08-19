@@ -11,7 +11,7 @@ namespace BlueDragon.Shared
         [Inject] private AuthService? AuthService { get; set; }
         [Inject] private ApplicationUserService ApplicationUserService { get; set; } = default!;
         [Inject] private SolutionService? SolutionService { get; set; }
-        [Inject] private AuditStateService? AuditStateService { get; set; }
+        [Inject] private AuditService? AuditStateService { get; set; }
         #endregion
 
         #region Model and List Initialization

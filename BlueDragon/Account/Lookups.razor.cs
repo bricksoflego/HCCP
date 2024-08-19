@@ -135,10 +135,11 @@ namespace BlueDragon.Account
         }
 
         /// <summary>
-        /// 
+        /// Asynchronously deletes a user account from the system using the specified user object. 
+        /// After deletion, it refreshes the list of users and updates the UI state.
         /// </summary>
-        /// <param name="user"></param>
-        /// <returns></returns>
+        /// <param name="user">The user object representing the account to be deleted.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         private async Task DeleteUserAccount(ApplicationUser user)
         {
             if (UserService != null)
@@ -152,9 +153,11 @@ namespace BlueDragon.Account
 
         #region Brand Names
         /// <summary>
-        /// 
+        /// Asynchronously saves or updates the brand name based on the provided edit context.
+        /// After saving, displays a success message via a snackbar notification, resets the brand model,
+        /// refreshes the list of brand names, and updates the UI state.
         /// </summary>
-        /// <param name="context"></param>
+        /// <param name="context">The EditContext containing the model data to be saved or updated.</param>
         private async Task SaveBrandName(EditContext context)
         {
             if (BrandService != null)
@@ -170,10 +173,11 @@ namespace BlueDragon.Account
         }
 
         /// <summary>
-        /// 
+        /// Asynchronously deletes the specified brand from the system. 
+        /// After deletion, it refreshes the list of brand names and updates the UI state.
         /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
+        /// <param name="model">The brand model representing the brand to be deleted.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         private async Task DeleteBrand(LuBrandName model)
         {
             if (BrandService != null)
@@ -187,9 +191,11 @@ namespace BlueDragon.Account
 
         #region Cable Types
         /// <summary>
-        /// 
+        /// Asynchronously saves or updates the cable type based on the provided edit context. 
+        /// After saving, displays a success message via a snackbar notification, resets the cable type model,
+        /// refreshes the list of cable types, and updates the UI state.
         /// </summary>
-        /// <param name="context"></param>
+        /// <param name="context">The EditContext containing the cable type model data to be saved or updated.</param>
         private async Task SaveCableType(EditContext context)
         {
             if (CableTypeService != null)
@@ -205,10 +211,11 @@ namespace BlueDragon.Account
         }
 
         /// <summary>
-        /// 
+        /// Asynchronously deletes the specified cable type from the system.
+        /// After deletion, it refreshes the list of cable types and updates the UI state.
         /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
+        /// <param name="model">The cable type model representing the cable type to be deleted.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         private async Task DeleteCableType(LuCableType model)
         {
             if (CableTypeService != null)
@@ -226,7 +233,9 @@ namespace BlueDragon.Account
         private bool upsertCableVisible;
 
         /// <summary>
-        /// 
+        /// Defines the configuration options for dialogs used in the application. 
+        /// The dialog options include full-width display, a close button, disabling backdrop clicks to close the dialog,
+        /// positioning the dialog at the top center of the screen, and setting the maximum width to small.
         /// </summary>
         private static readonly DialogOptions dialogOptions = new()
         {
@@ -238,11 +247,12 @@ namespace BlueDragon.Account
         };
 
         /// <summary>
-        /// TODO: Need to see if there is a way to enforce/override 
-        /// clearing fields with saved browser settings.
-        /// It's ugluy and annoying
+        /// Asynchronously retrieves or initializes user information based on the provided context. 
+        /// If the user exists, it fetches the user's roles and sets the selected role. 
+        /// If the user does not exist, it initializes a new user model for creation.
+        /// Finally, it opens the upsert dialog for user accounts and updates the UI state.
         /// </summary>
-        /// <param name="context"></param>
+        /// <param name="context">The user context, either for an existing user or null for a new user.</param>
         private async Task UpsertUser(ApplicationUser? context)
         {
             selectedRole = string.Empty;
@@ -273,9 +283,11 @@ namespace BlueDragon.Account
         }
 
         /// <summary>
-        /// 
+        /// Asynchronously retrieves or initializes brand information based on the provided context. 
+        /// If the brand exists, it fetches the brand data; otherwise, it initializes a new brand model. 
+        /// Finally, it opens the upsert dialog for brands and updates the UI state.
         /// </summary>
-        /// <param name="context"></param>
+        /// <param name="context">The brand context, either for an existing brand or null for a new brand.</param>
         private async void UpsertBrand(LuBrandName? context)
         {
             if (context != null && BrandService != null)
@@ -285,9 +297,11 @@ namespace BlueDragon.Account
         }
 
         /// <summary>
-        /// 
+        /// Asynchronously retrieves or initializes cable type information based on the provided context. 
+        /// If the cable type exists, it fetches the cable type data; otherwise, it initializes a new cable type model. 
+        /// Finally, it opens the upsert dialog for cable types and updates the UI state.
         /// </summary>
-        /// <param name="context"></param>
+        /// <param name="context">The cable type context, either for an existing cable type or null for a new cable type.</param>
         private async void UpsertCableType(LuCableType? context)
         {
             if (context != null && CableTypeService != null)
@@ -297,9 +311,10 @@ namespace BlueDragon.Account
         }
 
         /// <summary>
-        /// 
+        /// Closes the upsert dialog for the specified lookup type and resets the corresponding model and related fields.
+        /// This method handles user accounts, brands, and cable types, resetting the UI state as appropriate.
         /// </summary>
-        /// <param name="lookupType"></param>
+        /// <param name="lookupType">The type of dialog to close: "userAccount", "brand", or "cable".</param>
         private void Close(string lookupType)
         {
             switch (lookupType)

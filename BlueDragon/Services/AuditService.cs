@@ -1,6 +1,11 @@
-﻿namespace BlueDragon.Services
+﻿using BlueDragon.Models;
+using Microsoft.AspNetCore.Components;
+using System.Reflection.Metadata.Ecma335;
+using static MudBlazor.Icons.Custom;
+
+namespace BlueDragon.Services
 {
-    public class AuditStateService
+    public class AuditService
     {
         public event Action? OnChange;
 
@@ -21,7 +26,6 @@
                 }
             }
         }
-
         private void NotifyStateChanged() => OnChange?.Invoke();
     }
 }

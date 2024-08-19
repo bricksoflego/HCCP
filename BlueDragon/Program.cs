@@ -38,13 +38,13 @@ builder.Services.AddRazorComponents();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddTransient<BrandNameService>();
 builder.Services.AddTransient<CableTypeService>();
-builder.Services.AddTransient<CableService>();
-builder.Services.AddTransient<EComponentService>();
-builder.Services.AddTransient<HardwareService>();
-builder.Services.AddTransient<PeripheralService>();
+builder.Services.AddScoped<CableService>();
+builder.Services.AddScoped<EComponentService>();
+builder.Services.AddScoped<HardwareService>();
+builder.Services.AddScoped<PeripheralService>();
 builder.Services.AddTransient<RoleService>();
 builder.Services.AddTransient<SolutionService>();
-builder.Services.AddSingleton<AuditStateService>();
+builder.Services.AddScoped<AuditService>();
 builder.Services.AddScoped<IFormFieldClearService, FormFieldClearService>();
 
 // Register the CustomAuthenticationStateProvider

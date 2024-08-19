@@ -5,14 +5,9 @@ using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace BlueDragon.Services
 {
-    public class HardwareService
+    public class HardwareService(HccContext context)
     {
-        private readonly HccContext _context;
-
-        public HardwareService(HccContext context)
-        {
-            _context = context;
-        }
+        private readonly HccContext _context = context;
 
         /// <summary>
         /// 

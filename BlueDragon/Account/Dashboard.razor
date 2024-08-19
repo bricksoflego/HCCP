@@ -1,6 +1,7 @@
 ﻿@page "/dashboard"
 @attribute [Authorize]
 
+
 <PageTitle>Dashboard</PageTitle>
 
 <h1>Dashboard</h1>
@@ -12,7 +13,7 @@
 <div>
     @if (AuditInProgress == false)
     {
-              <h4>Last Audit Results</h4>
+        <h4>Last Audit Results</h4>
     }
     <a href="@A" target="_blank">@A</a>
 </div>

@@ -1,4 +1,5 @@
-﻿using BlueDragon.Services;
+﻿using BlueDragon.Models;
+using BlueDragon.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
@@ -11,7 +12,11 @@ namespace BlueDragon.Account
         [Inject] AuthService? AuthService { get; set; }
         [Inject] NavigationManager NavigationManager { get; set; } = default!;
         [Inject] SolutionService SolutionService { get; set; } = default!;
-        [Inject] private AuditStateService? AuditStateService { get; set; }
+        [Inject] AuditService AuditStateService { get; set; } = default!;
+        [Inject] HardwareService? HardwareService { get; set; }
+        [Inject] CableService? CableService { get; set; }
+        [Inject] EComponentService? EComponentService { get; set; }
+        [Inject] PeripheralService? PeripheralService { get; set; }
         #endregion
 
         #region Variable Initialization
@@ -28,7 +33,6 @@ namespace BlueDragon.Account
             if (AuthService?.IsAuthorized == true && (AuthService.IsInRole("Admin") || AuthService.IsInRole("Manager")))
                 await Task.CompletedTask;
             else NavigationManager.NavigateTo(AuthService?.IsAuthorized == true ? "/AccessDenied" : "/");
-
             await InvokeAsync(StateHasChanged);
         }
 
@@ -78,6 +82,17 @@ namespace BlueDragon.Account
         {
             AuditInProgress = false;
             A = "http://oxstudios.com";
+            InventoryAudit auditResults = new();
+
+            if (HardwareService != null && CableService != null && EComponentService != null && PeripheralService != null)
+            {
+                auditResults.Hardwares = await HardwareService.GetHardware();
+                auditResults.Cables = await CableService.GetCables();
+                auditResults.Ecomponents = await EComponentService.GetComponents();
+                auditResults.Peripherals = await PeripheralService.GetPeripherals();
+            }
+
+            ProcessAuditResults(auditResults);
 
             if (SolutionService != null)
             {
@@ -85,6 +100,17 @@ namespace BlueDragon.Account
                 Snackbar!.Configuration.PositionClass = Defaults.Classes.Position.BottomLeft;
                 Snackbar?.Add("Audit Mode Not Running.", Severity.Success);
             }
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="auditResults"></param>
+        private void ProcessAuditResults(InventoryAudit auditResults)
+        {
+            // Do something with the auditResults, like saving them to the database or performing an analysis
+            // This is just a placeholder for your custom logic
         }
     }
 }

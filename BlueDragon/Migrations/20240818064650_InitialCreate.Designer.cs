@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlueDragon.Migrations
 {
     [DbContext(typeof(HccContext))]
-    [Migration("20240814034027_InitialCreate")]
+    [Migration("20240818064650_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
