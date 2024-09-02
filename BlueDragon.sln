@@ -5,6 +5,8 @@ VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlueDragon", "BlueDragon\BlueDragon.csproj", "{11A16C9E-C49E-4620-96BE-A0C983B40682}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlueDragonTests", "BlueDragonTests\BlueDragonTests.csproj", "{F3C16776-2B01-4B17-8C84-3270B0B9A84D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{11A16C9E-C49E-4620-96BE-A0C983B40682}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11A16C9E-C49E-4620-96BE-A0C983B40682}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11A16C9E-C49E-4620-96BE-A0C983B40682}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3C16776-2B01-4B17-8C84-3270B0B9A84D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3C16776-2B01-4B17-8C84-3270B0B9A84D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3C16776-2B01-4B17-8C84-3270B0B9A84D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3C16776-2B01-4B17-8C84-3270B0B9A84D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
