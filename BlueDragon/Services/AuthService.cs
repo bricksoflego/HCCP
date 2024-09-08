@@ -15,7 +15,7 @@ namespace BlueDragon.Services
             _authenticationStateProvider = authenticationStateProvider;
         }
 
-        public bool IsAuthorized { get; private set; }
+        public virtual bool IsAuthorized { get; private set; }
 
         // Make the setter public so that roles can be assigned externally
         public List<string> UserRoles { get; set; } = new List<string>();
