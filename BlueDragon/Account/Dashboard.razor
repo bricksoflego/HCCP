@@ -1,4 +1,5 @@
 ﻿@page "/dashboard"
+@using BlueDragon.Components
 @attribute [Authorize]
 
 
@@ -16,4 +17,8 @@
         <h4>Last Audit Results</h4>
     }
     <a href="@A" target="_blank">@A</a>
+</div>
+<br />
+<div>
+    <Audit></Audit>
 </div>
