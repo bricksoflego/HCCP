@@ -82,3 +82,31 @@
     .mud-nav-link-disabled .mud-nav-link-icon {
         color: #001122 !important;
     }
+
+.mud-input-control.switch-inline-block {
+    position: relative;
+    margin: 0;
+    height: 2em;
+    display: inline-block;
+    top: -1.3em;
+}
+
+.cardHeader {
+    background: #036;
+    color: white;
+    height:65px;
+}
+
+.cardHeaderText {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.cardHeaderLabel {
+    font-weight: bold;
+    margin-right: .75em
+}
+
+.scanData {
+    padding: 3px;
+}

@@ -1,47 +1,104 @@
 ﻿@using BlueDragon.Data
+@using BlueDragon.Models
 @inject ISnackbar Snackbar
 
-<MudPaper>
-    <MudCard Style="border:1px solid black;">
-        <MudCardHeader>Audit Input</MudCardHeader>
-        <MudElement Style="display:inline;">
-            <MudText Inline="true"><strong>Name: </strong>@ItemName | </MudText>
-            <MudText Inline="true"><strong>Type: </strong>@ItemType | </MudText>
-            @*<MudText Inline="true"><strong>Count: </strong>@ItemCount | </MudText>*@
-            <MudText Inline="true"><strong>Length: </strong>@ItemLength | </MudText>
-            <MudText Inline="true"><strong>Date: </strong>@ItemDate</MudText>
-        </MudElement>
-        <LineBreak />
-        <MudDivider />
-        <LineBreak />
-        <MudTextField T="string" InputId="barcode"
-                      Value="@Barcode"
-                      ValueChanged="@(context => OnBarcodeChanged(context))"
-                      Immediate="true"
-                      MaxLength="13"
-                      Label="Barcode"
-                      Style="width:13em"
-                      @ref="barcodeField">
-        </MudTextField>
-        <LineBreak />
-        <MudTextField T="int?" InputId="barcodeCount"
-                      Value="@BarcodeCount"
-                      Immediate="true"
-                      Label="Count"
-                      Style="width:3em"
-                      OnKeyUp="CheckForEmptyCount"
-                      @ref="barcodeCountField">
-        </MudTextField>
-        <LineBreak />
-        <MudCardActions>
-            <MudButton Color="Color.Primary"
-                       Variant="Variant.Filled"
-                       Disabled="@enterButtonDisabled">
-                Enter
-            </MudButton>
-        </MudCardActions>
-    </MudCard>
-</MudPaper>
+<MudGrid>
+    <MudItem xs=12 sm=6>
+        <MudCard Style="border:1px solid black; padding:10px;">
+            <MudCardHeader Class="cardHeader">
+                <MudText Class="cardHeaderText" Inline="true">Audit Input </MudText>
+                <MudSpacer />
+                <MudText Class="cardHeaderLabel" Inline="true">Options:</MudText>
+                <MudSwitch Class="switch-inline-block"
+                           Value="@IncrementSwitchedOn"
+                           Color="Color.Info"
+                           UncheckedColor="Color.Warning"
+                           ValueChanged="@((bool value)=>OnIncrementSwitchChanged(value))">
+                    @IncrementSwitchText
+                </MudSwitch>
+                <MudSwitch Class="switch-inline-block"
+                           Value="@AutoScanSwitchedOn"
+                           Color="Color.Info"
+                           UncheckedColor="Color.Warning"
+                           ValueChanged="@((bool value)=>OnAutoScanSwitchChanged(value))">
+                    @AutoScanSwitchText
+                </MudSwitch>
+            </MudCardHeader>
+            <div id="Manual-Scan-Section" style="@ManualScanVisibility">
+                <MudElement Class="scanData" Style="display:inline;">
+                    <MudText Inline="true"><strong>Name: </strong>@ItemName | </MudText>
+                    <MudText Inline="true"><strong>Type: </strong>@ItemType | </MudText>
+                    @*<MudText Inline="true"><strong>Count: </strong>@ItemCount | </MudText>*@
+                    <MudText Inline="true"><strong>Length: </strong>@ItemLength | </MudText>
+                    <MudText Inline="true"><strong>Date: </strong>@ItemDate</MudText>
+                </MudElement>
+                <MudDivider />
+                <LineBreak />
+                <MudTextField T="string" InputId="barcode"
+                              Value="@Barcode"
+                              ValueChanged="@(context => OnBarcodeChanged(context))"
+                              Immediate="true"
+                              MaxLength="13"
+                              Label="Barcode"
+                              Style="width:13em"
+                              @ref="barcodeField">
+                </MudTextField>
+                <LineBreak />
+                <MudTextField T="int?" InputId="barcodeCount"
+                              Value="@BarcodeCount"
+                              Immediate="true"
+                              Label="Count"
+                              Style="width:3em"
+                              OnKeyUp="CheckForEmptyCount"
+                              @ref="barcodeCountField">
+                </MudTextField>
+                <LineBreak />
+                <MudCardActions>
+                    <MudButton Color="Color.Primary"
+                               Variant="Variant.Filled"
+                               Disabled="@enterButtonDisabled">
+                        Enter
+                    </MudButton>
+                </MudCardActions>
+            </div>
+        </MudCard>
+    </MudItem>
+    <MudItem xs=12 sm=6>
+        <MudCard Style="border:1px solid black; padding:10px;">
+            <MudCardHeader Class="cardHeader">
+                <MudText Class="cardHeaderText" Inline="true">Scan Results</MudText>
+            </MudCardHeader>
+            <MudSimpleTable Style="overflow-x: auto;">
+                <thead>
+                    <tr>
+                        @foreach (var h in headings)
+                        {
+                            <th>@h</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in AuditList)
+                    {
+                        <tr>
+                            <td>
+                                @row.FullBarcode
+                            </td>
+                            <td>
+                                @row.Count
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </MudSimpleTable>
+        </MudCard>
+    </MudItem>
+</MudGrid>
+
+<div>
+    TESTING STUFF
+    Barcode: <MudText>@Barcode</MudText>
+</div>
 
 @code {
     private string Barcode { get; set; } = string.Empty;
@@ -53,6 +110,16 @@
     private bool enterButtonDisabled = true;
     private MudTextField<string>? barcodeField;
     private MudTextField<int?>? barcodeCountField;
+    private string IncrementSwitchText = "Increment";
+    private string AutoScanSwitchText = "Auto Scan";
+    private bool IncrementSwitchedOn = true;
+    private bool AutoScanSwitchedOn = false;
+    private List<BarcodeInformation> AuditList = new();
+    string[] headings = { "Barcode", "Count" };
+
+    // HIDES THE MANUAL SCAN TO PREVENT ACCIDENTAL INPUT
+    private string ManualScanVisibility =>
+        AutoScanSwitchedOn ? "display: none;" : "display: block;";
 
     protected override async Task OnInitializedAsync()
     {
@@ -91,18 +158,53 @@
             int year = int.Parse(barcode.Substring(1, 4));
             int nm = int.Parse(barcode.Substring(5, 2));
             int nd = int.Parse(barcode.Substring(7, 2));
-            var date = new DateTime(year, nm, nd);
+            var date = new DateOnly(year, nm, nd);
 
-            // POULATE THE DATA
-            ItemName = prefix.ToString();
-            ItemType = suffix.ToString();
-            ItemLength = $"{numLen[..^1]}.{numLen[^1]}'"; // EXTRACT AND FORMAT JUST THE NUMERIC PART
-            ItemDate = date.ToString("MM-dd-yyyy");
+            // CHECK IF AUTO INPUT IS ENABLED
+            if (!AutoScanSwitchedOn)
+            {
+                BarcodeInformation item = new();
+                item.Prefix = prefix.ToString();
+                item.Suffix = suffix.ToString();
+                item.Plus = length.ToString();
+                item.Date = date;
+                item.FullBarcode = barcode;
+                await UpdateItemCount(item);
+            }
+            else
+            {
+                // POULATE THE DATA FOR SCREEN
+                ItemName = prefix.ToString();
+                ItemType = suffix.ToString();
+                ItemLength = $"{numLen[..^1]}.{numLen[^1]}'"; // EXTRACT AND FORMAT JUST THE NUMERIC PART
+                ItemDate = date.ToString();
+            }
 
             // FOCUS ON THE COUNT FIELD
             if (barcodeCountField != null)
                 await barcodeCountField.FocusAsync();
+
         }
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="item"></param>
+    /// <returns></returns>
+    public async Task UpdateItemCount(BarcodeInformation item)
+    {
+        var itemExists = AuditList.Find(i => i.FullBarcode == item.FullBarcode);
+        if (itemExists == null)
+        {
+            item.Count = 1;
+            AuditList.Add(item);
+        }
+        else
+        {
+            itemExists.Count++;
+        }
+        await Task.CompletedTask;
     }
 
     /// <summary>
@@ -117,5 +219,25 @@
             enterButtonDisabled = true;
 
         await Task.CompletedTask;
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="value"></param>
+    private void OnIncrementSwitchChanged(bool value)
+    {
+        IncrementSwitchedOn = value;
+        IncrementSwitchText = value ? "Increment" : "Decrement";
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="value"></param>
+    private void OnAutoScanSwitchChanged(bool value)
+    {
+        AutoScanSwitchedOn = value;
+        AutoScanSwitchText = value ? "Auto Scan" : "Manual Input";
     }
 }

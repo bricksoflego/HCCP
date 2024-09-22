@@ -10,4 +10,17 @@
         public List<Ecomponent>? Ecomponents { get; set; }
         public List<Peripheral>? Peripherals { get; set; }
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class BarcodeInformation
+    {
+        public string? Prefix { get; set; }
+        public string? Suffix { get; set; }
+        public string? Plus { get; set; }
+        public DateOnly Date { get; set; }
+        public string? FullBarcode { get; set; }
+        public int Count { get; set; }
+    }
 }

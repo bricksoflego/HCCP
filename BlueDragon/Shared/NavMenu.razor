@@ -13,9 +13,9 @@
             <MudNavLink Href="" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Checklist" Disabled="true">Audit</MudNavLink>
         }
     </AuthorizeView>
-    <AuthorizeView Roles="Admin,Manager">
         <MudDivider />
         <MudNavLink Href="dashboard" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Group">Manager Dashboard</MudNavLink>
+    <AuthorizeView Roles="Admin,Manager">
     </AuthorizeView>
     <AuthorizeView Roles="Admin">
         <MudNavLink Href="lookups" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.MiscellaneousServices">Administration</MudNavLink>
