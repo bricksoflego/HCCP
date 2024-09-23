@@ -49,6 +49,7 @@ public partial class HccContext : IdentityDbContext<ApplicationUser>
             entity.Property(e => e.BrandName).HasMaxLength(50);
             entity.Property(e => e.CableType).HasMaxLength(50);
             entity.Property(e => e.Name).HasMaxLength(50);
+            entity.Property(e => e.Barcode).HasMaxLength(13);
         });
 
         modelBuilder.Entity<Ecomponent>(entity =>
@@ -65,6 +66,7 @@ public partial class HccContext : IdentityDbContext<ApplicationUser>
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.ModelNumber).HasMaxLength(50);
             entity.Property(e => e.SerialNumber).HasMaxLength(50);
+            entity.Property(e => e.Barcode).HasMaxLength(13);
         });
 
         modelBuilder.Entity<Peripheral>(entity =>
@@ -81,6 +83,7 @@ public partial class HccContext : IdentityDbContext<ApplicationUser>
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.ModelNumber).HasMaxLength(50);
             entity.Property(e => e.SerialNumber).HasMaxLength(50);
+            entity.Property(e => e.Barcode).HasMaxLength(13);
         });
 
         modelBuilder.Entity<Hardware>(entity =>
@@ -97,6 +100,7 @@ public partial class HccContext : IdentityDbContext<ApplicationUser>
             entity.Property(e => e.ModelNumber).HasMaxLength(50);
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.SerialNumber).HasMaxLength(50);
+            entity.Property(e => e.Barcode).HasMaxLength(13);
         });
 
         modelBuilder.Entity<LuBrandName>(entity =>

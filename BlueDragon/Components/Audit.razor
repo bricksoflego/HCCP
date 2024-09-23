@@ -95,11 +95,6 @@
     </MudItem>
 </MudGrid>
 
-<div>
-    TESTING STUFF
-    Barcode: <MudText>@Barcode</MudText>
-</div>
-
 @code {
     private string Barcode { get; set; } = string.Empty;
     private int? BarcodeCount { get; set; }
@@ -161,6 +156,7 @@
             var date = new DateOnly(year, nm, nd);
 
             // CHECK IF AUTO INPUT IS ENABLED
+            // FIX: REMOVE '!' FOR NORML OPERATION
             if (!AutoScanSwitchedOn)
             {
                 BarcodeInformation item = new();

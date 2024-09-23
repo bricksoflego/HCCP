@@ -23,5 +23,8 @@ namespace BlueDragon.Models
         public int InUse { get; set; } = 0;
         [Required]
         public int OnHand { get; set; } = 0;
+
+        public string? Barcode { get; set; }
+
     }
 }
