@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlueDragon.Migrations
 {
     [DbContext(typeof(HccContext))]
-    [Migration("20240818064650_InitialCreate")]
+    [Migration("20240923022148_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -98,6 +98,10 @@ namespace BlueDragon.Migrations
                         .HasColumnName("CID")
                         .HasDefaultValueSql("(newid())");
 
+                    b.Property<string>("Barcode")
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)");
+
                     b.Property<string>("BrandName")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -141,6 +145,10 @@ namespace BlueDragon.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("ECID")
                         .HasDefaultValueSql("(newid())");
+
+                    b.Property<string>("Barcode")
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)");
 
                     b.Property<string>("BrandName")
                         .IsRequired()
@@ -189,6 +197,10 @@ namespace BlueDragon.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("HID")
                         .HasDefaultValueSql("(newid())");
+
+                    b.Property<string>("Barcode")
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)");
 
                     b.Property<string>("BrandName")
                         .IsRequired()
@@ -273,6 +285,10 @@ namespace BlueDragon.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("PCID")
                         .HasDefaultValueSql("(newid())");
+
+                    b.Property<string>("Barcode")
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)");
 
                     b.Property<string>("BrandName")
                         .IsRequired()
