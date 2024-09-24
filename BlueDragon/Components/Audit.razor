@@ -149,37 +149,45 @@
             BarcodePlus length = (BarcodePlus)int.Parse(barcode.Substring(11, 2));
             string numLen = length.ToString().Substring(6);
 
-            // PARSE BARCODE DATE
-            int year = int.Parse(barcode.Substring(1, 4));
-            int nm = int.Parse(barcode.Substring(5, 2));
-            int nd = int.Parse(barcode.Substring(7, 2));
-            var date = new DateOnly(year, nm, nd);
-
-            // CHECK IF AUTO INPUT IS ENABLED
-            // FIX: REMOVE '!' FOR NORML OPERATION
-            if (!AutoScanSwitchedOn)
+            // PARSE BARCODE DATE DATA
+            try
             {
-                BarcodeInformation item = new();
-                item.Prefix = prefix.ToString();
-                item.Suffix = suffix.ToString();
-                item.Plus = length.ToString();
-                item.Date = date;
-                item.FullBarcode = barcode;
-                await UpdateItemCount(item);
+                int year = int.Parse(barcode.Substring(1, 4));
+                int nm = int.Parse(barcode.Substring(5, 2));
+                int nd = int.Parse(barcode.Substring(7, 2));
+                var date = new DateOnly(year, nm, nd);
+
+                // CHECK IF AUTO INPUT IS ENABLED
+                // FIX: REMOVE '!' FOR NORML OPERATION
+                if (AutoScanSwitchedOn)
+                {
+                    BarcodeInformation item = new();
+                    item.Prefix = prefix.ToString();
+                    item.Suffix = suffix.ToString();
+                    item.Plus = length.ToString();
+                    item.Date = date;
+                    item.FullBarcode = barcode;
+                    await UpdateItemCount(item);
+                }
+                else
+                {
+                    // POULATE THE DATA FOR SCREEN
+                    ItemName = prefix.ToString();
+                    ItemType = suffix.ToString();
+                    ItemLength = $"{numLen[..^1]}.{numLen[^1]}'"; // EXTRACT AND FORMAT JUST THE NUMERIC PART
+                    ItemDate = date.ToString();
+
+                    // FOCUS ON THE COUNT FIELD
+                    if (barcodeCountField != null)
+                        await barcodeCountField.FocusAsync();
+                }
             }
-            else
+            catch
             {
-                // POULATE THE DATA FOR SCREEN
-                ItemName = prefix.ToString();
-                ItemType = suffix.ToString();
-                ItemLength = $"{numLen[..^1]}.{numLen[^1]}'"; // EXTRACT AND FORMAT JUST THE NUMERIC PART
-                ItemDate = date.ToString();
+                await DisableCountField();
+                Snackbar!.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+                Snackbar?.Add("You have entrd an invalid barcode. Please try again.", Severity.Error);
             }
-
-            // FOCUS ON THE COUNT FIELD
-            if (barcodeCountField != null)
-                await barcodeCountField.FocusAsync();
-
         }
     }
 
@@ -209,12 +217,19 @@
     /// <returns></returns>
     private async Task CheckForEmptyCount()
     {
-        if (barcodeCountField?.Text != "")
+        if (barcodeCountField?.Text != null && barcodeCountField?.Text != "" && ItemDate != "NA")
             enterButtonDisabled = false;
         else
             enterButtonDisabled = true;
 
         await Task.CompletedTask;
+    }
+
+    private async Task DisableCountField()
+    {
+        ItemDate = "NA";
+        enterButtonDisabled = true;
+        await barcodeField!.FocusAsync();
     }
 
     /// <summary>
