@@ -24,14 +24,16 @@
                     @AutoScanSwitchText
                 </MudSwitch>
             </MudCardHeader>
-            <MudElement Class="scanData" Style="display:inline;">
-                <MudText Inline="true"><strong>Name: </strong>@ItemName | </MudText>
-                <MudText Inline="true"><strong>Type: </strong>@ItemType | </MudText>
-                @*<MudText Inline="true"><strong>Count: </strong>@ItemCount | </MudText>*@
-                <MudText Inline="true"><strong>Length: </strong>@ItemLength | </MudText>
-                <MudText Inline="true"><strong>Date: </strong>@ItemDate</MudText>
+            <MudElement Style=@ManualScanVisibility>
+                <MudElement Class="scanData" Style="display:inline;">
+                    <MudText Inline="true"><strong>Name: </strong>@ItemName | </MudText>
+                    <MudText Inline="true"><strong>Type: </strong>@ItemType | </MudText>
+                    @*<MudText Inline="true"><strong>Count: </strong>@ItemCount | </MudText>*@
+                    <MudText Inline="true"><strong>Length: </strong>@ItemLength | </MudText>
+                    <MudText Inline="true"><strong>Date: </strong>@ItemDate</MudText>
+                </MudElement>
+                <MudDivider />
             </MudElement>
-            <MudDivider />
             <LineBreak />
             <MudTextField T="string" InputId="barcode"
                           ValueChanged="@(context => OnBarcodeChanged(context))"
@@ -148,18 +150,22 @@
     private async Task OnBarcodeChanged(string barcode)
     {
         ClearLabels(); // ENSURE THE BARCODE LABELS ARE CLEAR BEFORE BEGINNING
+        if (!string.IsNullOrEmpty(barcodeCountField?.Text) && !string.IsNullOrEmpty(barcodeField?.Text))
+            enterButtonDisabled = false;
+        else
+            enterButtonDisabled = true;
 
         if (barcode.Length == 13)
         {
-            // BREAK DOWN THE BARCODE INFO FOR DISPLAY
-            BarcodePrefix prefix = (BarcodePrefix)int.Parse(barcode.Substring(0, 1));
-            BarcodeSuffix suffix = (BarcodeSuffix)int.Parse(barcode.Substring(9, 2));
-            BarcodePlus length = (BarcodePlus)int.Parse(barcode.Substring(11, 2));
-            string numLen = length.ToString().Substring(6);
-
-            // PARSE BARCODE DATE DATA
             try
             {
+                // BREAK DOWN THE BARCODE INFO FOR DISPLAY
+                BarcodePrefix prefix = (BarcodePrefix)int.Parse(barcode.Substring(0, 1));
+                BarcodeSuffix suffix = (BarcodeSuffix)int.Parse(barcode.Substring(9, 2));
+                BarcodePlus length = (BarcodePlus)int.Parse(barcode.Substring(11, 2));
+                string numLen = length.ToString().Substring(6);
+
+                // PARSE BARCODE DATE DATA
                 int year = int.Parse(barcode.Substring(1, 4));
                 int nm = int.Parse(barcode.Substring(5, 2));
                 int nd = int.Parse(barcode.Substring(7, 2));
@@ -179,14 +185,14 @@
                     await UpdateItemCount(item);
 
                     // Clear barcode field and reset the value
-                    if (barcodeField != null) await ResetBarcodeField();
+                    if (barcodeField != null) await ResetFields();
                 }
                 else
                 {
                     // POULATE THE DATA FOR SCREEN
                     ItemName = prefix.ToString();
                     ItemType = suffix.ToString();
-                    ItemLength = $"{numLen[..^1]}.{numLen[^1]}'"; // EXTRACT AND FORMAT JUST THE NUMERIC PART
+                    ItemLength = $"{numLen[..^1]}.{numLen[^1]}'"; // EXTRACT JUST THE NUMERIC PART
                     ItemDate = date.ToString();
 
                     // FOCUS ON THE COUNT FIELD
@@ -198,11 +204,19 @@
                     }
                 }
             }
-            catch
+            catch (FormatException ex)
             {
                 await DisableCountField();
                 Snackbar!.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
-                Snackbar?.Add("You have entrd an invalid barcode. Please try again.", Severity.Error);
+                Snackbar?.Add("You have entered an invalid barcode. Please try again.", Severity.Error);
+                Console.WriteLine(ex.Message);
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                await DisableCountField();
+                Snackbar!.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+                Snackbar?.Add("You have entered an invalid barcode. Please try again.", Severity.Error);
+                Console.WriteLine(ex.Message);
             }
         }
     }
@@ -214,7 +228,7 @@
     private void OnBarcodeCountChanged(int? count)
     {
         BarcodeCount = count ?? 0;
-        if (count.HasValue && count > 0 && !string.IsNullOrEmpty(barcodeCountField?.Text))
+        if (count.HasValue && count > 0 && !string.IsNullOrEmpty(barcodeCountField?.Text) && !string.IsNullOrEmpty(barcodeField?.Text))
             enterButtonDisabled = false;
         else
             enterButtonDisabled = true;
@@ -245,15 +259,24 @@
     /// <returns></returns>
     public async Task UpdateItemCountManual(BarcodeInformation item)
     {
-        var itemExists = AuditList.Find(i => i.FullBarcode == item.FullBarcode);
-        if (itemExists == null)
+        if (item?.FullBarcode?.Length == 13)
         {
-            item.Count = BarcodeCount;
-            AuditList.Add(item);
+            var itemExists = AuditList.Find(i => i.FullBarcode == item.FullBarcode);
+            if (itemExists == null)
+            {
+                item.Count = BarcodeCount;
+                AuditList.Add(item);
+            }
+            else
+            {
+                itemExists.Count += BarcodeCount;
+            }
+            await ResetFields();
         }
         else
         {
-            itemExists.Count += BarcodeCount;
+            Snackbar!.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+            Snackbar?.Add("You have entrd an invalid barcode. Please try again.", Severity.Error);
         }
         await Task.CompletedTask;
     }
@@ -265,6 +288,8 @@
     private async Task DisableCountField()
     {
         ItemDate = "NA";
+        barcodeCountField!.Value = null;
+        await barcodeCountField.SetText(string.Empty);
         enterButtonDisabled = true;
         await barcodeField!.FocusAsync();
     }
@@ -288,7 +313,7 @@
         ClearLabels();
         AutoScanSwitchedOn = value;
         AutoScanSwitchText = value ? "Auto Scan" : "Manual Input";
-        await ResetBarcodeField();
+        await ResetFields();
     }
 
     /// <summary>
@@ -308,8 +333,10 @@
     ///
     /// </summary>
     /// <returns></returns>
-    private async Task ResetBarcodeField()
+    private async Task ResetFields()
     {
+        item = new(); // CLEAR THE ITEM
+        await DisableCountField(); // ENSURE COUNT FIELD IS EMPTIED
         barcodeField!.Value = string.Empty; // CLEAR THE INPUT VALUE DIRECTLY (MUDBLAZOR ISSUE)
         await barcodeField.SetText(string.Empty); // CLEAR THE INPUT FIELD
         await barcodeField.BlurAsync(); // FORCE THE FIELD TO LOSE FOCUS
