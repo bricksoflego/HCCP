@@ -14,6 +14,7 @@ namespace BlueDragon.Pages
         [Inject] CableTypeService? CableTypeService { get; set; }
         [Inject] CableService? CableService { get; set; }
         [Inject] AuthService? AuthService { get; set; }
+        [Inject] NavigationManager NavigationManager { get; set; } = default!;
         #endregion
 
         #region Model and List Initialization
@@ -36,8 +37,12 @@ namespace BlueDragon.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            if (AuthService != null)
-                AuthService.OnChange += StateHasChanged;
+            AuthService!.OnChange += HandleAuthStateChange;
+
+            if (AuthService?.IsAuthorized == true)
+                await Task.CompletedTask;
+            else NavigationManager.NavigateTo(AuthService?.IsAuthorized == true ? "/AccessDenied" : "/");
+            await InvokeAsync(StateHasChanged);
 
             if (BrandService != null && CableTypeService != null && CableService != null)
             {
@@ -45,6 +50,14 @@ namespace BlueDragon.Pages
                 cableTypes = await CableTypeService.GetCableTypes();
                 cables = await CableService.GetCables();
             }
+        }
+
+        /// <summary>
+        /// Handles changes in the authentication state by triggering a UI refresh.
+        /// </summary>
+        private void HandleAuthStateChange()
+        {
+            InvokeAsync(StateHasChanged);
         }
 
         #region Cables

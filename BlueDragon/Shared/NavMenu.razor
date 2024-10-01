@@ -10,12 +10,12 @@
         <MudNavLink Href="peripherals" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Extension">Peripheral Inventory</MudNavLink>
         @if (settings != null && settings.Any(x => x.Name == "Audit" && x.IsEnabled == true))
         {
-            <MudNavLink Href="" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Checklist" Disabled="true">Audit</MudNavLink>
+            <MudNavLink Href="inventoryaudit" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Checklist" Style="background:Gold;">Audit</MudNavLink>
         }
     </AuthorizeView>
+    <AuthorizeView Roles="Admin,Manager">
         <MudDivider />
         <MudNavLink Href="dashboard" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Group">Manager Dashboard</MudNavLink>
-    <AuthorizeView Roles="Admin,Manager">
     </AuthorizeView>
     <AuthorizeView Roles="Admin">
         <MudNavLink Href="lookups" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.MiscellaneousServices">Administration</MudNavLink>

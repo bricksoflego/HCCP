@@ -3,7 +3,7 @@
 @inject ISnackbar Snackbar
 
 <MudGrid>
-    <MudItem xs=12 sm=6>
+    <MudItem xs=12 sm=6 @ref="LeftColumn">
         <MudCard Style="border:1px solid black; padding:10px;">
             <MudCardHeader Class="cardHeader">
                 <MudText Class="cardHeaderText" Inline="true">Audit Input </MudText>
@@ -70,7 +70,9 @@
             <MudCardHeader Class="cardHeader">
                 <MudText Class="cardHeaderText" Inline="true">Scan Results</MudText>
             </MudCardHeader>
-            <MudSimpleTable Style="overflow-x: auto;">
+            <MudSimpleTable Style="height:235px; min-height:235px; max-height:500px;"
+                            FixedHeader="true"
+                            Dense="true">
                 <thead>
                     <tr>
                         @foreach (var h in headings)
@@ -110,6 +112,7 @@
     private MudTextField<string>? barcodeField;
     private MudTextField<int?>? barcodeCountField;
     private MudButton? btnEnter;
+    private MudItem? LeftColumn;
     private string IncrementSwitchText = "Increment";
     private string AutoScanSwitchText = "Auto Scan";
     private bool IncrementSwitchedOn = true;
