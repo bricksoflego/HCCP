@@ -17,7 +17,8 @@ if (builder.Environment.IsDevelopment())
 
 StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configuration);
 
-var connectionString = builder.Configuration.GetConnectionString("SQLServer");
+var sqlPassword = builder.Configuration["SQLPassword"];
+var connectionString = builder.Configuration.GetConnectionString("SQLServer").Replace("{SQLPassword}", sqlPassword);
 builder.Services.AddDbContext<HccContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<HccContext>();

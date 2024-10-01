@@ -28,7 +28,6 @@
                 <MudElement Class="scanData" Style="display:inline;">
                     <MudText Inline="true"><strong>Name: </strong>@ItemName | </MudText>
                     <MudText Inline="true"><strong>Type: </strong>@ItemType | </MudText>
-                    @*<MudText Inline="true"><strong>Count: </strong>@ItemCount | </MudText>*@
                     <MudText Inline="true"><strong>Length: </strong>@ItemLength | </MudText>
                     <MudText Inline="true"><strong>Date: </strong>@ItemDate</MudText>
                 </MudElement>
@@ -50,6 +49,7 @@
                               Immediate="true"
                               Label="Count"
                               Style="width:3em"
+                              OnKeyDown="KeyDown"
                               @ref="barcodeCountField">
                 </MudTextField>
                 <LineBreak />
@@ -57,7 +57,8 @@
                     <MudButton Color="Color.Primary"
                                Variant="Variant.Filled"
                                Disabled="@enterButtonDisabled"
-                               OnClick="()=>UpdateItemCountManual(item)">
+                               OnClick="()=>UpdateItemCountManual(item)"
+                               @ref="btnEnter">
                         Enter
                     </MudButton>
                 </MudCardActions>
@@ -108,6 +109,7 @@
     private bool enterButtonDisabled = true;
     private MudTextField<string>? barcodeField;
     private MudTextField<int?>? barcodeCountField;
+    private MudButton? btnEnter;
     private string IncrementSwitchText = "Increment";
     private string AutoScanSwitchText = "Auto Scan";
     private bool IncrementSwitchedOn = true;
@@ -126,10 +128,11 @@
     }
 
     /// <summary>
-    ///
+    /// Sets focus on the barcode field and clears the barcode count field after the component is first rendered.
+    /// Also initializes other fields for first-time rendering.
     /// </summary>
-    /// <param name="firstRender"></param>
-    /// <returns></returns>
+    /// <param name="firstRender">Indicates whether this is the first render of the component.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         // SET FOCUS ON THE BARCODE FIELD AFTER THE COMPONENT IS FIRST RENDERED
@@ -143,10 +146,11 @@
     }
 
     /// <summary>
-    ///
+    /// Handles changes to the barcode field. If the barcode is valid, it parses the barcode data, updates item information, and optionally updates the item count.
+    /// It also controls the state of the "Enter" button and manages focus and input field reset.
     /// </summary>
-    /// <param name="barcode"></param>
-    /// <returns></returns>
+    /// <param name="barcode">The barcode string entered by the user.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     private async Task OnBarcodeChanged(string barcode)
     {
         ClearLabels(); // ENSURE THE BARCODE LABELS ARE CLEAR BEFORE BEGINNING
@@ -181,10 +185,10 @@
                 // CHECK IF AUTO INPUT IS ENABLED
                 if (AutoScanSwitchedOn)
                 {
-                    // Add barcode to the list
+                    // ADD BARCODE TO THE LIST
                     await UpdateItemCount(item);
 
-                    // Clear barcode field and reset the value
+                    // CLEAR BARCODE FIELD AND RESET THE VALUE
                     if (barcodeField != null) await ResetFields();
                 }
                 else
@@ -206,25 +210,19 @@
             }
             catch (FormatException ex)
             {
-                await DisableCountField();
-                Snackbar!.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
-                Snackbar?.Add("You have entered an invalid barcode. Please try again.", Severity.Error);
-                Console.WriteLine(ex.Message);
+                OnFormattingError(ex.Message);
             }
             catch (ArgumentOutOfRangeException ex)
             {
-                await DisableCountField();
-                Snackbar!.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
-                Snackbar?.Add("You have entered an invalid barcode. Please try again.", Severity.Error);
-                Console.WriteLine(ex.Message);
+                OnFormattingError(ex.Message);
             }
         }
     }
 
     /// <summary>
-    ///
+    /// Handles changes to the barcode count field, updates the internal barcode count, and enables or disables the "Enter" button based on the input values.
     /// </summary>
-    /// <param name="count"></param>
+    /// <param name="count">The new count value entered by the user.</param>
     private void OnBarcodeCountChanged(int? count)
     {
         BarcodeCount = count ?? 0;
@@ -235,42 +233,81 @@
     }
 
     /// <summary>
-    ///
+    /// Updates the count of a barcode item in the audit list based on the increment switch.
+    /// If the item does not exist, it adds the item with the appropriate count. If the item's count reaches zero, it is removed from the list.
     /// </summary>
-    /// <param name="item"></param>
-    /// <returns></returns>
+    /// <param name="item">The barcode item whose count is to be updated.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task UpdateItemCount(BarcodeInformation item)
     {
         var itemExists = AuditList.Find(i => i.FullBarcode == item.FullBarcode);
-        if (itemExists == null)
+        if (IncrementSwitchedOn)
         {
-            item.Count = 1;
-            AuditList.Add(item);
+            if (itemExists == null)
+            {
+                item.Count = 1;
+                AuditList.Add(item);
+            }
+            else
+                itemExists.Count++;
         }
         else
-            itemExists.Count++;
+        {
+            if (itemExists == null)
+            {
+                item.Count = 0;
+                AuditList.Add(item);
+            }
+            else if (itemExists.Count > -1)
+                itemExists.Count--;
+        }
+        // IF ITEMS REACH 0, REMOVE FROM LIST
+        if (itemExists != null && itemExists.Count == 0)
+            AuditList.Remove(itemExists);
+
         await Task.CompletedTask;
     }
 
     /// <summary>
-    ///
+    /// Manually updates the count of a barcode item in the audit list based on the increment switch and the current barcode count.
+    /// Adds or updates the item if it exists, or displays a warning if the barcode is invalid or if decrement mode is active without the item existing.
+    /// If the item count reaches zero or less, it is removed from the list.
     /// </summary>
-    /// <param name="item"></param>
-    /// <returns></returns>
+    /// <param name="item">The barcode item to be updated.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task UpdateItemCountManual(BarcodeInformation item)
     {
         if (item?.FullBarcode?.Length == 13)
         {
             var itemExists = AuditList.Find(i => i.FullBarcode == item.FullBarcode);
-            if (itemExists == null)
+            if (IncrementSwitchedOn)
             {
-                item.Count = BarcodeCount;
-                AuditList.Add(item);
+                if (itemExists == null)
+                {
+                    item.Count = BarcodeCount;
+                    AuditList.Add(item);
+                }
+                else
+                {
+                    itemExists.Count += BarcodeCount;
+                }
             }
             else
             {
-                itemExists.Count += BarcodeCount;
+                if (itemExists == null)
+                {
+                    Snackbar!.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+                    Snackbar?.Add("You must swich to 'Increment' to add.", Severity.Warning);
+                }
+                else if (itemExists != null && itemExists.Count > 0)
+                {
+                    itemExists.Count -= BarcodeCount;
+                }
             }
+            // IF ITEMS REACH 0 OR LESS, REMOVE FROM LIST
+            if (itemExists != null && itemExists.Count <= 0)
+                AuditList.Remove(itemExists);
+
             await ResetFields();
         }
         else
@@ -282,9 +319,9 @@
     }
 
     /// <summary>
-    ///
+    /// Disables the barcode count field by clearing its value, setting the item date to "NA", disabling the "Enter" button, and refocusing on the barcode input field.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A task representing the asynchronous operation.</returns>
     private async Task DisableCountField()
     {
         ItemDate = "NA";
@@ -295,19 +332,21 @@
     }
 
     /// <summary>
-    ///
+    /// Handles the change in the increment switch state, updating the internal state to either "Increment" or "Decrement" mode, clearing labels, and resetting the input fields.
     /// </summary>
-    /// <param name="value"></param>
-    private void OnIncrementSwitchChanged(bool value)
+    /// <param name="value">The new value of the increment switch, indicating whether it's in "Increment" (true) or "Decrement" (false) mode.</param>
+    private async void OnIncrementSwitchChanged(bool value)
     {
+        ClearLabels();
         IncrementSwitchedOn = value;
         IncrementSwitchText = value ? "Increment" : "Decrement";
+        await ResetFields();
     }
 
     /// <summary>
-    ///
+    /// Handles the change in the auto-scan switch state, updating the internal state to either "Auto Scan" or "Manual Input" mode, clearing labels, and resetting the input fields.
     /// </summary>
-    /// <param name="value"></param>
+    /// <param name="value">The new value of the auto-scan switch, indicating whether it's in "Auto Scan" (true) or "Manual Input" (false) mode.</param>
     private async void OnAutoScanSwitchChanged(bool value)
     {
         ClearLabels();
@@ -317,7 +356,8 @@
     }
 
     /// <summary>
-    ///
+    /// Clears the item labels by resetting the item name, type, and length to empty strings, and setting the item date to "NA".
+    /// Triggers a UI refresh to reflect the changes.
     /// </summary>
     private void ClearLabels()
     {
@@ -330,9 +370,10 @@
     }
 
     /// <summary>
-    ///
+    /// Resets the input fields and barcode item by clearing the values, disabling the count field, and refocusing the barcode input field.
+    /// Ensures the UI is refreshed to reflect the changes.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A task representing the asynchronous operation.</returns>
     private async Task ResetFields()
     {
         item = new(); // CLEAR THE ITEM
@@ -341,6 +382,30 @@
         await barcodeField.SetText(string.Empty); // CLEAR THE INPUT FIELD
         await barcodeField.BlurAsync(); // FORCE THE FIELD TO LOSE FOCUS
         await barcodeField.FocusAsync(); // OPTIONALLY REFOCUS THE INPUT FIELD
+        await InvokeAsync(StateHasChanged); // ENSURE UI REFRESH
+    }
+
+    /// <summary>
+    /// Handles formatting errors by disabling the count field, displaying an error message via a snackbar, and logging the error message to the console.
+    /// </summary>
+    /// <param name="msg">The error message to log and display.</param>
+    private async void OnFormattingError(string msg)
+    {
+        await DisableCountField();
+        Snackbar!.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+        Snackbar?.Add("You have entered an invalid barcode. Please try again.", Severity.Error);
+        Console.WriteLine(msg);
+    }
+
+    /// <summary>
+    /// Handles the "Enter" key press event. When the "Enter" key is pressed, it triggers the manual update of the item count.
+    /// Ensures the UI is refreshed after the action.
+    /// </summary>
+    /// <param name="k">The keyboard event arguments.</param>
+    private async void KeyDown(KeyboardEventArgs k)
+    {
+        if (k.Key == "Enter")
+            await UpdateItemCountManual(item);
         await InvokeAsync(StateHasChanged); // ENSURE UI REFRESH
     }
 }
