@@ -10,7 +10,7 @@
         <MudNavLink Href="peripherals" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Extension">Peripheral Inventory</MudNavLink>
         @if (settings != null && settings.Any(x => x.Name == "Audit" && x.IsEnabled == true))
         {
-            <MudNavLink Href="inventoryaudit" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Checklist" Style="background:Gold;">Audit</MudNavLink>
+            <MudNavLink Href="inventory" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Checklist" Style="background:Gold;">Audit</MudNavLink>
         }
     </AuthorizeView>
     <AuthorizeView Roles="Admin,Manager">

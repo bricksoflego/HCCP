@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components;
 namespace BlueDragon.Account
 {
 
-    public partial class ItemAudit
+    public partial class Inventory
     {
         [Inject] AuthService? AuthService { get; set; }
         [Inject] NavigationManager NavigationManager { get; set; } = default!;
@@ -13,9 +13,9 @@ namespace BlueDragon.Account
         {
             AuthService!.OnChange += HandleAuthStateChange;
 
-            if (AuthService?.IsAuthorized == true)
-                await Task.CompletedTask;
-            else NavigationManager.NavigateTo(AuthService?.IsAuthorized == true ? "/AccessDenied" : "/");
+            //if (AuthService?.IsAuthorized == true)
+            //    await Task.CompletedTask;
+            //else NavigationManager.NavigateTo(AuthService?.IsAuthorized == true ? "/AccessDenied" : "/");
             await InvokeAsync(StateHasChanged);
         }
 
