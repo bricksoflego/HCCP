@@ -6,7 +6,7 @@ namespace BlueDragon.Account
 
     public partial class Inventory
     {
-        [Inject] AuthService? AuthService { get; set; }
+        [Inject] IAuthService? AuthService { get; set; }
         [Inject] NavigationManager NavigationManager { get; set; } = default!;
 
         protected override async Task OnInitializedAsync()

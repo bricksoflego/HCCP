@@ -10,10 +10,10 @@ namespace BlueDragon.Pages
     {
         #region Dependencies
         [Inject] ISnackbar? Snackbar { get; set; }
-        [Inject] BrandNameService? BrandService { get; set; }
-        [Inject] CableTypeService? CableTypeService { get; set; }
-        [Inject] CableService? CableService { get; set; }
-        [Inject] AuthService? AuthService { get; set; }
+        [Inject] IBrandNameService? BrandService { get; set; }
+        [Inject] ICableTypeService? CableTypeService { get; set; }
+        [Inject] ICableService? CableService { get; set; }
+        [Inject] IAuthService? AuthService { get; set; }
         [Inject] NavigationManager NavigationManager { get; set; } = default!;
         #endregion
 

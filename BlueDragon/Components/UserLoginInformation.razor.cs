@@ -14,7 +14,7 @@ namespace BlueDragon.Components
         public ApplicationUser ApplicationUser { get; private set; } = new(); // Make applicationUser public
 
         [Inject] private UserService? UserService { get; set; }
-        [Inject] private AuthService? AuthService { get; set; }
+        [Inject] private IAuthService? AuthService { get; set; }
         [Inject] public NavigationManager? NavigationManager { get; set; }
         [Inject] private ApplicationUserService? ApplicationUserService { get; set; }
 

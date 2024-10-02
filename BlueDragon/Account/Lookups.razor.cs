@@ -11,11 +11,11 @@ namespace BlueDragon.Account
     {
         #region Dependencies
         [Inject] ISnackbar? Snackbar { get; set; }
-        [Inject] BrandNameService? BrandService { get; set; }
-        [Inject] CableTypeService? CableTypeService { get; set; }
+        [Inject] IBrandNameService? BrandService { get; set; }
+        [Inject] ICableTypeService? CableTypeService { get; set; }
         [Inject] UserService? UserService { get; set; }
         [Inject] RoleService? RoleService { get; set; }
-        [Inject] AuthService? AuthService { get; set; } = default!;
+        [Inject] IAuthService? AuthService { get; set; } = default!;
         [Inject] private NavigationManager NavigationManager { get; set; } = default!;
         #endregion
 

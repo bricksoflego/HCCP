@@ -5,7 +5,7 @@ namespace BlueDragon.Shared
 {
     public partial class MainLayout
     {
-        [Inject] private AuthService? AuthService { get; set; }
+        [Inject] private IAuthService? AuthService { get; set; }
 
         protected override void OnInitialized()
         {

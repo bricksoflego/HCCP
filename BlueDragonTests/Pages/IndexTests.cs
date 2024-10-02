@@ -5,9 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 namespace BlueDragonTests.Pages
 {
     [TestClass]
-    public class IndexPageTests
+    public class IndexTests
     {
-        private Bunit.TestContext _ctx;
+        private Bunit.TestContext? _ctx;
 
         [TestInitialize]
         public void Setup()
@@ -15,20 +15,20 @@ namespace BlueDragonTests.Pages
             _ctx = new Bunit.TestContext();
 
             // Provide a simple mock/stub for AuthService that does nothing
-            _ctx.Services.AddScoped<AuthService>(sp => new MockAuthService());
+            _ctx.Services.AddScoped<IAuthService>(sp => new MockAuthService());
         }
 
         [TestCleanup]
         public void Teardown()
         {
-            _ctx.Dispose();
+            _ctx!.Dispose();
         }
 
         [TestMethod]
         public void IndexPageRendersCorrectly()
         {
             // Act: Render the Index component
-            var cut = _ctx.RenderComponent<BlueDragon.Pages.Index>();
+            var cut = _ctx!.RenderComponent<BlueDragon.Pages.Index>();
 
             // Assert: Verify the presence of specific content
             // Have to break up in sections (getting the first h5) for evaluation
@@ -43,7 +43,7 @@ namespace BlueDragonTests.Pages
         // A minimal AuthService mock that can be used for the test
         public class MockAuthService : AuthService
         {
-            public MockAuthService() : base(null, null) { }
+            public MockAuthService() : base(default, default) { }
         }
     }
 }

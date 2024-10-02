@@ -4,54 +4,26 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BlueDragon.Services
 {
-    public class EComponentService
+    public class EComponentService(HccContext context) : IEComponentService
     {
-        private readonly HccContext _context;
+        private readonly HccContext _context = context;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="context"></param>
-        public EComponentService(HccContext context)
-        {
-            _context = context;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         public async Task<List<Ecomponent>> GetComponents()
         {
             return await _context.Ecomponents.OrderBy(c => c.Name).ToListAsync();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
         public async Task<Ecomponent?> GetComponent(Ecomponent model)
         {
             return await _context.Ecomponents.FirstOrDefaultAsync(c => c.Ecid == model.Ecid);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
         public async Task Upsert(Ecomponent model)
         {
             _context.Update(model);
             await _context.SaveChangesAsync();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
         public async Task Delete(Ecomponent model)
         {
             _context.Remove(model);

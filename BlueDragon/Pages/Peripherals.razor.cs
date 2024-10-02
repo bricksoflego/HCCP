@@ -11,9 +11,9 @@ namespace BlueDragon.Pages
     {
         #region Dependencies
         [Inject] ISnackbar? Snackbar { get; set; }
-        [Inject] BrandNameService? BrandService { get; set; }
-        [Inject] PeripheralService? PeripheralService { get; set; }
-        [Inject] AuthService? AuthService { get; set; }
+        [Inject] IBrandNameService? BrandService { get; set; }
+        [Inject] IPeripheralService? PeripheralService { get; set; }
+        [Inject] IAuthService? AuthService { get; set; }
         [Inject] NavigationManager NavigationManager { get; set; } = default!;
         #endregion
 

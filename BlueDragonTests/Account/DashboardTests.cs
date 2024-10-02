@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace BlueDragonTests.Account
 {
-    internal class DashboardTests
+    [TestClass]
+    public class DashboardTests
     {
     }
 }

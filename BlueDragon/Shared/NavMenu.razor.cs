@@ -8,10 +8,10 @@ namespace BlueDragon.Shared
     public partial class NavMenu
     {
         #region Dependencies
-        [Inject] private AuthService? AuthService { get; set; }
+        [Inject] private IAuthService? AuthService { get; set; }
         [Inject] private ApplicationUserService ApplicationUserService { get; set; } = default!;
-        [Inject] private SolutionService? SolutionService { get; set; }
-        [Inject] private AuditService? AuditStateService { get; set; }
+        [Inject] private ISolutionService? SolutionService { get; set; }
+        [Inject] private IAuditService? AuditStateService { get; set; }
         #endregion
 
         #region Model and List Initialization

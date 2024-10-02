@@ -18,8 +18,8 @@ if (builder.Environment.IsDevelopment())
 StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configuration);
 
 var sqlPassword = builder.Configuration["SQLPassword"];
-var connectionString = builder.Configuration.GetConnectionString("SQLServer").Replace("{SQLPassword}", sqlPassword);
-builder.Services.AddDbContext<HccContext>(options => options.UseSqlServer(connectionString));
+var connectionString = builder?.Configuration?.GetConnectionString("SQLServer")?.Replace("{SQLPassword}", sqlPassword);
+builder!.Services.AddDbContext<HccContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<HccContext>();
 
@@ -37,23 +37,19 @@ builder.Services.AddAuthorizationBuilder()
 builder.Services.AddRazorPages();
 builder.Services.AddRazorComponents();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddTransient<BrandNameService>();
-builder.Services.AddTransient<CableTypeService>();
-builder.Services.AddScoped<CableService>();
-builder.Services.AddScoped<EComponentService>();
-builder.Services.AddScoped<HardwareService>();
-builder.Services.AddScoped<PeripheralService>();
-builder.Services.AddTransient<RoleService>();
-builder.Services.AddTransient<SolutionService>();
-builder.Services.AddScoped<AuditService>();
+builder.Services.AddScoped<IBrandNameService, BrandNameService>();
+builder.Services.AddScoped<ICableTypeService, CableTypeService>();
+builder.Services.AddScoped<ICableService, CableService>();
+builder.Services.AddScoped<IEComponentService, EComponentService>();
+builder.Services.AddScoped<IHardwareService, HardwareService>();
+builder.Services.AddScoped<IPeripheralService, PeripheralService>();
+builder.Services.AddScoped<ISolutionService, SolutionService>();
+builder.Services.AddScoped<IAuditService, AuditService>();
 builder.Services.AddScoped<IFormFieldClearService, FormFieldClearService>();
-
-// Register the CustomAuthenticationStateProvider
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<RoleService>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 builder.Services.AddSingleton<ApplicationUserService>();
-
-// Register AuthService after CustomAuthenticationStateProvider
-builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<UserService>();
 
 builder.Services.AddMudServices();

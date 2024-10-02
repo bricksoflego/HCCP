@@ -9,14 +9,14 @@ namespace BlueDragon.Account
     {
         #region Dependencies
         [Inject] ISnackbar? Snackbar { get; set; }
-        [Inject] AuthService? AuthService { get; set; }
+        [Inject] IAuthService? AuthService { get; set; }
         [Inject] NavigationManager NavigationManager { get; set; } = default!;
-        [Inject] SolutionService SolutionService { get; set; } = default!;
-        [Inject] AuditService AuditStateService { get; set; } = default!;
-        [Inject] HardwareService? HardwareService { get; set; }
-        [Inject] CableService? CableService { get; set; }
-        [Inject] EComponentService? EComponentService { get; set; }
-        [Inject] PeripheralService? PeripheralService { get; set; }
+        [Inject] ISolutionService SolutionService { get; set; } = default!;
+        [Inject] IAuditService AuditStateService { get; set; } = default!;
+        [Inject] IHardwareService? HardwareService { get; set; }
+        [Inject] ICableService? CableService { get; set; }
+        [Inject] IEComponentService? EComponentService { get; set; }
+        [Inject] IPeripheralService? PeripheralService { get; set; }
         #endregion
 
         #region Variable Initialization
