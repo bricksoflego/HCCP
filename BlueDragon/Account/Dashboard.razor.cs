@@ -8,10 +8,10 @@ namespace BlueDragon.Account
     public partial class Dashboard
     {
         #region Dependencies
-        [Inject] ISnackbar? Snackbar { get; set; }
+        [Inject] internal ISnackbar? Snackbar { get; set; }
         [Inject] IAuthService? AuthService { get; set; }
         [Inject] NavigationManager NavigationManager { get; set; } = default!;
-        [Inject] ISolutionService SolutionService { get; set; } = default!;
+        [Inject] internal ISolutionService SolutionService { get; set; } = default!;
         [Inject] IAuditService AuditStateService { get; set; } = default!;
         [Inject] IHardwareService? HardwareService { get; set; }
         [Inject] ICableService? CableService { get; set; }
