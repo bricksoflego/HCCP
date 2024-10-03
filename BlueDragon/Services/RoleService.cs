@@ -12,7 +12,7 @@ namespace BlueDragon.Services
             _roleManager = roleManager;
         }
 
-        public async Task<List<IdentityRole>> GetRoleListAsync()
+        public virtual async Task<List<IdentityRole>> GetRoleListAsync()
         {
             var roles = await _roleManager.Roles.ToListAsync();
             return roles;

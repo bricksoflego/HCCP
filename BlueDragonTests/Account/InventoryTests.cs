@@ -1,10 +1,10 @@
-﻿using BlueDragon.Account;
-using BlueDragon.Services;
+﻿using BlueDragon.Services;
 using Bunit;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using MudBlazor;
 using MudBlazor.Services;
+using BlueDragonTests.Mocks;
 
 namespace BlueDragonTests.Account
 {
@@ -18,16 +18,10 @@ namespace BlueDragonTests.Account
         {
             _ctx = new Bunit.TestContext();
 
-            // Provide a simple mock/stub for AuthService
+            // Create required Stubs & Mocks
             _ctx.Services.AddScoped<IAuthService>(sp => new MockAuthService());
-
-            // Mock the ISnackbar service to avoid null reference exception
             _ctx.Services.AddScoped<ISnackbar>(sp => Mock.Of<ISnackbar>());
-
-            // Register the required MudBlazor services
             _ctx.Services.AddMudServices();
-
-            // Configure JSInterop to ignore the "mudKeyInterceptor.connect" JS call
             _ctx.JSInterop.SetupVoid("mudKeyInterceptor.connect", _ => true);
         }
 
@@ -40,18 +34,12 @@ namespace BlueDragonTests.Account
         [TestMethod]
         public void AuditComponent_EnsureExists()
         {
-            // Act: Render the Inventory page
+            // Arrange: Render the Inventory page
             var cut = _ctx!.RenderComponent<BlueDragon.Account.Inventory>();
+            var componentExists = cut.HasComponent<BlueDragon.Components.Audit>();
 
             // Assert: Audit component is present
-            var componentExists = cut.HasComponent<BlueDragon.Components.Audit>();
             Assert.IsTrue(componentExists);
-        }
-
-        // Minimal AuthService mock
-        public class MockAuthService : AuthService
-        {
-            public MockAuthService() : base(default, default) { }
         }
     }
 }

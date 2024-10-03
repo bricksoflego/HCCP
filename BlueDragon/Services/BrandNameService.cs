@@ -8,12 +8,12 @@ namespace BlueDragon.Services
     {
         private readonly HccContext _context = context;
 
-        public async Task<List<LuBrandName>> GetBrandNames()
+        public virtual async Task<List<LuBrandName>> GetBrandNames()
         {
             return await _context.LuBrandNames.OrderBy(c => c.Name).ToListAsync();
         }
 
-        public async Task<LuBrandName?> GetBrandName(LuBrandName model)
+        public virtual async Task<LuBrandName?> GetBrandName(LuBrandName model)
         {
             return await _context.LuBrandNames.FirstOrDefaultAsync(c => c.Id == model.Id);
         }

@@ -8,12 +8,12 @@ namespace BlueDragon.Services
     {
         private readonly HccContext _context = context;
 
-        public async Task<List<LuCableType>> GetCableTypes()
+        public virtual async Task<List<LuCableType>> GetCableTypes()
         {
             return await _context.LuCableTypes.OrderBy(c => c.Name).ToListAsync();
         }
 
-        public async Task<LuCableType?> GetCableType(LuCableType model)
+        public virtual async Task<LuCableType?> GetCableType(LuCableType model)
         {
             return await _context.LuCableTypes.FirstOrDefaultAsync(c => c.Id == model.Id);
         }

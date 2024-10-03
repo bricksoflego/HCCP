@@ -32,7 +32,7 @@ namespace BlueDragon.Services
         /// 
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ApplicationUser>> GetUserList()
+        public virtual async Task<List<ApplicationUser>> GetUserList()
         {
             var users = _userManager.Users.ToList();
             return await _userManager.Users.OrderBy(c => c.UserName).ToListAsync();
@@ -134,7 +134,7 @@ namespace BlueDragon.Services
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public async Task<IList<string>> GetUserRoles(ApplicationUser user)
+        public virtual async Task<IList<string>> GetUserRoles(ApplicationUser user)
         {
             return await _userManager.GetRolesAsync(user);
         }

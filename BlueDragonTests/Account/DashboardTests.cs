@@ -1,6 +1,5 @@
 ﻿using BlueDragon.Account;
-using BlueDragon.Models;
-using BlueDragon.Services;
+using BlueDragonTests.Mocks;
 using Moq;
 using MudBlazor;
 
@@ -21,9 +20,7 @@ namespace BlueDragonTests.Account
             // Mock Snackbar.Configuration to avoid null reference exception
             var mockSnackbarConfig = new Mock<SnackbarConfiguration>();
             _mockSnackbar.Setup(s => s.Configuration).Returns(mockSnackbarConfig.Object);
-
             _testSolutionService = new TestSolutionService();
-
             _dashboard = new Dashboard
             {
                 Snackbar = _mockSnackbar.Object,  // Pass in the mocked Snackbar
@@ -51,23 +48,6 @@ namespace BlueDragonTests.Account
             // Assert
             Assert.IsFalse(_dashboard.AuditInProgress);
             _mockSnackbar!.Verify(s => s.Add(It.IsAny<string>(), It.IsAny<Severity>(), It.IsAny<Action<SnackbarOptions>>(), It.IsAny<string>()), Times.Once);
-        }
-    }
-
-    // Mock for ISolutionService
-    public class TestSolutionService : ISolutionService
-    {
-        public bool UpsertCalled { get; private set; }
-
-        public Task Upsert(string key, bool value)
-        {
-            UpsertCalled = true;
-            return Task.CompletedTask;
-        }
-
-        public Task<List<SolutionSetting>> GetSolutionSetings()
-        {
-            return Task.FromResult(new List<SolutionSetting>());
         }
     }
 }
