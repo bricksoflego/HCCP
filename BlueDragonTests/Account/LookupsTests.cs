@@ -1,11 +1,13 @@
 ﻿using BlueDragon.Services;
-using Bunit;
-using Microsoft.Extensions.DependencyInjection;
-using MudBlazor.Services;
-using MudBlazor;
-using Moq;
-using Microsoft.AspNetCore.Components.Web;
 using BlueDragonTests.Mocks;
+using Bunit;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.Extensions.DependencyInjection;
+using Moq;
+using MudBlazor;
+using MudBlazor.Services;
 
 namespace BlueDragonTests.Account
 {
@@ -40,7 +42,7 @@ namespace BlueDragonTests.Account
         }
 
         [TestMethod]
-        public void PageTitle_ShouldBeDefined_SetToSpecificText()
+        public void PageTitle_ShouldBeDefined()
         {
             // Arrange: Render Lookups component inside MockLayoutWithPopover
             var cut = _ctx!.RenderComponent<MockLayoutWithPopover>(parameters => parameters.AddChildContent<BlueDragon.Account.Lookups>());

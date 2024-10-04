@@ -1,10 +1,11 @@
 ﻿using BlueDragon.Models;
 using BlueDragon.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Identity;
 using MudBlazor;
-using System.Data;
+using System.Security.Claims;
 
 namespace BlueDragonTests.Mocks
 {
@@ -106,7 +107,6 @@ namespace BlueDragonTests.Mocks
         public MockPeripheralService() : base(default) { }
     }
 
-    // Mock for ISolutionService
     public class TestSolutionService : ISolutionService
     {
         public bool UpsertCalled { get; private set; }
@@ -136,5 +136,44 @@ namespace BlueDragonTests.Mocks
         }
     }
 
+    public class MockAuthenticationStateProvider : AuthenticationStateProvider
+    {
+        private ClaimsPrincipal _user = new ClaimsPrincipal(new ClaimsIdentity());
+
+        public MockAuthenticationStateProvider(bool isAuthenticated)
+        {
+            if (isAuthenticated)
+            {
+                // Default to "Admin" role for authenticated users
+                SetAuthenticatedUser("AdminUser", "Admin");
+            }
+            else
+            {
+                SetUnauthenticatedUser();
+            }
+        }
+
+        public void SetAuthenticatedUser(string username, string role)
+        {
+            _user = new ClaimsPrincipal(new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimTypes.Name, username),
+                new Claim(ClaimTypes.Role, role)
+            }, "mockAuthenticationType"));
+
+            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(_user)));
+        }
+
+        public void SetUnauthenticatedUser()
+        {
+            _user = new ClaimsPrincipal(new ClaimsIdentity());
+            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(_user)));
+        }
+
+        public override Task<AuthenticationState> GetAuthenticationStateAsync()
+        {
+            return Task.FromResult(new AuthenticationState(_user));
+        }
+    }
     #endregion
 }
