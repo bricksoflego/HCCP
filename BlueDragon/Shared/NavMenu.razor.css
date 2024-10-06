@@ -1,5 +1,5 @@
 ﻿::deep .mud-nav-link-disabled {
-    background: gold;
+    background: #FC0;
 }
 
     ::deep .mud-nav-link-disabled .mud-nav-link-text {

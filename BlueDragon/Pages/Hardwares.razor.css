@@ -3,3 +3,9 @@
     height: 2em !important;
     line-height: 2em !important;
 }
+
+    ::deep .mud-dialog .mud-dialog-title .barcodeLookupHeader {
+        background: red !important;
+        height: 2em !important;
+        line-height: 2em !important;
+    }

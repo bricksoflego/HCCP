@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "http": {
+    "Blue Dragon": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "IIS Express": {
+    "BD Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {

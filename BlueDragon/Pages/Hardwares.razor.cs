@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.VisualBasic;
 using MudBlazor;
+using System.ComponentModel.DataAnnotations;
 
 namespace BlueDragon.Pages
 {
@@ -21,6 +22,7 @@ namespace BlueDragon.Pages
 
         #region Model and List Initialization
         Hardware hardwareModel = new();
+        Base baseModel = new();
 
         List<LuBrandName> brands = [];
         List<Hardware> hardwares = [];
@@ -93,10 +95,6 @@ namespace BlueDragon.Pages
         }
         #endregion
 
-        #region Upsert Dialog
-        private bool upsertVisible;
-        private bool detailVisible;
-
         /// <summary>
         /// 
         /// </summary>
@@ -108,6 +106,34 @@ namespace BlueDragon.Pages
             Position = DialogPosition.TopCenter,
             MaxWidth = MaxWidth.Small
         };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private static readonly DialogOptions largeDialogOptions = new()
+        {
+            FullWidth = true,
+            CloseButton = true,
+            BackdropClick = false,
+            Position = DialogPosition.TopCenter,
+            MaxWidth = MaxWidth.Medium
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private static readonly DialogOptions compactDialogOptions = new()
+        {
+            FullWidth = true,
+            CloseButton = true,
+            BackdropClick = false,
+            Position = DialogPosition.TopCenter,
+            MaxWidth = MaxWidth.ExtraSmall
+        };
+
+        #region Upsert Dialog
+        private bool upsertVisible;
+        private bool detailVisible;
 
         /// <summary>
         /// 
@@ -134,6 +160,8 @@ namespace BlueDragon.Pages
             StateHasChanged();
         }
 
+        #endregion
+
         /// <summary>
         /// 
         /// </summary>
@@ -141,8 +169,42 @@ namespace BlueDragon.Pages
         {
             upsertVisible = false;
             detailVisible = false;
+            barcodeDialogVisible = false;
+            pageInfoVisible = false;
             hardwareModel = new();
+            baseModel = new();
         }
-        #endregion
+
+        private bool barcodeDialogVisible;
+        private bool pageInfoVisible;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private async void ShowBarcodeDialog()
+        {
+            barcodeDialogVisible = true;
+            await InvokeAsync(StateHasChanged);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="scan"></param>
+        /// <returns></returns>
+        private async Task BarcodeLookupChanged(string scan)
+        {
+            if (scan.Length == 13 && Int64.TryParse(scan, out _) == true)
+            {
+                Close();
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+
+        private async void GetPageInfo()
+        {
+            pageInfoVisible = true;
+        }
+
     }
 }

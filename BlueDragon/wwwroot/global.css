@@ -4,6 +4,12 @@
     color: white;
 }
 
+.mud-dialog.mud-dialog-width-xs.mud-dialog-width-full.barcodeLookupHeader .mud-dialog-title {
+    background: #880044 !important;
+    padding: .5rem 1.75rem;
+    color: white;
+}
+
 .mud-dialog-title > .mud-icon-button {
     font-size: 1.5rem;
     margin: 0;
@@ -72,7 +78,7 @@
 }
 
 .mud-nav-link-disabled {
-    background: gold !important;
+    background: #E6B800 !important;
 }
 
     .mud-nav-link-disabled .mud-nav-link-text {
