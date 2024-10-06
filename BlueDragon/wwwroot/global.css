@@ -116,3 +116,8 @@
 .scanData {
     padding: 3px;
 }
+
+code {
+    background: #DDD;
+    padding: 0px 5px 0px 5px;
+}

@@ -3,6 +3,8 @@
 @using BlueDragon.Services;
 @using System.Linq;
 @using BlueDragon.Models;
+@using BlueDragon.Components;
+
 @attribute [Authorize]
 
 @inject IDialogService DialogService
@@ -269,10 +271,24 @@
             Help With This Page
         </MudText>
     </TitleContent>
+    <DialogContent>
+        <MudCard>
+            <MudCardContent>
+                <MudText Typo="Typo.h5" Color="Color.Secondary">Using the Search & Table Filters</MudText>
+
+
+
+                <HardwareHelp />
+
+
+            </MudCardContent>
+        </MudCard>
+    </DialogContent>
 </MudDialog>
 
 @code {
     private string? _searchString;
+
     private Func<Hardware, bool> _quickFilter => x =>
     {
         if (string.IsNullOrWhiteSpace(_searchString))
