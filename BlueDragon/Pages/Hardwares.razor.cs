@@ -196,6 +196,7 @@ namespace BlueDragon.Pages
         {
             if (scan.Length == 13 && Int64.TryParse(scan, out _) == true)
             {
+                _searchString = scan;
                 Close();
                 await InvokeAsync(StateHasChanged);
             }
@@ -204,6 +205,7 @@ namespace BlueDragon.Pages
         private async void GetPageInfo()
         {
             pageInfoVisible = true;
+            await InvokeAsync(StateHasChanged);
         }
 
     }

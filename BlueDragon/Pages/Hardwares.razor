@@ -39,6 +39,7 @@
                       Immediate="true"
                       AdornmentIcon="@Icons.Material.Filled.Search"
                       IconSize="Size.Medium"
+                      Clearable="true"
                       Class="mt-0">
         </MudTextField>
     </ToolBarContent>
@@ -53,6 +54,7 @@
         <PropertyColumn Property="x => x.SerialNumber" Hidden="true" />
         <PropertyColumn Property="x => x.Description" Hidden="true" />
         <PropertyColumn Property="x => x.Notes" Hidden="true" />
+        <PropertyColumn Property="x => x.Barcode" Hidden="true" />
         <TemplateColumn CellStyle="width:118px;" Filterable="false">
             <CellTemplate>
                 <MudIconButton Color="Color.Tertiary" Icon="@Icons.Material.Filled.OpenInNew" Size="Size.Small" OnClick="(()=>ViewDetails(context.Item))" />
@@ -142,6 +144,13 @@
                             <MudTextField @bind-Value="hardwareModel.OnHand"
                                           Label="On-hand count"
                                           For="@(() => hardwareModel.OnHand)"
+                                          Required="false" />
+                        </MudItem>
+                        <MudItem xs="12">
+                            <MudTextField @bind-Value="hardwareModel.Barcode"
+                                          Label="Barcode"
+                                          HelperText="Barcode (optional/strongly recommended)"
+                                          For="@(() => hardwareModel.Barcode)"
                                           Required="false" />
                         </MudItem>
                         <MudItem xs="12">
@@ -285,6 +294,9 @@
             return true;
 
         if (x.Description!.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.Barcode! != null && x.Barcode!.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
             return true;
 
         if ($"{x.BrandName} {x.ModelNumber}".Contains(_searchString, StringComparison.OrdinalIgnoreCase))
