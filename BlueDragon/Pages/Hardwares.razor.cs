@@ -207,6 +207,5 @@ namespace BlueDragon.Pages
             pageInfoVisible = true;
             await InvokeAsync(StateHasChanged);
         }
-
     }
 }

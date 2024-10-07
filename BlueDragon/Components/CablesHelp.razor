@@ -1,0 +1,9 @@
+﻿@using Markdig
+
+<MudText Typo="Typo.body1">
+    @((MarkupString)PageHelp)
+</MudText>
+
+@code {
+    string PageHelp = Markdown.ToHtml("The search field integrated with the data table allows for the search among the following visible and hidden field data -  `Name`, `Location`, `Brand`, `Model`, `Serial #`, `Description`, and `Barcode`. Additionally, `Brand` & `Model` can be used in conjunction with one another to drill down. However, be aware that the brand name would come before the make with only a space separating the two.<br><br> For example: `Dell Latitude 3550`<br><br>The model in the above example would be \"Dell\". After that, any length of the model name starting from the model name's beginning will drill down to just the Latitude laptops until the model name is fully qualified `Latitude 3550`. <br><br> If you choose to filter by using the scanner method instead, simply click on the button to open a dialog. Ensure the barcode field is in focus and either scan or type the barcode.<br><br> > Note: Only barcodes that have been assigned to items in the database will display. This means that even if a barcode lookup scan does not return results, it does not mean there are no items of that type.");
+}

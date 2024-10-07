@@ -3,7 +3,9 @@
 @using BlueDragon.Services;
 @using System.Linq;
 @using BlueDragon.Models;
+@using BlueDragon.Components;
 @attribute [Authorize]
+@inject IDialogService DialogService
 
 <PageTitle>Peripherals</PageTitle>
 
@@ -15,10 +17,31 @@
         Add New Item
     </MudButton>
 </AuthorizeView>
-<MudDataGrid Items="@peripherals" Dense Filterable Hideable Hover Striped>
+<MudButton OnClick="(()=>ShowBarcodeDialog())"
+           Size="Size.Small"
+           Class="mb-2"
+           StartIcon="@Icons.Material.Filled.QrCodeScanner">
+    Lookup Scan
+</MudButton>
+<MudIconButton OnClick="(()=>GetPageInfo())"
+               Size="Size.Small"
+               Class="mb-2"
+               Icon="@Icons.Material.Filled.Help"
+               Color="Color.Info">
+</MudIconButton>
+<MudDataGrid Items="@peripherals" QuickFilter="_quickFilter" Dense Filterable Hideable Hover Striped>
     <ToolBarContent>
         <MudText Typo="Typo.h6">Peripherals</MudText>
         <MudSpacer />
+        <MudTextField @bind-Value="_searchString"
+                      Placeholder="Search Peripherals"
+                      Adornment="Adornment.Start"
+                      Immediate="true"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      IconSize="Size.Medium"
+                      Clearable="true"
+                      Class="mt-0">
+        </MudTextField>
     </ToolBarContent>
     <Columns>
         <PropertyColumn Property="x => x.Name" />
@@ -30,6 +53,7 @@
         <PropertyColumn Property="x => x.SerialNumber" Hidden="true" />
         <PropertyColumn Property="x => x.Description" Hidden="true" />
         <PropertyColumn Property="x => x.Notes" Hidden="true" />
+        <PropertyColumn Property="x => x.Barcode" Hidden="true" />
         <TemplateColumn CellStyle="width:118px;" Filterable="false">
             <CellTemplate>
                 <MudIconButton Color="Color.Tertiary" Icon="@Icons.Material.Filled.OpenInNew" Size="Size.Small" OnClick="(()=>ViewDetails(context.Item))" />
@@ -122,6 +146,13 @@
                                           Required="false" />
                         </MudItem>
                         <MudItem xs="12">
+                            <MudTextField @bind-Value="peripheralModel.Barcode"
+                                          Label="Barcode"
+                                          HelperText="Barcode (optional/strongly recommended)"
+                                          For="@(() => peripheralModel.Barcode)"
+                                          Required="false" />
+                        </MudItem>
+                        <MudItem xs="12">
                             <MudTextField @bind-Value="peripheralModel.Description"
                                           Label="Description"
                                           HelperText="Description of component"
@@ -202,3 +233,84 @@
         </MudCard>
     </DialogContent>
 </MudDialog>
+<MudDialog @bind-Visible="barcodeDialogVisible" Options="compactDialogOptions" Class="barcodeLookupHeader">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            Barcode Lookup
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <EditForm Model="baseModel">
+            <DataAnnotationsValidator />
+            <MudCard>
+                <MudCardContent>
+                    <MudTextField @bind-Value="baseModel.NumberString"
+                                  MaxLength="13"
+                                  Label="Barcode"
+                                  HelperText="ex: 2202202231111"
+                                  For="@(()=>baseModel.NumberString)"
+                                  Required="true"
+                                  RequiredError="Please fill out this field."
+                                  Immediate="true"
+                                  OnKeyUp="()=>BarcodeLookupChanged(baseModel.NumberString)" />
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButtonGroup Class="mx-auto" Color="Color.Primary" Variant="Variant.Filled">
+                        <MudButton OnClick="Close" StartIcon="@Icons.Material.Filled.Close">Close</MudButton>
+                    </MudButtonGroup>
+                </MudCardActions>
+            </MudCard>
+        </EditForm>
+    </DialogContent>
+</MudDialog>
+<MudDialog @bind-Visible="pageInfoVisible" Options="largeDialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            Help With This Page
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudCard>
+            <MudCardContent>
+                <MudText Typo="Typo.h5" Color="Color.Secondary">Using the Search & Table Filters</MudText>
+                <PeripheralsHelp />
+            </MudCardContent>
+        </MudCard>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    private string? _searchString;
+
+    private Func<Peripheral, bool> _quickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (x.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.Location!.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.Description!.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.SerialNumber!.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.BrandName!.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.ModelNumber!.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.Barcode! != null && x.Barcode!.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if ($"{x.BrandName} {x.ModelNumber}".Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    };
+}

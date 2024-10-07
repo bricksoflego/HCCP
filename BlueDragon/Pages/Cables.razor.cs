@@ -19,6 +19,7 @@ namespace BlueDragon.Pages
 
         #region Model and List Initialization
         Cable cableModel = new();
+        Base baseModel = new();
 
         List<LuBrandName> brands = [];
         List<LuCableType> cableTypes = [];
@@ -60,11 +61,47 @@ namespace BlueDragon.Pages
             InvokeAsync(StateHasChanged);
         }
 
-        #region Cables
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="context"></param>
+        private static readonly DialogOptions dialogOptions = new()
+        {
+            FullWidth = true,
+            CloseButton = true,
+            BackdropClick = false,
+            Position = DialogPosition.TopCenter,
+            MaxWidth = MaxWidth.Small
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private static readonly DialogOptions largeDialogOptions = new()
+        {
+            FullWidth = true,
+            CloseButton = true,
+            BackdropClick = false,
+            Position = DialogPosition.TopCenter,
+            MaxWidth = MaxWidth.Medium
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private static readonly DialogOptions compactDialogOptions = new()
+        {
+            FullWidth = true,
+            CloseButton = true,
+            BackdropClick = false,
+            Position = DialogPosition.TopCenter,
+            MaxWidth = MaxWidth.ExtraSmall
+        };
+
+        #region Cables
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="context"></param>
         private async Task SaveCable(EditContext context)
         {
             if (CableService != null)
@@ -102,18 +139,6 @@ namespace BlueDragon.Pages
         /// <summary>
         /// 
         /// </summary>
-        private static readonly DialogOptions dialogOptions = new()
-        {
-            FullWidth = true,
-            CloseButton = true,
-            BackdropClick = false,
-            Position = DialogPosition.TopCenter,
-            MaxWidth = MaxWidth.Small
-        };
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="context"></param>
         private async void UpsertCable(Cable? context)
         {
@@ -136,15 +161,49 @@ namespace BlueDragon.Pages
             StateHasChanged();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        #endregion
+
         private void Close()
         {
             upsertVisible = false;
             detailVisible = false;
+            barcodeDialogVisible = false;
+            pageInfoVisible = false;
             cableModel = new();
+            baseModel = new();
         }
-        #endregion
+
+        private bool barcodeDialogVisible;
+        private bool pageInfoVisible;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private async void ShowBarcodeDialog()
+        {
+            barcodeDialogVisible = true;
+            await InvokeAsync(StateHasChanged);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="scan"></param>
+        /// <returns></returns>
+        private async Task BarcodeLookupChanged(string scan)
+        {
+            if (scan.Length == 13 && Int64.TryParse(scan, out _) == true)
+            {
+                _searchString = scan;
+                Close();
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+
+        private async void GetPageInfo()
+        {
+            pageInfoVisible = true;
+            await InvokeAsync(StateHasChanged);
+        }
     }
 }
