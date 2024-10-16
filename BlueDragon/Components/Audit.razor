@@ -28,7 +28,7 @@
                 <MudElement Class="scanData" Style="display:inline;">
                     <MudText Inline="true"><strong>Name: </strong>@ItemName | </MudText>
                     <MudText Inline="true"><strong>Type: </strong>@ItemType | </MudText>
-                    <MudText Inline="true"><strong>Length: </strong>@ItemLength | </MudText>
+                    <MudText Inline="true"> <strong>Length: </strong>@ItemLength | </MudText>
                     <MudText Inline="true"><strong>Date: </strong>@ItemDate</MudText>
                 </MudElement>
                 <MudDivider />
@@ -166,11 +166,13 @@
         {
             try
             {
+                string numLen = string.Empty;
                 // BREAK DOWN THE BARCODE INFO FOR DISPLAY
                 BarcodePrefix prefix = (BarcodePrefix)int.Parse(barcode.Substring(0, 1));
                 BarcodeSuffix suffix = (BarcodeSuffix)int.Parse(barcode.Substring(9, 2));
                 BarcodePlus length = (BarcodePlus)int.Parse(barcode.Substring(11, 2));
-                string numLen = length.ToString().Substring(6);
+                if (length.ToString() != "NA")
+                    numLen = length.ToString().Substring(6);
 
                 // PARSE BARCODE DATE DATA
                 int year = int.Parse(barcode.Substring(1, 4));
@@ -199,7 +201,10 @@
                     // POULATE THE DATA FOR SCREEN
                     ItemName = prefix.ToString();
                     ItemType = suffix.ToString();
-                    ItemLength = $"{numLen[..^1]}.{numLen[^1]}'"; // EXTRACT JUST THE NUMERIC PART
+                    if (length.ToString() != "NA")
+                        ItemLength = $"{numLen[..^1]}.{numLen[^1]}'"; // EXTRACT JUST THE NUMERIC PART
+                    else
+                        ItemLength = "N/A";
                     ItemDate = date.ToString();
 
                     // FOCUS ON THE COUNT FIELD
