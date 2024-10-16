@@ -1,9 +1,7 @@
-﻿namespace BlueDragon.Services
+﻿namespace BlueDragon.Services;
+public interface IFormFieldClearService
 {
-    public interface IFormFieldClearService
-    {
-        void ClearUserFields();
-        void ClearBrandFields();
-        void ClearCableFields();
-    }
+    void ClearUserFields();
+    void ClearBrandFields();
+    void ClearCableFields();
 }

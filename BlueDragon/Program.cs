@@ -17,12 +17,15 @@ if (builder.Environment.IsDevelopment())
 
 StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configuration);
 
+#region SQL Services
 var sqlPassword = builder.Configuration["SQLPassword"];
 var connectionString = builder?.Configuration?.GetConnectionString("SQLServer")?.Replace("{SQLPassword}", sqlPassword);
 builder!.Services.AddDbContext<HccContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<HccContext>();
+#endregion
 
+#region Authorization Services
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -32,8 +35,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 builder.Services.AddAuthorizationBuilder()
     .AddPolicy("MustBeAdmin", policy => policy.RequireRole("Admin"));
+#endregion
 
-// Add services to the container.
+// ADD SERVICES TO THE CONTAINER.
 builder.Services.AddRazorPages();
 builder.Services.AddRazorComponents();
 builder.Services.AddServerSideBlazor();
@@ -51,7 +55,6 @@ builder.Services.AddScoped<RoleService>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 builder.Services.AddSingleton<ApplicationUserService>();
 builder.Services.AddScoped<UserService>();
-
 builder.Services.AddMudServices();
 
 var app = builder.Build();
@@ -62,22 +65,18 @@ using (var scope = app.Services.CreateScope())
     await InitializeRoles(roleManager);
 }
 
-// Configure the HTTP request pipeline.
+// CONFIGURE THE HTTP REQUEST PIPELINE.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
 }
 
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
-
 app.Run();
 
 static async Task InitializeRoles(RoleManager<IdentityRole> roleManager)

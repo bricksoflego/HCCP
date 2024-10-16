@@ -1,12 +1,10 @@
 ﻿using BlueDragon.Models;
 
-namespace BlueDragon.Services
+namespace BlueDragon.Services;
+public interface IEComponentService
 {
-    public interface IEComponentService
-    {
-        Task<List<Ecomponent>> GetComponents();
-        Task<Ecomponent?> GetComponent(Ecomponent model);
-        Task Upsert(Ecomponent model);
-        Task Delete(Ecomponent model);
-    }
+    Task<List<Ecomponent>> GetComponents();
+    Task<Ecomponent?> GetComponent(Ecomponent model);
+    Task Upsert(Ecomponent model);
+    Task Delete(Ecomponent model);
 }

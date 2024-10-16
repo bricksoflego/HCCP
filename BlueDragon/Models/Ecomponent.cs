@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace BlueDragon.Models;
-
-/// <summary>
-/// 
-/// </summary>
 public partial class Ecomponent
 {
     [Key]
@@ -25,7 +19,6 @@ public partial class Ecomponent
     public int InUse { get; set; } = 0;
     [Required]
     public int OnHand { get; set; } = 0;
-
     public string? Barcode { get; set; }
 
 }

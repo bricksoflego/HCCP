@@ -1,30 +1,29 @@
 ﻿using BlueDragon.Services;
 using Microsoft.AspNetCore.Components;
 
-namespace BlueDragon.Account
+namespace BlueDragon.Account;
+public partial class Inventory
 {
+    #region Dependencies
+    [Inject] IAuthService? AuthService { get; set; }
+    [Inject] NavigationManager NavigationManager { get; set; } = default!;
+    #endregion
 
-    public partial class Inventory
+    protected override async Task OnInitializedAsync()
     {
-        [Inject] IAuthService? AuthService { get; set; }
-        [Inject] NavigationManager NavigationManager { get; set; } = default!;
+        AuthService!.OnChange += HandleAuthStateChange;
 
-        protected override async Task OnInitializedAsync()
-        {
-            AuthService!.OnChange += HandleAuthStateChange;
+        if (AuthService?.IsAuthorized == true)
+            await Task.CompletedTask;
+        else NavigationManager.NavigateTo(AuthService?.IsAuthorized == true ? "/AccessDenied" : "/");
+        await InvokeAsync(StateHasChanged);
+    }
 
-            if (AuthService?.IsAuthorized == true)
-                await Task.CompletedTask;
-            else NavigationManager.NavigateTo(AuthService?.IsAuthorized == true ? "/AccessDenied" : "/");
-            await InvokeAsync(StateHasChanged);
-        }
-
-        /// <summary>
-        /// Handles changes in the authentication state by triggering a UI refresh.
-        /// </summary>
-        private void HandleAuthStateChange()
-        {
-            InvokeAsync(StateHasChanged);
-        }
+    /// <summary>
+    /// Handles changes in the authentication state by triggering a UI refresh.
+    /// </summary>
+    private void HandleAuthStateChange()
+    {
+        InvokeAsync(StateHasChanged);
     }
 }

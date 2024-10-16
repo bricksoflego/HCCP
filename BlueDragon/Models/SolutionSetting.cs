@@ -1,16 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BlueDragon.Models
+namespace BlueDragon.Models;
+public class SolutionSetting
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public class SolutionSetting
-    {
-        [Key]
-        public Guid Sid { get; set; }
-        [Required]
-        public string Name { get; set; } = null!;
-        public bool IsEnabled { get; set; }
-    }
+    [Key]
+    public Guid Sid { get; set; }
+    [Required]
+    public string Name { get; set; } = null!;
+    public bool IsEnabled { get; set; }
 }

@@ -1,8 +1,6 @@
-﻿namespace BlueDragon.Services
+﻿namespace BlueDragon.Services;
+public interface IAuditService
 {
-    public interface IAuditService
-    {
-        bool IsAuditInProgress { get; set; }
-        event Action? OnChange;
-    }
+    bool IsAuditInProgress { get; set; }
+    event Action? OnChange;
 }

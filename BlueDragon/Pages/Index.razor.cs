@@ -2,18 +2,18 @@
 using Markdig;
 using Microsoft.AspNetCore.Components;
 
-namespace BlueDragon.Pages
+namespace BlueDragon.Pages;
+public partial class Index
 {
-    public partial class Index
-    {
-        [Inject] IAuthService? AuthService { get; set; }
+    #region Dependencies
+    [Inject] IAuthService? AuthService { get; set; }
+    #endregion
 
-        protected override async Task OnInitializedAsync()
-        {
-            if (AuthService != null)
-                AuthService.OnChange += StateHasChanged;
-            costAnalysis = Markdown.ToHtml(costAnalysis);
-            await base.OnInitializedAsync();
-        }
+    protected override async Task OnInitializedAsync()
+    {
+        if (AuthService != null)
+            AuthService.OnChange += StateHasChanged;
+        costAnalysis = Markdown.ToHtml(costAnalysis);
+        await base.OnInitializedAsync();
     }
 }

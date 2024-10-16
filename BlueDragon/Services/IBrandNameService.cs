@@ -1,12 +1,10 @@
 ﻿using BlueDragon.Models;
 
-namespace BlueDragon.Services
+namespace BlueDragon.Services;
+public interface IBrandNameService
 {
-    public interface IBrandNameService
-    {
-        Task<List<LuBrandName>> GetBrandNames();
-        Task<LuBrandName?> GetBrandName(LuBrandName model);
-        Task Upsert(LuBrandName model);
-        Task Delete(LuBrandName model);
-    }
+    Task<List<LuBrandName>> GetBrandNames();
+    Task<LuBrandName?> GetBrandName(LuBrandName model);
+    Task Upsert(LuBrandName model);
+    Task Delete(LuBrandName model);
 }

@@ -1,70 +1,67 @@
-﻿using BlueDragon.Components;
-using BlueDragon.Models;
+﻿using BlueDragon.Models;
 using BlueDragon.Services;
 using Microsoft.AspNetCore.Components;
 
-namespace BlueDragon.Shared
+namespace BlueDragon.Shared;
+public partial class NavMenu
 {
-    public partial class NavMenu
+    #region Dependencies
+    [Inject] private IAuthService? AuthService { get; set; }
+    [Inject] private ApplicationUserService ApplicationUserService { get; set; } = default!;
+    [Inject] private ISolutionService? SolutionService { get; set; }
+    [Inject] private IAuditService? AuditStateService { get; set; }
+    #endregion
+
+    #region Model and List Initialization
+    private List<SolutionSetting>? settings = [];
+    #endregion
+
+    protected override async Task OnInitializedAsync()
     {
-        #region Dependencies
-        [Inject] private IAuthService? AuthService { get; set; }
-        [Inject] private ApplicationUserService ApplicationUserService { get; set; } = default!;
-        [Inject] private ISolutionService? SolutionService { get; set; }
-        [Inject] private IAuditService? AuditStateService { get; set; }
-        #endregion
+        if (AuthService != null)
+            AuthService.OnChange += StateHasChanged;
 
-        #region Model and List Initialization
-        private List<SolutionSetting>? settings = [];
-        #endregion
-
-        protected override async Task OnInitializedAsync()
+        if (SolutionService != null)
         {
-            if (AuthService != null)
-                AuthService.OnChange += StateHasChanged;
-
-            if (SolutionService != null)
-            {
-                settings = await SolutionService.GetSolutionSetings();
-            }
-
-            AuditStateService.OnChange += () =>
-            {
-                UpdateSettingsBasedOnAuditState();
-                StateHasChanged();
-            };
-
-            ApplicationUserService.OnChange += HandleUserStateChange;
+            settings = await SolutionService.GetSolutionSetings();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        private void UpdateSettingsBasedOnAuditState()
+        AuditStateService!.OnChange += () =>
         {
-            // Assuming settings is a list of SolutionSetting objects
-            var auditSetting = settings.FirstOrDefault(x => x.Name == "Audit");
-            if (auditSetting != null)
-            {
-                auditSetting.IsEnabled = AuditStateService.IsAuditInProgress;
-            }
-        }
+            UpdateSettingsBasedOnAuditState();
+            StateHasChanged();
+        };
 
-        /// <summary>
-        /// 
-        /// </summary>
-        private void HandleUserStateChange()
-        {
-            InvokeAsync(StateHasChanged);
-        }
+        ApplicationUserService.OnChange += HandleUserStateChange;
+    }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public void HandleAuditStateChanged()
+    /// <summary>
+    /// 
+    /// </summary>
+    private void UpdateSettingsBasedOnAuditState()
+    {
+        // Assuming settings is a list of SolutionSetting objects
+        var auditSetting = settings!.FirstOrDefault(x => x.Name == "Audit");
+        if (auditSetting != null)
         {
-            // RE - RENDER THE COMPONENT WHEN THE AUDIT STATE CHANGES
-            InvokeAsync(StateHasChanged);
+            auditSetting.IsEnabled = AuditStateService!.IsAuditInProgress;
         }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private void HandleUserStateChange()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public void HandleAuditStateChanged()
+    {
+        // RE - RENDER THE COMPONENT WHEN THE AUDIT STATE CHANGES
+        InvokeAsync(StateHasChanged);
     }
 }

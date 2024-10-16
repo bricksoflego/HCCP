@@ -1,10 +1,11 @@
-﻿using BlueDragon.Models;
+﻿/// This is a standard EF Context with settings modified to work with HCCP Models
+
+using BlueDragon.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace BlueDragon.Data;
-
 public partial class HccContext : IdentityDbContext<ApplicationUser>
 {
     public HccContext()
@@ -20,19 +21,12 @@ public partial class HccContext : IdentityDbContext<ApplicationUser>
     }
 
     public virtual DbSet<ApplicationUser> ApplicationUsers { get; set; }
-
     public virtual DbSet<Cable> Cables { get; set; }
-
     public virtual DbSet<Ecomponent> Ecomponents { get; set; }
-
     public virtual DbSet<Peripheral> Peripherals { get; set; }
-
     public virtual DbSet<Hardware> Hardwares { get; set; }
-
     public virtual DbSet<LuBrandName> LuBrandNames { get; set; }
-
     public virtual DbSet<LuCableType> LuCableTypes { get; set; }
-
     public virtual DbSet<SolutionSetting> SolutionSettings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -134,7 +128,6 @@ public partial class HccContext : IdentityDbContext<ApplicationUser>
 
         OnModelCreatingPartial(modelBuilder);
     }
-
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
