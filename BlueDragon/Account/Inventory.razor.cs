@@ -13,9 +13,9 @@ namespace BlueDragon.Account
         {
             AuthService!.OnChange += HandleAuthStateChange;
 
-            //if (AuthService?.IsAuthorized == true)
-            //    await Task.CompletedTask;
-            //else NavigationManager.NavigateTo(AuthService?.IsAuthorized == true ? "/AccessDenied" : "/");
+            if (AuthService?.IsAuthorized == true)
+                await Task.CompletedTask;
+            else NavigationManager.NavigateTo(AuthService?.IsAuthorized == true ? "/AccessDenied" : "/");
             await InvokeAsync(StateHasChanged);
         }
 
