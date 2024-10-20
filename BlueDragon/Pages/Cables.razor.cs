@@ -14,6 +14,7 @@ public partial class Cables
     [Inject] ICableService? CableService { get; set; }
     [Inject] IAuthService? AuthService { get; set; }
     [Inject] NavigationManager NavigationManager { get; set; } = default!;
+    [Inject] AppConfig? AppConfig { get; set; }
     #endregion
 
     #region Model and List Initialization
@@ -38,6 +39,7 @@ public partial class Cables
 
     protected override async Task OnInitializedAsync()
     {
+        AppConfig!.CurrentPageTitle = "Cables";
         AuthService!.OnChange += HandleAuthStateChange;
 
         if (AuthService?.IsAuthorized == true)

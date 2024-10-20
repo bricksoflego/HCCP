@@ -7,7 +7,7 @@
 @attribute [Authorize]
 @inject IDialogService DialogService
 
-<PageTitle>Hardwares</PageTitle>
+<PageTitle>@AppConfig.FullPageTitle</PageTitle>
 
 <AuthorizeView Roles="Admin, Manager" Context="user">
     <MudButton OnClick="(()=>UpsertHardware(new Hardware()))"

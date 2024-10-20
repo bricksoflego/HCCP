@@ -13,6 +13,7 @@ public partial class Hardwares
     [Inject] IHardwareService? HardwareService { get; set; }
     [Inject] IAuthService? AuthService { get; set; }
     [Inject] NavigationManager NavigationManager { get; set; } = default!;
+    [Inject] AppConfig? AppConfig { get; set; }
     #endregion
 
     #region Model and List Initialization
@@ -25,6 +26,7 @@ public partial class Hardwares
 
     protected override async Task OnInitializedAsync()
     {
+        AppConfig!.CurrentPageTitle = "Hardware";
         AuthService!.OnChange += HandleAuthStateChange;
 
         if (AuthService?.IsAuthorized == true)

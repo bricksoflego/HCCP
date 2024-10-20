@@ -16,6 +16,7 @@ public partial class Lookups
     [Inject] RoleService? RoleService { get; set; }
     [Inject] IAuthService? AuthService { get; set; } = default!;
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
+    [Inject] AppConfig? AppConfig { get; set; }
     #endregion
 
     #region Model and List Initialization
@@ -37,6 +38,7 @@ public partial class Lookups
 
     protected override async Task OnInitializedAsync()
     {
+        AppConfig!.CurrentPageTitle = "Administration";
         AuthService!.OnChange += StateHasChanged;
 
         if (AuthService?.IsAuthorized == true && AuthService.IsInRole("Admin"))

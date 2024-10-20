@@ -16,6 +16,7 @@ public partial class Dashboard
     [Inject] ICableService? CableService { get; set; }
     [Inject] IEComponentService? EComponentService { get; set; }
     [Inject] IPeripheralService? PeripheralService { get; set; }
+    [Inject] AppConfig? AppConfig { get; set; }
     #endregion
 
     #region Variable Initialization
@@ -27,6 +28,7 @@ public partial class Dashboard
 
     protected override async Task OnInitializedAsync()
     {
+        AppConfig!.CurrentPageTitle = "Manager Dashboard";
         AuthService!.OnChange += HandleAuthStateChange;
 
         if (AuthService?.IsAuthorized == true && (AuthService.IsInRole("Admin") || AuthService.IsInRole("Manager")))

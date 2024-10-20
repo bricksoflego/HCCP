@@ -56,6 +56,7 @@ builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStat
 builder.Services.AddSingleton<ApplicationUserService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddMudServices();
+builder.Services.AddSingleton<AppConfig>();
 
 var app = builder.Build();
 

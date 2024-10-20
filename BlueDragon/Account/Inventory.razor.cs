@@ -7,10 +7,12 @@ public partial class Inventory
     #region Dependencies
     [Inject] IAuthService? AuthService { get; set; }
     [Inject] NavigationManager NavigationManager { get; set; } = default!;
+    [Inject] AppConfig? AppConfig { get; set; }
     #endregion
 
     protected override async Task OnInitializedAsync()
     {
+        AppConfig!.CurrentPageTitle = "Inventory Audit";
         AuthService!.OnChange += HandleAuthStateChange;
 
         if (AuthService?.IsAuthorized == true)

@@ -13,6 +13,7 @@ public partial class Peripherals
     [Inject] IPeripheralService? PeripheralService { get; set; }
     [Inject] IAuthService? AuthService { get; set; }
     [Inject] NavigationManager NavigationManager { get; set; } = default!;
+    [Inject] AppConfig? AppConfig { get; set; }
     #endregion
 
     #region Model and List Initialization
@@ -25,6 +26,7 @@ public partial class Peripherals
 
     protected override async Task OnInitializedAsync()
     {
+        AppConfig!.CurrentPageTitle = "Peripherals";
         AuthService!.OnChange += HandleAuthStateChange;
 
         if (AuthService?.IsAuthorized == true)

@@ -7,7 +7,7 @@
 @attribute [Authorize]
 @inject IDialogService DialogService
 
-<PageTitle>Cables</PageTitle>
+<PageTitle>@AppConfig.FullPageTitle</PageTitle>
 
 <AuthorizeView Roles="Admin, Manager" Context="user">
     <MudButton OnClick="(()=>UpsertCable(new Cable()))"
